@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Recipes App
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list class="ios list-ios hydrated">
+    <ion-list-header class="ios hydrated">
+      Recipes
+    </ion-list-header>
+
+    <ion-item *ngFor="let recipeItem of recipes" class="user-list">
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>{{recipeItem.name}}</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content (click)="openRecipe(recipeItem)">
+          <div class="card">
+            <img src="{{recipeItem.title_image}}"/>
+          </div>
+          <div>
+            {{recipeItem.recipeText}}
+          </div>
+          <br>
+          <div>
+            <ion-icon name="timer-sharp"></ion-icon> {{recipeItem.recipeTime}} min
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+
+    </ion-item>
+  </ion-list>
+</ion-content>

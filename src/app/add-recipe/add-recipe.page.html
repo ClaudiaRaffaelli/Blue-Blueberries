@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar class="ios hydrated">
+    <ion-title class="ios title-ios hydrated">Add Recipe</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-list lines="full">
+    <form [formGroup]="recipeForm" (ngSubmit)="formSubmit()">
+      <ion-item>
+        <ion-label position="floating">Name</ion-label>
+        <ion-input formControlName="name" type="text" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Recipe</ion-label>
+        <ion-input formControlName="recipeText" type="text" required>
+        </ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Time (min.)</ion-label>
+        <ion-input formControlName="recipeTime" type="number" required>
+        </ion-input>
+      </ion-item>
+
+      <ion-card class="ion-text-center">
+        <ion-card-header>
+          <ion-card-title>Choose Images to Upload</ion-card-title>
+        </ion-card-header>
+        <ion-card-content class="insertImage" (change)="uploadFile($event.target.files)">
+          <ion-button color="primary" shape="square" expand="block" >
+            <input id="uploadBtn" type="file" class="upload" />
+          </ion-button>
+          Images Uploaded:<br>
+          <ion-item *ngFor="let imageName of imagesUploaded" class="user-list">
+            <div>
+              {{imageName.split('.')[0].substring(0,6)}}... .jpg
+              <ion-icon name="cloud-done-outline"></ion-icon>
+            </div>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-row>
+        <ion-col>
+          <ion-button type="submit" color="success" shape="full" expand="block">Add Recipe</ion-button>
+        </ion-col>
+      </ion-row>
+    </form>
+  </ion-list>
+
+
+
+</ion-content>

@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>viewRecipe</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>{{data.name}}</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content>
+          <div class="card">
+            <img src="{{data.title_image}}"/>
+          </div>
+          <br>
+
+          <div>
+            <ion-icon name="timer-sharp"></ion-icon> {{data.recipeTime}} min
+          </div>
+
+          <div>
+            {{data.recipeText}}
+          </div>
+          <br>
+        </ion-card-content>
+      </ion-card>
+
+</ion-content>
+

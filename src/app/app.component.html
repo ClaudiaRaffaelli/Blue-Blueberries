@@ -1,0 +1,20 @@
+<ion-app>
+  <ion-router-outlet></ion-router-outlet>
+</ion-app>
+
+<ion-tabs>
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button routerLinkActive="tab-selected" routerLink="/home" class="ios" tab="home">
+      <ion-icon name="list"></ion-icon>
+    </ion-tab-button>
+
+    <ion-tab-button routerLinkActive="tab-selected" routerLink="/search-recipe" class="ios" tab="search-recipe">
+      <ion-icon name="search-sharp"></ion-icon>
+    </ion-tab-button>
+
+    <ion-tab-button routerLinkActive="tab-selected" routerLink="/add-recipe" class="ios" tab="add-recipe">
+      <ion-icon name="add-circle"></ion-icon>
+    </ion-tab-button>
+
+  </ion-tab-bar>
+</ion-tabs>
