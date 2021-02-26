@@ -1,3 +1,16 @@
 .insertImage{
   font-size: 12px;
 }
+
+.forecast_container{
+  flex-wrap: wrap;
+  overflow-x: hidden;
+  overflow-y: scroll!important;
+}
+
+[size="small"] {
+  height: 12px;
+  font-size: 12px;
+  padding: 9px;
+  margin: 8px;
+}

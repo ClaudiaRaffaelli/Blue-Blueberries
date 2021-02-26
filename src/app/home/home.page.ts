@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import { RecipeItem } from '../shared/recipeItem';
+import {IngredientsDic, RecipeItem} from '../shared/recipeItem';
 import { RecipeItemService } from './../shared/recipe-item.service';
 import firebase from 'firebase';
 import 'firebase/storage'; // in order to use images stored in the firebase database
@@ -21,22 +21,42 @@ export class HomePage implements OnInit {
     private router: Router
   ) { }
 
+
   ngOnInit() {
+    // const myIngredients = new IngredientsDic();
+    // const tortaAlleMele = new IngredientsDic();
+    //
+    // myIngredients.ingredients['apple'] = true;
+    // tortaAlleMele.ingredients['apple'] = true;
+    // //console.log(myIngredients.ingredients);
+    //
+    // for (const key in myIngredients.ingredients){
+    //   if ( !myIngredients.ingredients[key] && tortaAlleMele.ingredients[key]){
+    //     console.log('Non puoi farla');
+    //     break;
+    //   }
+    // }
+
+
+
     this.fetchRecipeItems();
     const recipesRes = this.aptService.getRecipesList();
     recipesRes.snapshotChanges().subscribe(res => {
       this.recipes = [];
       res.forEach(item => {
-        const a = item.payload.toJSON();
+        const myRecipeItem = item.payload.toJSON();
         // @ts-ignore
-        a.$key = item.key;
-
+        myRecipeItem.$key = item.key;
+        // get title image
         this.pathReference = firebase.storage().ref().child(item.key + '/' + item.key + '_0.jpg').getDownloadURL().then(url => {
           this.imgs = url;
           // @ts-ignore
-          a.title_image = this.imgs;
+          myRecipeItem.title_image = this.imgs;
         });
-        this.recipes.push(a as RecipeItem);
+        // @ts-ignore
+        if ((myRecipeItem.recipeTime as RecipeItem) < 200) {
+          this.recipes.push(myRecipeItem as RecipeItem);
+        }
       });
     });
   }

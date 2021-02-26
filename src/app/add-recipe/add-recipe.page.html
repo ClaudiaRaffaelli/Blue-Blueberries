@@ -25,6 +25,7 @@
         </ion-input>
       </ion-item>
 
+      <!-- Images selector -->
       <ion-card class="ion-text-center">
         <ion-card-header>
           <ion-card-title>Choose Images to Upload</ion-card-title>
@@ -43,12 +44,29 @@
         </ion-card-content>
       </ion-card>
 
+      <!-- Checkboxes for ingredients -->
+      <ion-card class="ion-padding">
+        <ion-grid>
+          <ion-row class="forecast_container">
+            <ion-col *ngFor="let ingredient of recipeForm.value.ingredientsForm.ingredients">
+              <ion-chip color="{{ingredient.color}}" size="small">
+                <ion-label color="{{ingredient.color}}" (click)="toggleIngredient(ingredient.name)">{{ingredient.name}}</ion-label>
+              </ion-chip>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+      </ion-card>
+
       <ion-row>
         <ion-col>
           <ion-button type="submit" color="success" shape="full" expand="block">Add Recipe</ion-button>
         </ion-col>
       </ion-row>
     </form>
+
+
+
   </ion-list>
 
 

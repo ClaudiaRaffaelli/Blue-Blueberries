@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { RecipeItemService } from './../shared/recipe-item.service';
+import {IngredientsDic} from '../shared/recipeItem';
 
 // Upload image
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
@@ -14,7 +15,7 @@ export interface MyTitleImage {
   filepath: string;
   size: number;
 }
-//
+
 
 @Component({
   selector: 'app-add-recipe',
@@ -23,8 +24,9 @@ export interface MyTitleImage {
 })
 
 export class AddRecipePage implements OnInit {
+  // Parameter required to upload recipe info
   recipeForm: FormGroup;
-  // Parameter required to upload an image
+  // Parameters required to upload an image
   // Upload Task
   task: AngularFireUploadTask;
   // Progress in percentage
@@ -60,11 +62,13 @@ export class AddRecipePage implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.recipeForm = this.fb.group({
       $key: Math.random().toString(12).substring(2, 8) + Date.now(),
       name: [''],
       recipeText: [''],
-      recipeTime: ['']
+      recipeTime: [''],
+      ingredientsForm: new IngredientsDic()
     });
     this.imgsCount = 0;
     this.imagesUploaded = [];
@@ -75,7 +79,8 @@ export class AddRecipePage implements OnInit {
       $key: Math.random().toString(12).substring(2, 8) + Date.now(),
       name: [''],
       recipeText: [''],
-      recipeTime: ['']
+      recipeTime: [''],
+      ingredientsForm: new IngredientsDic()
     });
     this.imgsCount = 0;
     this.imagesUploaded = [];
@@ -85,6 +90,7 @@ export class AddRecipePage implements OnInit {
     if (!this.recipeForm.valid) {
       return false;
     } else {
+      console.log(this.recipeForm.value);
       this.aptService.createRecipeItem(this.recipeForm.value).then(res => {
         console.log(res);
         this.recipeForm.reset();
@@ -94,6 +100,26 @@ export class AddRecipePage implements OnInit {
     }
   }
 
+  toggleIngredient(ingredient: string){
+    // Change chip's state. (the ingredient is inside the ion-chip component
+    // tslint:disable-next-line:forin
+    for (const idx in this.recipeForm.value.ingredientsForm.ingredients){ // check for the right ingredient in the array
+      if (this.recipeForm.value.ingredientsForm.ingredients[idx].name === ingredient) { // then switch its value
+        this.recipeForm.value.ingredientsForm.ingredients[idx].isChecked =
+            !this.recipeForm.value.ingredientsForm.ingredients[idx].isChecked;
+        if (this.recipeForm.value.ingredientsForm.ingredients[idx].isChecked) { // and its color
+          this.recipeForm.value.ingredientsForm.ingredients[idx].color = 'success';
+        }
+        else{
+          this.recipeForm.value.ingredientsForm.ingredients[idx].color = 'dark';
+        }
+        break;
+      }
+    }
+
+  }
+
+  // upload image
   uploadFile(event: FileList) {
     // The File object
     const file = event.item(0);
@@ -155,7 +181,7 @@ export class AddRecipePage implements OnInit {
 
     // Set document id with value in database
     this.imageCollection.doc(id).set(image).then(resp => {
-      console.log(resp);;
+      console.log(resp);
     }).catch(error => {
       console.log('error ' + error);
     });
