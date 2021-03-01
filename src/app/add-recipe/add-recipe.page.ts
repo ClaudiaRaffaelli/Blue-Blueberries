@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { RecipeItemService } from './../shared/recipe-item.service';
@@ -9,10 +9,12 @@ import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
+import {IonSearchbar} from '@ionic/angular';
 
-export interface MyTitleImage {
+// Uploaded image info
+export interface MyImage {
   name: string;
-  filepath: string;
+  filepath: string; // file path in the database
   size: number;
 }
 
@@ -24,6 +26,11 @@ export interface MyTitleImage {
 })
 
 export class AddRecipePage implements OnInit {
+  // Find the search bar in the HTML DOM
+  @ViewChild('search', {static: false}) search: IonSearchbar;
+  ingredients: any;
+  showSearchBarResults: boolean; // If something is typed in the searchbar than show the results list
+  ingredientSelectedIcon: boolean;
   // Parameter required to upload recipe info
   recipeForm: FormGroup;
   // Parameters required to upload an image
@@ -36,7 +43,7 @@ export class AddRecipePage implements OnInit {
   // Uploaded File URL
   UploadedFileURL: Observable<string>;
   // Uploaded Image List
-  images: Observable<MyTitleImage[]>;
+  images: Observable<MyImage[]>;
   // File details
   fileName: string;
   fileSize: number;
@@ -44,9 +51,10 @@ export class AddRecipePage implements OnInit {
   isUploading: boolean;
   isUploaded: boolean;
 
-  private imageCollection: AngularFirestoreCollection<MyTitleImage>;
+  private imageCollection: AngularFirestoreCollection<MyImage>;
   private imgsCount: number;
   private imagesUploaded: string[];
+
 
   constructor(
     private aptService: RecipeItemService,
@@ -57,8 +65,10 @@ export class AddRecipePage implements OnInit {
     this.isUploading = false;
     this.isUploaded = false;
     // Set collection where our documents/ images info will save
-    this.imageCollection = database.collection<MyTitleImage>('freakyImages');
+    this.imageCollection = database.collection<MyImage>('freakyImages');
     this.images = this.imageCollection.valueChanges();
+    this.ingredientSelectedIcon = false;
+
   }
 
   ngOnInit(): void {
@@ -72,6 +82,9 @@ export class AddRecipePage implements OnInit {
     });
     this.imgsCount = 0;
     this.imagesUploaded = [];
+    this.ingredients = this.recipeForm.value.ingredientsForm.ingredients;
+    this.showSearchBarResults = false;
+    this.ingredientSelectedIcon = false;
   }
 
   ionViewWillEnter() {
@@ -84,6 +97,9 @@ export class AddRecipePage implements OnInit {
     });
     this.imgsCount = 0;
     this.imagesUploaded = [];
+    this.ingredients = this.recipeForm.value.ingredientsForm.ingredients;
+    this.showSearchBarResults = false;
+    this.ingredientSelectedIcon = false;
   }
 
   formSubmit() {
@@ -100,24 +116,6 @@ export class AddRecipePage implements OnInit {
     }
   }
 
-  toggleIngredient(ingredient: string){
-    // Change chip's state. (the ingredient is inside the ion-chip component
-    // tslint:disable-next-line:forin
-    for (const idx in this.recipeForm.value.ingredientsForm.ingredients){ // check for the right ingredient in the array
-      if (this.recipeForm.value.ingredientsForm.ingredients[idx].name === ingredient) { // then switch its value
-        this.recipeForm.value.ingredientsForm.ingredients[idx].isChecked =
-            !this.recipeForm.value.ingredientsForm.ingredients[idx].isChecked;
-        if (this.recipeForm.value.ingredientsForm.ingredients[idx].isChecked) { // and its color
-          this.recipeForm.value.ingredientsForm.ingredients[idx].color = 'success';
-        }
-        else{
-          this.recipeForm.value.ingredientsForm.ingredients[idx].color = 'dark';
-        }
-        break;
-      }
-    }
-
-  }
 
   // upload image
   uploadFile(event: FileList) {
@@ -175,7 +173,7 @@ export class AddRecipePage implements OnInit {
     );
   }
 
-  addImagetoDB(image: MyTitleImage) {
+  addImagetoDB(image: MyImage) {
     // Create an ID for document
     const id = this.database.createId();
 
@@ -187,6 +185,30 @@ export class AddRecipePage implements OnInit {
     });
   }
 
+  // search bar
+  _ionChange(event){
+    const val = event.target.value;
+    if (val.trim() !== ''){
+      this.showSearchBarResults = true;
+    }else {
+      this.showSearchBarResults = false;
+    }
 
+    this.ingredients = this.recipeForm.value.ingredientsForm.ingredients;
+
+    if (val && val.trim() !== ''){
+      this.ingredients = Object.keys(this.ingredients).filter((item: any) => {
+        return (item.toLowerCase().indexOf(val.toLowerCase()) > -1);
+      });
+    }
+  }
+
+
+  toggleIngredient(ingredient: unknown){
+    // Change ingredient's state
+    // @ts-ignore
+    this.recipeForm.value.ingredientsForm.ingredients[ingredient] = !this.recipeForm.value.ingredientsForm.ingredients[ingredient];
+    this.ingredientSelectedIcon = !this.ingredientSelectedIcon;
+  }
 
 }

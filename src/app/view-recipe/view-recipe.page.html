@@ -18,6 +18,9 @@
 
           <div>
             <ion-icon name="timer-sharp"></ion-icon> {{data.recipeTime}} min
+              <ul *ngFor="let ingredient of data.ingredients | keyvalue">
+                <li *ngIf="ingredient.value">{{ingredient.key}}</li>
+              </ul>
           </div>
 
           <div>
