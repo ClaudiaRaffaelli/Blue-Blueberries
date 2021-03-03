@@ -8,9 +8,9 @@
   overflow-y: scroll!important;
 }
 
-[size="small"] {
-  height: 12px;
-  font-size: 12px;
-  padding: 9px;
-  margin: 8px;
+.ingredient-row {
+  background-color: transparentize(#36abe0, 0.9);
 }
+
+
+

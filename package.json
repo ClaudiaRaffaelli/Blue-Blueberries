@@ -29,6 +29,7 @@
     "cordova-plugin-inappbrowser": "^5.0.0",
     "firebase": "^8.2.9",
     "ionic-select-searchable": "^2.10.0",
+    "ionic4-star-rating": "^1.1.1",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
