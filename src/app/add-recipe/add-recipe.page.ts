@@ -77,6 +77,7 @@ export class AddRecipePage implements OnInit {
       $key: Math.random().toString(12).substring(2, 8) + Date.now(),
       name: [''],
       recipeText: [''],
+      recipeDifficulty: [''],
       recipeTime: [''],
       ingredientsForm: new IngredientsDic()
     });
@@ -93,6 +94,7 @@ export class AddRecipePage implements OnInit {
       $key: Math.random().toString(12).substring(2, 8) + Date.now(),
       name: [''],
       recipeText: [''],
+      recipeDifficulty: [''],
       recipeTime: [''],
       ingredientsForm: new IngredientsDic()
     });

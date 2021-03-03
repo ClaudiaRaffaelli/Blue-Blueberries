@@ -53,6 +53,7 @@ export class HomePage implements OnInit {
           // @ts-ignore
           myRecipeItem.title_image = this.imgs;
         });
+
         // @ts-ignore
         if ((myRecipeItem.recipeTime as RecipeItem) < 20000000000) {
           this.recipes.push(myRecipeItem as RecipeItem);
