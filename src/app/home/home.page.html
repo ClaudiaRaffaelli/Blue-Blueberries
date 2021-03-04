@@ -13,9 +13,13 @@
             <img src="{{recipeItem.title_image}}"/>
           </div>
           <br>
-          <div>
+          <ion-item size="small">
             <ion-icon name="timer-outline"></ion-icon> {{recipeItem.recipeTime}} min
-          </div>
+          </ion-item>
+          <br>
+          <ion-item>
+            Difficulty: {{recipeItem.recipeDifficulty}}
+          </ion-item>
         </ion-card-content>
       </ion-card>
     </ion-item>

@@ -71,27 +71,30 @@ export class AddRecipePage implements OnInit {
 
   }
 
+  // Reset some variables before the user can interact with this tab
   ngOnInit(): void {
-
     this.recipeForm = this.fb.group({
       $key: Math.random().toString(12).substring(2, 8) + Date.now(),
       name: [''],
       recipeText: [''],
+      recipeDifficulty: [''],
       recipeTime: [''],
       ingredientsForm: new IngredientsDic()
     });
     this.imgsCount = 0;
     this.imagesUploaded = [];
+    // This variable is needed for the searchbar functionality
     this.ingredients = this.recipeForm.value.ingredientsForm.ingredients;
-    this.showSearchBarResults = false;
-    this.ingredientSelectedIcon = false;
+    this.showSearchBarResults = false; // When the searchbar is empty don't show (all) the ingredients list
   }
 
+  // Same as ngOnInit() because we need to reset everything even when the user switches between tabs
   ionViewWillEnter() {
     this.recipeForm = this.fb.group({
       $key: Math.random().toString(12).substring(2, 8) + Date.now(),
       name: [''],
       recipeText: [''],
+      recipeDifficulty: [''],
       recipeTime: [''],
       ingredientsForm: new IngredientsDic()
     });
@@ -99,7 +102,6 @@ export class AddRecipePage implements OnInit {
     this.imagesUploaded = [];
     this.ingredients = this.recipeForm.value.ingredientsForm.ingredients;
     this.showSearchBarResults = false;
-    this.ingredientSelectedIcon = false;
   }
 
   formSubmit() {
@@ -108,7 +110,6 @@ export class AddRecipePage implements OnInit {
     } else {
       console.log(this.recipeForm.value);
       this.aptService.createRecipeItem(this.recipeForm.value).then(res => {
-        console.log(res);
         this.recipeForm.reset();
         this.router.navigate(['/home']);
       })
@@ -203,12 +204,24 @@ export class AddRecipePage implements OnInit {
     }
   }
 
-
   toggleIngredient(ingredient: unknown){
     // Change ingredient's state
     // @ts-ignore
-    this.recipeForm.value.ingredientsForm.ingredients[ingredient] = !this.recipeForm.value.ingredientsForm.ingredients[ingredient];
+    // tslint:disable-next-line:max-line-length
+    this.recipeForm.value.ingredientsForm.ingredients[ingredient].selected = !this.recipeForm.value.ingredientsForm.ingredients[ingredient].selected;
     this.ingredientSelectedIcon = !this.ingredientSelectedIcon;
   }
+
+  changeDose(event, ingredient: unknown){
+    // @ts-ignore
+    this.recipeForm.value.ingredientsForm.ingredients[ingredient].dose = event.detail.value;
+  }
+
+  changeDoseType(event, ingredient: unknown){
+    // @ts-ignore
+    this.recipeForm.value.ingredientsForm.ingredients[ingredient].unit = event.detail.value;
+  }
+
+
 
 }

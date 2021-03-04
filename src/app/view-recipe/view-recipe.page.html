@@ -17,9 +17,10 @@
           <br>
 
           <div>
-            <ion-icon name="timer-sharp"></ion-icon> {{data.recipeTime}} min
+            <ion-item> <ion-icon name="timer-sharp"></ion-icon> {{data.recipeTime}} min </ion-item>
+            <ion-item> Difficulty: {{data.recipeDifficulty}} </ion-item>
               <ul *ngFor="let ingredient of data.ingredients | keyvalue">
-                <li *ngIf="ingredient.value">{{ingredient.key}}</li>
+                <li *ngIf="ingredient.value.selected">{{ingredient.value.dose}} {{ingredient.value.unit}} {{ingredient.key.toLowerCase()}}</li>
               </ul>
           </div>
 

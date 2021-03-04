@@ -17,6 +17,7 @@ export class RecipeItemService {
     return this.savedRecipesListRef.set(apt.$key, {
       name: apt.name,
       recipeText: apt.recipeText,
+      recipeDifficulty: apt.recipeDifficulty,
       recipeTime: apt.recipeTime,
       ingredients: apt.ingredientsForm.ingredients
     });

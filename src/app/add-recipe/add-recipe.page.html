@@ -20,6 +20,12 @@
       </ion-item>
 
       <ion-item>
+        <ion-label position="floating">Difficulty</ion-label>
+        <ion-input formControlName="recipeDifficulty" type="number" required>
+        </ion-input>
+      </ion-item>
+
+      <ion-item>
         <ion-label position="floating">Time (min.)</ion-label>
         <ion-input formControlName="recipeTime" type="number" required>
         </ion-input>
@@ -46,28 +52,31 @@
 
 
       <!-- Default Searchbar -->
-      <ion-card>
-        <ion-grid>
-          <ion-label>Ingredients selected:</ion-label>
-          <ion-row class="forecast_container">
-            <ion-col *ngFor="let ingredient of recipeForm.value.ingredientsForm.ingredients | keyvalue">
-              <ion-item *ngIf="ingredient.value">
-                <ion-icon (click)="toggleIngredient(ingredient.key)" name="trash-sharp"></ion-icon>
-                <ion-label color="primary">{{ingredient.key}}</ion-label>
-              </ion-item>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-        <ion-searchbar (ionChange)="_ionChange($event)" animated placeholder="Search ingredients...">
-        </ion-searchbar>
+      <ion-card padding>
+
         <ion-list *ngIf="showSearchBarResults">
           <ion-item *ngFor="let ingredient of this.ingredients | keyvalue">
             <ion-label color="dark" (click)="toggleIngredient(ingredient.value)">{{ingredient.value}}</ion-label>
-            {{this.recipeForm.value.ingredientsForm.ingredients[ingredient]}}
             <ion-icon (click)="toggleIngredient(ingredient.value)"
-                      [name]="this.recipeForm.value.ingredientsForm.ingredients[ingredient.value] ? 'checkmark-sharp' : 'add-outline'" item-end ></ion-icon>
+                      [name]="this.recipeForm.value.ingredientsForm.ingredients[ingredient.value].selected ? 'checkmark-sharp' : 'add-outline'" item-end ></ion-icon>
           </ion-item>
         </ion-list>
+
+        <ion-searchbar (ionChange)="_ionChange($event)" animated placeholder="Ingredients...">
+        </ion-searchbar>
+
+        <ion-list lines="full" *ngFor="let ingredient of recipeForm.value.ingredientsForm.ingredients | keyvalue">
+          <ion-item *ngIf="ingredient.value.selected">
+            <p slot="start" position="floating">{{ingredient.key}}</p>
+            <ion-item>
+              <ion-input class="ingredientsInput" (ionChange)="changeDose($event, ingredient.key)" debounce="500" type="number" placeholder="dose" clearInput required></ion-input>
+              <ion-input class="ingredientsInput" (ionChange)="changeDoseType($event, ingredient.key)" debounce="500" type="text" placeholder="unit" clearInput required></ion-input>
+              <ion-icon (click)="toggleIngredient(ingredient.key)" name="trash-sharp" item-end></ion-icon>
+            </ion-item>
+          </ion-item>
+        </ion-list>
+
+
       </ion-card>
 
       <ion-row>
@@ -76,11 +85,39 @@
         </ion-col>
       </ion-row>
     </form>
-
-
-
   </ion-list>
 
 
 
 </ion-content>
+
+
+<!--
+ <ion-label>Selected ingredients:</ion-label>
+        <ion-grid *ngFor="let ingredient of recipeForm.value.ingredientsForm.ingredients | keyvalue">
+          <ion-row *ngIf="ingredient.value.selected" class="ingredient-row">
+            <ion-col size="1" class="ion-align-self-start">
+              <ion-icon (click)="toggleIngredient(ingredient.key)" name="trash-sharp" item-end></ion-icon>
+            </ion-col>
+
+            <ion-col size="11">
+              <ion-row class="ion-align-self-end">
+                <ion-col size="5" class="ion-align-self-start">
+                  <ion-label color="primary">{{ingredient.key}}</ion-label>
+                </ion-col>
+                <ion-col size="6" class="ion-align-self-end" style="text-align: right">
+                  Quantity <ion-input (ionChange)="changeDose($event, ingredient.key)" debounce="500" type="number" clearInput required></ion-input>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="5">
+                </ion-col>
+                <ion-col size="6" style="text-align: center">
+                  <ion-label> Type <ion-input (ionChange)="changeDoseType($event, ingredient.key)" debounce="500" type="text" clearInput required></ion-input>
+                  </ion-label>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+ -->
