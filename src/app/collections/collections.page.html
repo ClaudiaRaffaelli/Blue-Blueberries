@@ -1,0 +1,31 @@
+<!-- TODO sistemare  -->
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Collections</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <br>
+  <ion-list class="ios list-ios hydrated">
+
+    <ion-item *ngFor="let recipeItem of recipes" class="user-list">
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>{{recipeItem.name}}</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content (click)="openRecipe(recipeItem)">
+          <div class="card">
+            <img src="{{recipeItem.title_image}}"/>
+          </div>
+          <br>
+          <div>
+            <!-- todo cambia recipeItem.recipeTime per mostrare quante ricette ci sono dentro alla collection -->
+            <ion-icon name="archive"></ion-icon> {{recipeItem.recipeTime}} recipes
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </ion-item>
+  </ion-list>
+</ion-content>

@@ -23,6 +23,10 @@ const routes: Routes = [
     path: 'search-recipe',
     loadChildren: () => import('./search-recipe/search-recipe.module').then( m => m.SearchRecipePageModule)
   },
+  {
+    path: 'collections',
+    loadChildren: () => import('./collections/collections.module').then( m => m.CollectionsPageModule)
+  },
 ];
 
 @NgModule({
