@@ -79,9 +79,9 @@ export class AddRecipePage implements OnInit {
       recipeText: [''],
       recipeDifficulty: [''],
       recipeTime: [''],
-      ingredientsForm: new IngredientsDic()
+      ingredientsForm: new IngredientsDic(),
+      imgsCount: 0
     });
-    this.imgsCount = 0;
     this.imagesUploaded = [];
     // This variable is needed for the searchbar functionality
     this.ingredients = this.recipeForm.value.ingredientsForm.ingredients;
@@ -96,9 +96,9 @@ export class AddRecipePage implements OnInit {
       recipeText: [''],
       recipeDifficulty: [''],
       recipeTime: [''],
-      ingredientsForm: new IngredientsDic()
+      ingredientsForm: new IngredientsDic(),
+      imgsCount: 0
     });
-    this.imgsCount = 0;
     this.imagesUploaded = [];
     this.ingredients = this.recipeForm.value.ingredientsForm.ingredients;
     this.showSearchBarResults = false;
@@ -138,8 +138,8 @@ export class AddRecipePage implements OnInit {
 
     // The storage path
     const randomPathName = this.recipeForm.getRawValue().$key;
-    const path = randomPathName + '/' + randomPathName + '_' + this.imgsCount + '.jpg';
-    this.imgsCount++;
+    const path = randomPathName + '/' + randomPathName + '_' + this.recipeForm.value.imgsCount + '.jpg';
+    this.recipeForm.value.imgsCount++;
 
 
     // File reference

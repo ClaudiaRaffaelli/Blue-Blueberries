@@ -19,7 +19,8 @@ export class RecipeItemService {
       recipeText: apt.recipeText,
       recipeDifficulty: apt.recipeDifficulty,
       recipeTime: apt.recipeTime,
-      ingredients: apt.ingredientsForm.ingredients
+      ingredients: apt.ingredientsForm.ingredients,
+      imgsCount: apt.imgsCount
     });
   }
 

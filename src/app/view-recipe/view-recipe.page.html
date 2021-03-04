@@ -5,31 +5,31 @@
 </ion-header>
 
 <ion-content>
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>{{data.name}}</ion-card-title>
-        </ion-card-header>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{data.name}}</ion-card-title>
+    </ion-card-header>
 
-        <ion-card-content>
-          <div class="card">
-            <img src="{{data.title_image}}"/>
-          </div>
-          <br>
+    <ion-card-content>
+      <div class="card">
+        <img id="titleImage" src="{{this.recipeImages[this.data.$key + '_' + (this.currentImg)]}}"/>
+      </div>
+      <br>
 
-          <div>
-            <ion-item> <ion-icon name="timer-sharp"></ion-icon> {{data.recipeTime}} min </ion-item>
-            <ion-item> Difficulty: {{data.recipeDifficulty}} </ion-item>
-              <ul *ngFor="let ingredient of data.ingredients | keyvalue">
-                <li *ngIf="ingredient.value.selected">{{ingredient.value.dose}} {{ingredient.value.unit}} {{ingredient.key.toLowerCase()}}</li>
-              </ul>
-          </div>
+      <div>
+        <ion-item> <ion-icon name="timer-sharp"></ion-icon> {{data.recipeTime}} min </ion-item>
+        <ion-item> Difficulty: {{data.recipeDifficulty}} </ion-item>
+          <ul *ngFor="let ingredient of data.ingredients | keyvalue">
+            <li *ngIf="ingredient.value.selected">{{ingredient.value.dose}} {{ingredient.value.unit}} {{ingredient.key.toLowerCase()}}</li>
+          </ul>
+      </div>
+    </ion-card-content>
+  </ion-card>
 
-          <div>
-            {{data.recipeText}}
-          </div>
-          <br>
-        </ion-card-content>
-      </ion-card>
+  <p id="recipeText">
+
+  </p>
+
 
 </ion-content>
 

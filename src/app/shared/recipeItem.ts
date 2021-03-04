@@ -6,6 +6,7 @@ export class RecipeItem {
   recipeDifficulty: number;
   recipeTime: number;
   ingredientsForm: IngredientsDic;
+  imgsCount: number;
 }
 
 export class IngredientsDic{
