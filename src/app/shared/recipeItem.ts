@@ -3,7 +3,7 @@ export class RecipeItem {
   $key: string;
   name: string;
   recipeText: string;
-  recipeDifficulty: number;
+  recipeDifficulty: string;
   recipeTime: number;
   ingredientsForm: IngredientsDic;
   imgsCount: number;

@@ -16,6 +16,14 @@ export class HomePage implements OnInit {
   pathReference: any;
   imgs: []; // Title images downloaded from the firebase storage
 
+  // Options for images slider
+  option = {
+    slidesPerView: 1.2,
+    centeredSlides: true,
+    loop: false,
+    spaceBetween: 2,
+  };
+
   constructor(
     private aptService: RecipeItemService,
     private router: Router
