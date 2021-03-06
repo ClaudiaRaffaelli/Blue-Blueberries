@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {RecipeItem} from '../shared/recipeItem';
+import {CollectionItem} from '../shared/collectionItem';
 import {RecipeItemService} from '../shared/recipe-item.service';
+import {CollectionItemService} from '../shared/collection-item.service';
 import firebase from 'firebase';
 import 'firebase/storage'; // in order to use images stored in the firebase database
 import {NavigationExtras, Router} from '@angular/router'; // pass data between two pages
@@ -14,16 +16,19 @@ import {Storage} from '@ionic/storage';
 export class CollectionsPage implements OnInit {
 
   recipes = []; // Here are going to be saved all the recipes downloaded from the database
+  collections = []; // Here will be saved all the collections stored from local Ionic Storage
   pathReference: any;
   imgs: []; // Title images downloaded from the firebase storage
 
   constructor(
+      private localDBService: CollectionItemService,
       private aptService: RecipeItemService,
       private router: Router,
       private storage: Storage
   ) {
     // making sure that local storage is ready
-    storage.ready().then(() => {});
+    storage.ready().then(() => {
+    });
   }
 
   ngOnInit() {
@@ -34,6 +39,11 @@ export class CollectionsPage implements OnInit {
       this.recipes = [];
       res.forEach(item => {
         const myRecipeItem = item.payload.toJSON();
+
+        // TODO testing di aggiunta ricetta singola
+        //this.localDBService.addRecipeToCollectionItem("CollezioneA", myRecipeItem)
+        //this.addRecipeToCollectionItem("MiaCollezione", myRecipeItem)
+        //this.deleteRecipeFromCollectionItem("CollezioneA", myRecipeItem)
         // @ts-ignore
         myRecipeItem.$key = item.key;
 
@@ -48,14 +58,29 @@ export class CollectionsPage implements OnInit {
       });
 
       // TODO some testing
-      this.addCollectionItem("MiaCollezione", this.recipes)
-      this.getCollectionItem("MiaCollezione").then(
-          (item) => console.log('Il contenuto della collezione è ', item)
+      let collectionItem = new CollectionItem()
+      collectionItem.recipeList = this.recipes
+      collectionItem.recipeNumber = this.recipes.length
+      //this.localDBService.addCollectionItem("CollezioneB", collectionItem)
+      this.localDBService.deleteCollectionItem("CollezioneB")
+      //this.localDBService.addCollectionItem("CollezioneA", collectionItem)
+      //this.addCollectionItem("MiaCollezione", collectionItem)
+      //this.deleteCollectionItem("MiaCollezione")
+      //this.addCollectionItem("CollezioneA", collectionItem)
+      this.localDBService.getCollectionItem("MiaCollezione").then(
+          (item) => console.log('Il contenuto della collezione Mia è ', item)
+      );
+      this.localDBService.getCollectionItem("CollezioneA").then(
+          (item) => console.log('Il contenuto della collezione A è ', item)
+      );
+      this.localDBService.getCollectionItem("CollezioneB").then(
+          (item) => console.log('Il contenuto della collezione B è ', item)
       );
     });
 
   }
-  openRecipe(recipeP: any){
+
+  openRecipe(recipeP: any) {
     const navigationExtras: NavigationExtras = {
       state: {
         recipe: recipeP
@@ -76,26 +101,9 @@ export class CollectionsPage implements OnInit {
     }
   }
 
-  // Local storage methods for handling personalized collections
-  // TODO ok
-  addCollectionItem(collectionName, recipeItemList){
-    // key: collectionName (string), value: list of recipeItem objects
-    // the list of recipeItem is first converted into a string
-    let json = JSON.stringify(recipeItemList);
-    this.storage.set(collectionName, json);
+  fetchCollectionItems(){
+    //this.localDBService.getAllCollectionItems()
   }
-
-  getCollectionItem(collectionName){
-    // get the specified collection
-    return this.storage.get(collectionName).then((item) => {
-      return JSON.parse(item);
-    });
-  }
-
-  // TODO fai il delete per una collection
-
-  // TODO fai il modify per una collection
-
 
 }
 
