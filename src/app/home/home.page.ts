@@ -47,7 +47,7 @@ export class HomePage implements OnInit {
 
 
 
-    this.fetchRecipeItems();
+    // this.fetchRecipeItems();
     const recipesRes = this.aptService.getRecipesList();
     recipesRes.snapshotChanges().subscribe(res => {
       this.recipes = [];

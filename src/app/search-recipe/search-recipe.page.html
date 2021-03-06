@@ -1,9 +1,104 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>searchRecipe</ion-title>
-  </ion-toolbar>
-</ion-header>
+<html class="md">
 
-<ion-content>
+  <br>
 
-</ion-content>
+  <ion-content mode="ios">
+    <ion-card>
+      <ion-card-content>
+        <!-- SEARCH BY NAME -->
+        <h1><ion-label color="dark"><b>Search recipe</b></ion-label></h1>
+        <ion-searchbar animated placeholder="Cake, pasta, ...">
+        </ion-searchbar>
+      </ion-card-content>
+    </ion-card>
+
+
+    <h1><ion-item lines="none"><b>Advanced filters</b></ion-item></h1>
+      <ion-card>
+          <!-- AVAILABLE INGREDIENTS -->
+          <ion-list *ngIf="showAvailableSearchBarResults && searchAvailableIngredients" lines="none">
+            <ion-item *ngFor="let ingredient of this.availableIngredients | keyvalue">
+              <ion-chip [color]="this.ing.ingredients[ingredient.value].selected ? 'light' : 'dark'">
+                <ion-label [color]="this.ing.ingredients[ingredient.value].selected ? 'success' : 'dark'" (click)="toggleAvailableIngredient(ingredient.value)">{{ingredient.value}}</ion-label>
+                <ion-icon (click)="toggleAvailableIngredient(ingredient.value)"
+                        [name]="this.ing.ingredients[ingredient.value].selected ? 'checkmark-sharp' : 'add-outline'"
+                          [color]="this.ing.ingredients[ingredient.value].selected ? 'success' : 'dark'"></ion-icon>
+              </ion-chip>
+            </ion-item>
+          </ion-list>
+          <!-- SEARCH BAR -->
+          <ion-searchbar *ngIf="searchAvailableIngredients" (ionChange)="_ionChangeAvailable($event)" debounce="250" animated placeholder="Eggs, milk, ...">
+          </ion-searchbar>
+        <ion-item lines="none">
+          Available ingredients <ion-checkbox checked="false" (click)="toggleSearchAvailableIngredients()" color="light" slot="end"></ion-checkbox>
+        </ion-item>
+      </ion-card>
+
+      <!-- UNDESIRED INGREDIENTS -->
+      <ion-card>
+          <ion-list *ngIf="showUndesiredSearchBarResults && searchUndesiredIngredients" lines="none">
+            <ion-item *ngFor="let ingredient of this.undesiredIngredients | keyvalue">
+              <ion-chip [color]="this.ingUndesired.ingredients[ingredient.value].selected ? 'light' : 'dark'">
+                <ion-label [color]="this.ingUndesired.ingredients[ingredient.value].selected ? 'danger' : 'dark'" (click)="toggleUndesiredIngredient(ingredient.value)">{{ingredient.value}}</ion-label>
+                <ion-icon (click)="toggleUndesiredIngredient(ingredient.value)"
+                          [name]="this.ingUndesired.ingredients[ingredient.value].selected ? 'checkmark-sharp' : 'add-outline'"
+                          [color]="this.ingUndesired.ingredients[ingredient.value].selected ? 'danger' : 'dark'"></ion-icon>
+              </ion-chip>
+            </ion-item>
+          </ion-list>
+          <!-- SEARCH BAR -->
+          <ion-searchbar *ngIf="searchUndesiredIngredients" (ionChange)="_ionChangeUndesired($event)" debounce="250" animated placeholder="Mushrooms, Rice, ...">
+          </ion-searchbar>
+        <ion-item lines="none">
+          Undesired ingredients <ion-checkbox checked="false" (click)="toggleSearchUndesiredIngredients()" color="light" slot="end"></ion-checkbox>
+        </ion-item>
+      </ion-card>
+          <!-- DIFFICULTY -->
+      <ion-card>
+          <ion-segment *ngIf="searchDifficulty" (ionChange)="toggleDifficulty($event)" color="dark" value="easy">
+            <ion-segment-button value="easy">
+              <ion-label>Easy</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="medium">
+              <ion-label>Medium</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="hard">
+              <ion-label>hard</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+        <ion-item lines="none">
+          Difficulty <ion-checkbox checked="false" (click)="toggleSearchDifficulty()" color="light" slot="end"></ion-checkbox>
+        </ion-item>
+      </ion-card>
+      <h1><ion-item *ngIf="this.searchUndesiredIngredients || this.searchAvailableIngredients" lines="none"><b>Ingredients summary</b></ion-item></h1>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <ion-list lines="full" *ngFor="let ingredient of this.availableIngredientsKeys" mode="ios">
+                <ion-chip *ngIf="showAvailableIngredients && this.ing.ingredients[ingredient].selected " color="success">
+                  <ion-label color="success">{{ingredient}}</ion-label>
+                  <ion-icon (click)="toggleAvailableIngredient(ingredient)" name="close"></ion-icon>
+                </ion-chip>
+              </ion-list>
+            </ion-col>
+
+            <ion-col size="6">
+              <ion-list lines="full" *ngFor="let ingredient of this.undesiredIngredientsKeys" mode="ios">
+                <ion-chip *ngIf="showUndesiredIngredients && this.ingUndesired.ingredients[ingredient].selected " color="danger">
+                  <ion-label color="danger">{{ingredient}}</ion-label>
+                  <ion-icon (click)="toggleUndesiredIngredient(ingredient)" name="close"></ion-icon>
+                </ion-chip>
+              </ion-list>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+    <br>
+    <ion-button class="ion-activatable ripple-parent" color="success" expand="block">
+      Search
+      <ion-ripple-effect></ion-ripple-effect>
+    </ion-button>
+    <br><br><br>
+
+  </ion-content>
+
+</html>

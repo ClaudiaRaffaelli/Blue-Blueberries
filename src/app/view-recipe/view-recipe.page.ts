@@ -11,8 +11,6 @@ import {waitForAsync} from '@angular/core/testing';
   styleUrls: ['./view-recipe.page.scss'],
 })
 export class ViewRecipePage implements OnInit {
-  @ViewChild('one') d1: ElementRef;
-
   data: any;
   recipeImages: {[id: string]: string};
   recipe: any;
