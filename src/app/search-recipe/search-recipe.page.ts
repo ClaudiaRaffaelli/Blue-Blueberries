@@ -40,7 +40,7 @@ export class SearchRecipePage implements OnInit {
     this.searchUndesiredIngredients = false;
     this.searchDifficulty = false;
     this.searchRequiredTime = false;
-    this.maxRequiredTime = 0;
+    this.maxRequiredTime = 120;
   }
 
   ngOnInit() {

@@ -14,6 +14,7 @@ export class RecipeItemService {
 
   // Create
   createRecipeItem(apt: RecipeItem) {
+    this.savedRecipesListRef = this.db.list('/recipes');
     return this.savedRecipesListRef.set(apt.$key, {
       name: apt.name,
       recipeText: apt.recipeText,

@@ -17,7 +17,24 @@ export class IngredientsDic{
     Potatoes: {selected: false, dose: 0, unit: ''},
     Tomatoes: {selected: false, dose: 0, unit: ''},
     Rice: {selected: false, dose: 0, unit: 'grams'},
-    Water: {selected: false, dose: 0, unit: 'liters'}
+    Water: {selected: false, dose: 0, unit: 'liters'},
+    Pasta: {selected: false, dose: 0, unit: 'grams'},
+    Garlic: {selected: false, dose: 0, unit: 'clove'},
+    Basil: {selected: false, dose: 0, unit: 'as required'},
+    Oil: {selected: false, dose: 0, unit: 'as required'},
+    Salt: {selected: false, dose: 0, unit: 'as required'},
+    Flour: {selected: false, dose: 0, unit: 'g'},
+    Butter: {selected: false, dose: 0, unit: 'as required'},
+    Sugar: {selected: false, dose: 0, unit: 'as required'},
+    Apples: {selected: false, dose: 0, unit: ''},
+    Figs: {selected: false, dose: 0, unit: 'g'},
+    Limoncello: {selected: false, dose: 0, unit: 'tablespoons'},
+    Raisins: {selected: false, dose: 0, unit: 'g'},
+    PineNuts: {selected: false, dose: 0, unit: ''},
+    Lemons: {selected: false, dose: 0, unit: ''},
+    apricots: {selected: false, dose: 0, unit: ''},
+    Oranges: {selected: false, dose: 0, unit: ''},
+    Pistachios: {selected: false, dose: 0, unit: ''}
   };
 }
 
