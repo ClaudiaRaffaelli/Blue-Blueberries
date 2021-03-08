@@ -1,9 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {RecipeItem} from '../shared/recipeItem';
-import {CollectionItem} from '../shared/collectionItem';
 import {RecipeItemService} from '../shared/recipe-item.service';
 import {CollectionItemService} from '../shared/collection-item.service';
-import firebase from 'firebase';
 import 'firebase/storage'; // in order to use images stored in the firebase database
 import {NavigationExtras, Router} from '@angular/router'; // pass data between two pages
 import {Storage} from '@ionic/storage';
@@ -20,6 +17,8 @@ export class CollectionsPage implements OnInit {
   pathReference: any;
   imgs: []; // Title images downloaded from the firebase storage
 
+  savedCollectionsListRef = [];
+
   constructor(
       private localDBService: CollectionItemService,
       private aptService: RecipeItemService,
@@ -33,51 +32,19 @@ export class CollectionsPage implements OnInit {
 
   ngOnInit() {
 
-    this.fetchRecipeItems();
-    const recipesRes = this.aptService.getRecipesList();
-    recipesRes.snapshotChanges().subscribe(res => {
-      this.recipes = [];
-      res.forEach(item => {
-        const myRecipeItem = item.payload.toJSON();
+    this.localDBService.getCollectionList().then(res => {
+      this.savedCollectionsListRef = res;
+      // todo iterare su tutte le collezioni estraendo le info necessarie avendo l'array di tutti i nomi di collezioni
+      console.log("lista collezioni: ", this.savedCollectionsListRef)
 
-        // TODO testing di aggiunta ricetta singola
-        //this.localDBService.addRecipeToCollectionItem("CollezioneA", myRecipeItem)
-        //this.addRecipeToCollectionItem("MiaCollezione", myRecipeItem)
-        //this.deleteRecipeFromCollectionItem("CollezioneA", myRecipeItem)
-        // @ts-ignore
-        myRecipeItem.$key = item.key;
-
-        // get title image
-        this.pathReference = firebase.storage().ref().child(item.key + '/' + item.key + '_0.jpg').getDownloadURL().then(url => {
-          this.imgs = url;
-          // @ts-ignore
-          myRecipeItem.title_image = this.imgs;
-        });
-        // @ts-ignore
-        this.recipes.push(myRecipeItem as RecipeItem);
-      });
-
-      // TODO some testing
-      let collectionItem = new CollectionItem()
-      collectionItem.recipeList = this.recipes
-      collectionItem.recipeNumber = this.recipes.length
-      //this.localDBService.addCollectionItem("CollezioneB", collectionItem)
-      this.localDBService.deleteCollectionItem("CollezioneB")
-      //this.localDBService.addCollectionItem("CollezioneA", collectionItem)
-      //this.addCollectionItem("MiaCollezione", collectionItem)
-      //this.deleteCollectionItem("MiaCollezione")
-      //this.addCollectionItem("CollezioneA", collectionItem)
-      this.localDBService.getCollectionItem("MiaCollezione").then(
-          (item) => console.log('Il contenuto della collezione Mia è ', item)
-      );
-      this.localDBService.getCollectionItem("CollezioneA").then(
-          (item) => console.log('Il contenuto della collezione A è ', item)
-      );
-      this.localDBService.getCollectionItem("CollezioneB").then(
-          (item) => console.log('Il contenuto della collezione B è ', item)
-      );
-    });
-
+      this.collections = [];
+      // looping through all collections fetched
+      for (let coll of res){
+        this.localDBService.getCollectionItem(coll).then(item => {
+          this.collections.push(item)
+        })
+      }
+    })
   }
 
   openRecipe(recipeP: any) {
@@ -87,7 +54,6 @@ export class CollectionsPage implements OnInit {
       }
     };
     this.router.navigate(['view-recipe'], navigationExtras);
-
   }
 
   fetchRecipeItems() {
@@ -99,10 +65,6 @@ export class CollectionsPage implements OnInit {
     if (window.confirm('Do you really want to delete?')) {
       this.aptService.deleteRecipe(id);
     }
-  }
-
-  fetchCollectionItems(){
-    //this.localDBService.getAllCollectionItems()
   }
 
 }

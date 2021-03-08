@@ -9,21 +9,19 @@
   <br>
   <ion-list class="ios list-ios hydrated">
 
-    <ion-item *ngFor="let recipeItem of recipes" class="user-list">
+    <ion-item *ngFor="let collectionItem of collections" class="user-list">
       <ion-card>
         <ion-card-header>
-          <ion-card-title>{{recipeItem.name}}</ion-card-title>
+          <ion-card-title>{{collectionItem.name}}</ion-card-title>
         </ion-card-header>
 
-        <ion-card-content (click)="openRecipe(recipeItem)">
+        <ion-card-content (click)="openRecipe(collectionItem)">
           <div class="card">
-            <!-- todo cambia qui ci va l'immagine -->
-            <img src="{{recipeItem.title_image}}"/>
+            <img src="{{collectionItem.coverPhoto}}"/>
           </div>
           <br>
           <div>
-            <!-- todo cambia recipeItem.recipeTime per mostrare quante ricette ci sono dentro alla collection -->
-            <ion-icon name="archive"></ion-icon> {{recipeItem.recipeTime}} recipes
+            <ion-icon name="archive"></ion-icon> {{collectionItem.recipeNumber}} recipes
           </div>
         </ion-card-content>
       </ion-card>
