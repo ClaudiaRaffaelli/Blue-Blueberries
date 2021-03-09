@@ -1,38 +1,10 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>presentation</ion-title>
-  </ion-toolbar>
-</ion-header>
 
-<ion-content>
+<ion-content *ngIf="recipes">
+  <ion-item lines="none"><h1>Picks for you</h1></ion-item>
   <ion-slides [options]="option" class="ion-margin-top">
-    <ion-slide>
-      <ion-card>
-        <img src="../../assets/img/AlooGobi.jpg">
-      </ion-card>
-    </ion-slide>
-
-    <ion-slide>
-      <ion-card>
-        <img src="../../assets/img/AlooGobi.jpg">
-      </ion-card>
-    </ion-slide>
-
-    <ion-slide>
-      <ion-card>
-        <img src="../../assets/img/AlooGobi.jpg">
-      </ion-card>
-    </ion-slide>
-
-    <ion-slide>
-      <ion-card>
-        <img src="../../assets/img/AlooGobi.jpg">
-      </ion-card>
-    </ion-slide>
-
-    <ion-slide>
-      <ion-card>
-        <img src="../../assets/img/AlooGobi.jpg">
+    <ion-slide *ngFor="let recipeItem of recipes">
+      <ion-card (click)="openRecipe(recipeItem)">
+        <img src="{{recipeItem.title_image}}">
       </ion-card>
     </ion-slide>
   </ion-slides>
