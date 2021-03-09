@@ -27,6 +27,10 @@ const routes: Routes = [
     path: 'collections',
     loadChildren: () => import('./collections/collections.module').then( m => m.CollectionsPageModule)
   },
+  {
+    path: 'view-collection',
+    loadChildren: () => import('./view-collection/view-collection.module').then( m => m.ViewCollectionPageModule)
+  },
 ];
 
 @NgModule({

@@ -39,6 +39,7 @@ export class CollectionItemService {
 
   // Local storage methods for handling personalized collections
   addCollectionItem(collectionName, recipeItemList){
+    // todo numero massimo di collezioni creabili
     // key: collectionName (string), value: list of recipeItem objects
     // the list of recipeItem is first converted into a string
     let json = JSON.stringify(recipeItemList);
@@ -99,7 +100,7 @@ export class CollectionItemService {
         });
       }
 
-      // pushing the new recipe
+      // pushing the new recipe key
       value.recipeList.push(recipe);
       // updating the number of recipes
       value.recipeNumber = value.recipeList.length
@@ -110,9 +111,9 @@ export class CollectionItemService {
   }
 
   // Get cover image from recipe
-  async getCoverImage(recipe): Promise<any> {
+  async getCoverImage(recipeKey): Promise<any> {
 
-    const path = recipe.$key + "/" + recipe.$key + "_0.jpg";
+    const path = recipeKey + "/" + recipeKey + "_0.jpg";
     const urlSrc = await firebase.storage().ref().child(path).getDownloadURL().then(url => {
       return url;
     });

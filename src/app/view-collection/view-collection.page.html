@@ -1,0 +1,29 @@
+<ion-content>
+  <br>
+
+  <ion-list *ngIf="recipes" class="ios list-ios hydrated">
+    <ion-item *ngFor="let recipeItem of recipes" class="user-list">
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>{{recipeItem.name}}</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content (click)="openRecipe(recipeItem)">
+          <div class="card">
+            <img src="{{recipeItem.title_image}}"/>
+          </div>
+          <br>
+          <ion-item size="small">
+            <ion-icon name="timer-outline"></ion-icon> {{recipeItem.recipeTime}} min
+          </ion-item>
+          <br>
+          <ion-item>
+            Difficulty: {{recipeItem.recipeDifficulty}}
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+    </ion-item>
+  </ion-list>
+
+
+</ion-content>
