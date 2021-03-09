@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CollectionItem } from '../shared/collectionItem';
-import { AngularFireDatabase, AngularFireList, AngularFireObject } from '@angular/fire/database';
 import { Storage } from '@ionic/storage';
-import {RecipeItem} from "./recipeItem";
 import firebase from 'firebase';
 
 @Injectable({
@@ -13,18 +11,22 @@ import firebase from 'firebase';
 
 export class CollectionItemService {
   public savedCollectionsListRef: string [];
+  pathReference: any;
+  imgs: []; // Title images downloaded from the firebase storage
+  currentCoverImage: any;
 
   constructor(private storage: Storage) {
-    // todo questo è da spostare i collections.page.ts
-    this.fetchCollections().then(res => {
+
+    /*// todo questo è da spostare i collections.page.ts
+    this.getCollectionList().then(res => {
       this.savedCollectionsListRef = res;
       // todo iterare su tutte le collezioni estraendo le info necessarie avendo l'array di tutti i nomi di collezioni
       console.log("lista collezioni: ", this.savedCollectionsListRef)
-    })
+    })*/
 
   }
 
-  fetchCollections(){
+  getCollectionList(){
     // getting the array of collections
     return this.storage.get("CollectionsList").then((item) => {
       // If this is the first time we are fetching collections there is also no collections list and we create it
@@ -37,6 +39,7 @@ export class CollectionItemService {
 
   // Local storage methods for handling personalized collections
   addCollectionItem(collectionName, recipeItemList){
+    // todo numero massimo di collezioni creabili
     // key: collectionName (string), value: list of recipeItem objects
     // the list of recipeItem is first converted into a string
     let json = JSON.stringify(recipeItemList);
@@ -73,7 +76,7 @@ export class CollectionItemService {
       let value = valueStr ? JSON.parse(valueStr) : {};
 
       // removing the item from the list
-      //todo non funziona
+      //todo non funziona granché bene, non rimuove tutto
       value = value.filter(v => v !== collectionName);
 
       // Save the entire data again
@@ -81,21 +84,23 @@ export class CollectionItemService {
     });
   }
 
-  addRecipeToCollectionItem(collectionName, recipe){
+  async addRecipeToCollectionItem(collectionName, recipe){
     // TODO gestire no duplicati di ricetta (controllare che recipe non sia già nella collectionName)
+
     // Get the entire data
-    this.storage.get(collectionName).then(valueStr => {
+    await this.storage.get(collectionName).then(async valueStr => {
       let value = valueStr ? JSON.parse(valueStr) : {};
 
       // if this is the first time we add a recipe to the collection, we take the first image of the collection
       // as cover photo
       if (value.recipeNumber == 0){
-        let path = recipe.$key + '/' + recipe.$key + '_0.jpg';
-        value.coverPhoto = firebase.storage().ref().child(path).getDownloadURL().then(url => {
-          return url;
+        value.coverPhoto = await this.getCoverImage(recipe).then(async res => {
+          value.coverPhoto = res;
+          return res;
         });
       }
-      // pushing the new recipe
+
+      // pushing the new recipe key
       value.recipeList.push(recipe);
       // updating the number of recipes
       value.recipeNumber = value.recipeList.length
@@ -103,6 +108,17 @@ export class CollectionItemService {
       // Save the entire data again
       this.storage.set(collectionName, JSON.stringify(value));
     });
+  }
+
+  // Get cover image from recipe
+  async getCoverImage(recipeKey): Promise<any> {
+
+    const path = recipeKey + "/" + recipeKey + "_0.jpg";
+    const urlSrc = await firebase.storage().ref().child(path).getDownloadURL().then(url => {
+      return url;
+    });
+    return urlSrc;
+
   }
 
   deleteRecipeFromCollectionItem(collectionName, recipe){
@@ -120,51 +136,4 @@ export class CollectionItemService {
       this.storage.set(collectionName, JSON.stringify(value));
     });
   }
-
-  /*getAllCollectionItems(){
-    // returns a list of collections
-    this.storage.forEach( (value, key, index) => {
-      console.log("This is the value", value)
-      console.log("from the key", key)
-      console.log("Index is", index)
-    })
-    //this.storage.forEach()
-  }*/
-
-  /*// Create
-  createCollectionItem(apt: CollectionItem) {
-    this.storage.set('AllCollection', ['Apple', 2, 'Orange', 3, 4, 'Banana']);
-    return this.savedRecipesListRef.set(apt.$key, {
-      name: apt.name,
-      recipeList: apt.recipeList,
-      recipeNumber: apt.recipeNumber
-    });
-  }
-
-  // Get Single
-  getRecipe(id: string) {
-    this.savedRecipesRef = this.db.object('/recipes/' + id);
-    return this.savedRecipesRef;
-  }
-
-  // Get List
-  getRecipesList() {
-    this.savedRecipesListRef = this.db.list('/recipes');
-    return this.savedRecipesListRef;
-  }
-
-  // Update
-  updateRecipe(id, apt: CollectionItem) {
-    return this.savedRecipesRef.update({
-      name: apt.name,
-      recipeText: apt.recipeText,
-      recipeTime: apt.recipeTime
-    });
-  }
-
-  // Delete
-  deleteRecipe(id: string) {
-    this.savedRecipesRef = this.db.object('/recipes/' + id);
-    this.savedRecipesRef.remove();
-  }*/
 }
