@@ -1,22 +1,47 @@
+<!-- Default back button -->
+<ion-header>
+  <ion-toolbar>
+    <br>
+    <ion-grid color="secondary">
+      <ion-row class="ion-justify-content-between">
+          <ion-buttons>
+            <ion-back-button defaultHref="home" text="" icon="chevron-back-outline"></ion-back-button>
+          </ion-buttons>
+        <ion-buttons>
+          <ion-icon (click)="toggleTimer()" name="stopwatch-outline" size="large" [color]="timerState === 'start' ? 'primary' : 'dark'"></ion-icon>
+        </ion-buttons>
+      </ion-row>
+      <ion-row class="ion-justify-content-center" *ngIf="timerToggle">
+        <ion-item lines="none">
+          <ion-icon (click)="startTimer()" *ngIf="timerState === 'stop'" size="large" color="dark" name="play-circle-outline"></ion-icon>
+          <ion-icon (click)="stopTimer()" *ngIf="timerState === 'start'" size="large" color="primary" name="stop-outline"></ion-icon>
+          <ion-label [color]="timerState === 'start' ? 'primary' : 'dark'"> {{timerHour}}:{{time | async}}</ion-label>
+        </ion-item>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>
+
 
 <ion-content>
-  <br>
+  <div class="card">
+    <img id="titleImage" src="{{this.recipeImages[this.data.$key + '_' + (this.currentImg)]}}"/>
+  </div>
   <ion-card>
     <ion-card-header>
       <ion-card-title>{{data.name}}</ion-card-title>
     </ion-card-header>
 
+
     <ion-card-content>
-      <div class="card">
-        <img id="titleImage" src="{{this.recipeImages[this.data.$key + '_' + (this.currentImg)]}}"/>
-      </div>
       <br>
 
       <div>
-        <ion-item> <ion-icon name="timer-sharp"></ion-icon> {{data.recipeTime}} min </ion-item>
+        <ion-item> <ion-icon name="timer-sharp"></ion-icon> Ready in {{data.recipeTime}} mins </ion-item>
         <ion-item> Difficulty: {{data.recipeDifficulty}} </ion-item>
           <ul *ngFor="let ingredient of data.ingredients | keyvalue">
-            <li *ngIf="ingredient.value.selected">{{ingredient.value.dose}} {{ingredient.value.unit}} {{ingredient.key.toLowerCase()}}</li>
+            <li *ngIf="ingredient.value.selected && ingredient.value.dose!=0">{{ingredient.value.dose}} {{ingredient.value.unit}} {{ingredient.key.toLowerCase()}}</li>
+            <li *ngIf="ingredient.value.selected && ingredient.value.dose==0">{{ingredient.value.unit}} {{ingredient.key.toLowerCase()}}</li>
           </ul>
       </div>
     </ion-card-content>

@@ -1,10 +1,6 @@
 <ion-content>
   <br>
 
-
-
-
-
   <ion-list *ngIf="recipes" class="ios list-ios hydrated">
     <ion-item *ngFor="let recipeItem of recipes" class="user-list">
       <ion-card>
@@ -18,7 +14,7 @@
           </div>
           <br>
           <ion-item size="small">
-            <ion-icon name="timer-outline"></ion-icon> {{recipeItem.recipeTime}} min
+            Ready in {{recipeItem.recipeTime}} mins
           </ion-item>
           <br>
           <ion-item>

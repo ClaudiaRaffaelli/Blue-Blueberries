@@ -18,14 +18,6 @@ export class HomePage implements OnInit {
   recipesRes: any;
   query = {}; // query from search-page
 
-  // Options for images slider
-  option = {
-    slidesPerView: 1.2,
-    centeredSlides: true,
-    loop: false,
-    spaceBetween: 2,
-  };
-
   constructor(
     private aptService: RecipeItemService,
     private route: ActivatedRoute,
@@ -119,6 +111,7 @@ export class HomePage implements OnInit {
           }
 
         });
+        console.log(this.recipes);
       });
     }
   });

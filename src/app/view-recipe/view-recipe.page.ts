@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import firebase from 'firebase';
 import {RecipeItem} from '../shared/recipeItem';
 import {RecipeItemService} from '../shared/recipe-item.service';
-import {waitForAsync} from '@angular/core/testing';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'app-view-recipe',
@@ -18,6 +18,14 @@ export class ViewRecipePage implements OnInit {
   pathReference: any;
   currentImg: number;
   recipeTextSteps: [];
+  // timer parameters
+  time: BehaviorSubject<string> = new BehaviorSubject('00:00');
+  timer: number; // in seconds
+  interval;
+  duration = 0; // starting time (in minutes)
+  timerHour = 0;
+  timerState: 'start' | 'stop' = 'stop'; // it can be either start or stop
+  timerToggle = false;
 
   // Options for images slider
   option = {
@@ -101,9 +109,45 @@ export class ViewRecipePage implements OnInit {
     return urlSrc;
   }
 
-  // tslint:disable-next-line:use-lifecycle-interface
-  ngAfterViewInit() {
+  startTimer(){
+    this.timerState = 'start';
+    clearInterval(this.interval);
+    this.timer = this.duration * 60;
+    this.updateTimeValue();
+    this.interval = setInterval( () => {
+      this.updateTimeValue();
+    }, 1000); // 1000 means every second
+  }
 
+  stopTimer(){
+    clearInterval(this.interval);
+    this.time.next('00:00');
+    this.timerState = 'stop';
+  }
+
+  updateTimeValue(){
+    let minutes: any = this.timer / 60;
+    let seconds: any = this.timer % 60;
+
+    minutes = String('0' + Math.floor(minutes)).slice(-2);
+    seconds = String('0' + Math.floor(seconds)).slice(-2);
+
+    const text = minutes + ':' + seconds;
+    this.time.next(text);
+
+    ++this.timer;
+    if (this.timer > 3600){ // 99 minutes
+      this.timerHour++;
+      this.startTimer();
+    }
+  }
+
+  setTimer(event){
+    this.duration = event.target.value;
+  }
+
+  toggleTimer(){
+    this.timerToggle = !this.timerToggle;
   }
 }
 

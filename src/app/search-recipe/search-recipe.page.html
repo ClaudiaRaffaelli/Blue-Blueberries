@@ -15,7 +15,7 @@
     <h1><ion-item lines="none"><b>Advanced filters</b></ion-item></h1>
       <ion-card>
           <ion-item lines="none">
-            Max time required<ion-checkbox checked="false" (click)="toggleRequiredTime()" color="light" slot="end"></ion-checkbox>
+            Max time required<ion-toggle checked="false" (click)="toggleRequiredTime()" color="secondary" slot="end"></ion-toggle>
           </ion-item>
         <ion-list *ngIf="searchRequiredTime" lines="none">
           <ion-item>
@@ -28,7 +28,7 @@
 
       <ion-card>
         <ion-item lines="none">
-          Available ingredients <ion-checkbox checked="false" (click)="toggleSearchAvailableIngredients()" color="light" slot="end"></ion-checkbox>
+          Available ingredients <ion-toggle checked="false" (click)="toggleSearchAvailableIngredients()" color="secondary" slot="end"></ion-toggle>
         </ion-item>
         <!-- SEARCH BAR -->
         <ion-searchbar *ngIf="searchAvailableIngredients" (ionChange)="_ionChangeAvailable($event)" debounce="250" animated placeholder="Eggs, milk, ...">
@@ -50,7 +50,7 @@
       <ion-card>
         <!-- SEARCH BAR -->
         <ion-item lines="none">
-          Undesired ingredients <ion-checkbox checked="false" (click)="toggleSearchUndesiredIngredients()" color="light" slot="end"></ion-checkbox>
+          Undesired ingredients <ion-toggle checked="false" (click)="toggleSearchUndesiredIngredients()" color="secondary" slot="end"></ion-toggle>
         </ion-item>
         <ion-searchbar *ngIf="searchUndesiredIngredients" (ionChange)="_ionChangeUndesired($event)" debounce="250" animated placeholder="Mushrooms, Rice, ...">
         </ion-searchbar>
@@ -68,7 +68,7 @@
           <!-- DIFFICULTY -->
       <ion-card>
         <ion-item lines="none">
-          Difficulty <ion-checkbox checked="false" (click)="toggleSearchDifficulty()" color="light" slot="end"></ion-checkbox>
+          Difficulty <ion-toggle checked="false" (click)="toggleSearchDifficulty()" color="secondary" slot="end"></ion-toggle>
         </ion-item>
           <ion-segment *ngIf="searchDifficulty" (ionChange)="toggleDifficulty($event)" color="dark" value="easy">
             <ion-segment-button value="easy">

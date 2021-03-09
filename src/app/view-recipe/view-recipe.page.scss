@@ -58,3 +58,7 @@ ion-slide{
 .swiper-slide {
   transition: 400ms all ease-in-out;
 }
+
+.background-image{
+  --background: url("../../assets/img/AlooGobi.jpg") 0 0/100% 100% no-repeat;
+}
