@@ -12,7 +12,7 @@ export class RecipeItem {
 
 export class IngredientsDic{
   ingredients: {[key: string]: {selected: boolean; dose: number; unit: string}} = {
-    Mushrooms: {selected: false, dose: 0, unit: 'grams'},
+    Mushrooms: {selected: false, dose: 0, unit: 'grams'}, // the unit parameter is not required to be specified here
     Eggs: {selected: false, dose: 0, unit: ''},
     Milk: {selected: false, dose: 0, unit: 'liters'},
     Potatoes: {selected: false, dose: 0, unit: ''},

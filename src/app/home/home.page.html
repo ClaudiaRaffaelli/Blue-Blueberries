@@ -1,7 +1,7 @@
 <ion-content color="light">
-  <ion-list *ngIf="dataFetched" lines="none" class="ios list-ios hydrated">
+  <ion-list *ngIf="dataFetched" lines="none" class="ios list-ios hydrated ion-justify-content-center">
     <ion-item *ngFor="let recipeItem of recipes" class="user-list" color="light">
-      <ion-card style="border-radius: 25px;">
+      <ion-card style="border-radius: 25px; margin: 5px !important;">
         <ion-card-header>
           <ion-card-title>{{recipeItem.name}}</ion-card-title>
         </ion-card-header>

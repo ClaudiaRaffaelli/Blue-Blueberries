@@ -4,6 +4,7 @@ import firebase from 'firebase';
 import {RecipeItem} from '../shared/recipeItem';
 import {RecipeItemService} from '../shared/recipe-item.service';
 import {BehaviorSubject} from 'rxjs';
+import * as Bounce from 'bounce.js';
 
 @Component({
   selector: 'app-view-recipe',
@@ -12,7 +13,7 @@ import {BehaviorSubject} from 'rxjs';
 })
 export class ViewRecipePage implements OnInit {
   data: any;
-  recipeImages: {[id: string]: string};
+  recipeImages: { [id: string]: string };
   recipe: any;
   img: any;
   pathReference: any;
@@ -50,7 +51,7 @@ export class ViewRecipePage implements OnInit {
         this.currentImg = 0; // images on database are indexed from 0 to n
 
         // set difficulty icon's color
-        switch (this.data.recipeDifficulty){
+        switch (this.data.recipeDifficulty) {
           case 'easy':
             this.difficultyColor = 'success';
             break;
@@ -71,13 +72,13 @@ export class ViewRecipePage implements OnInit {
         // Get all recipe's steps (they are separated with <endStep> keywords)
         const recipeBlocks = this.data.recipeText.split('<endStep>');
         // tslint:disable-next-line:forin
-        for (let j = 0; j < recipeBlocks.length; j++){ // for each step
+        for (let j = 0; j < recipeBlocks.length; j++) { // for each step
           const innerBlocks = recipeBlocks[j].split('<endText>');   // separate the text from the images => text <endText> <img> <img> ...
           const text = innerBlocks[0]; // get the text in the current step (block)
 
           const recipeText = document.getElementById('recipeText');
           const ionCard = document.createElement('ion-card');
-          ionCard.setAttribute('style', 'border-radius: 25px;');
+          ionCard.setAttribute('style', 'border-radius: 25px; margin-top: 5px !important;');
           const ionCardHeader = document.createElement('ion-card-header');
           const ionCardTitle = document.createElement('ion-card-content');
           const ionCardH1 = document.createElement('h1');
@@ -94,12 +95,12 @@ export class ViewRecipePage implements OnInit {
           ionCard.appendChild(ionCardContent);
           recipeText.appendChild(ionCard);
 
-          if (innerBlocks.length > 1){ // The last block may not have images so innerblock[1] will be undefined
+          if (innerBlocks.length > 1) { // The last block may not have images so innerblock[1] will be undefined
             const imagesNumber = (innerBlocks[1].match(/<img>/g) || []).length; // count number of '<img>' substrings in innerBlock[1]
             const slides = document.createElement('ion-slides');
             slides.className = 'ion-margin-top';
             slides.options = this.option;
-            for (let i = 0; i < imagesNumber; i++){ // Insert all the images in this block
+            for (let i = 0; i < imagesNumber; i++) { // Insert all the images in this block
               const slide = document.createElement('ion-slide');
               const imgCard = document.createElement('ion-card');
               imgCard.className = 'recipeImageCard';
@@ -122,8 +123,8 @@ export class ViewRecipePage implements OnInit {
     });
   }
 
-  ngOnInit(){
-    if (this.data === undefined){
+  ngOnInit() {
+    if (this.data === undefined) {
       this.router.navigate(['home']);
     }
   }
@@ -137,23 +138,25 @@ export class ViewRecipePage implements OnInit {
     return urlSrc;
   }
 
-  startTimer(){
+  startTimer() {
     this.timerState = 'start';
+    this.bounceTimer('timerPlay');
     clearInterval(this.interval);
     this.timer = this.duration * 60;
     this.updateTimeValue();
-    this.interval = setInterval( () => {
+    this.interval = setInterval(() => {
       this.updateTimeValue();
     }, 1000); // 1000 means every second
   }
 
-  stopTimer(){
+  stopTimer() {
     clearInterval(this.interval);
     this.time.next('00:00');
     this.timerState = 'stop';
+    this.bounceTimer('timerStop');
   }
 
-  updateTimeValue(){
+  updateTimeValue() {
     let minutes: any = this.timer / 60;
     let seconds: any = this.timer % 60;
 
@@ -163,20 +166,38 @@ export class ViewRecipePage implements OnInit {
     const text = minutes + ':' + seconds;
     this.time.next(text);
 
+    if ((this.timer) % 10 === 0 ){
+      this.bounceTimer('timer');
+    }
     ++this.timer;
-    if (this.timer > 3600){ // 99 minutes
+    if (this.timer > 3600) { // 99 minutes
       this.timerHour++;
       this.startTimer();
     }
   }
 
-  setTimer(event){
+  setTimer(event) {
     this.duration = event.target.value;
   }
 
-  toggleTimer(){
+  toggleTimer() {
     this.timerToggle = !this.timerToggle;
+    this.bounceTimer('timer');
   }
+
+  bounceTimer(id: string) {
+    const bounce = new Bounce();
+    bounce
+        .scale({
+          from: {x: 1, y: 1},
+          to: {x: 3, y: 2},
+          easing: 'sway',
+          duration: 500,
+          delay: 50,
+        })
+        .applyTo(document.getElementById(id));
+  }
+
 }
 
 

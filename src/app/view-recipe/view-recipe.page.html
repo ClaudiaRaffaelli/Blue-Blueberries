@@ -7,14 +7,14 @@
             <ion-back-button defaultHref="{{this.lastPage}}" text="" icon="chevron-back-outline"></ion-back-button>
           </ion-buttons>
         <ion-buttons>
-          <ion-icon (click)="toggleTimer()" name="stopwatch-outline" size="large" [color]="timerState === 'start' ? 'success' : 'medium'"></ion-icon>
+          <ion-icon id="timer" (click)="toggleTimer()" name="stopwatch-outline" size="large" [color]="timerState === 'start' ? 'success' : 'tertiary'"></ion-icon>
         </ion-buttons>
       </ion-row>
       <ion-row class="ion-justify-content-center" *ngIf="timerToggle">
         <ion-item lines="none">
-          <ion-icon (click)="startTimer()" *ngIf="timerState === 'stop'" size="large" color="medium" name="play-circle-outline"></ion-icon>
-          <ion-icon (click)="stopTimer()" *ngIf="timerState === 'start'" size="large" color="success" name="stop-outline"></ion-icon>
-          <ion-label [color]="timerState === 'start' ? 'success' : 'medium'"> {{timerHour}}:{{time | async}}</ion-label>
+          <ion-icon id="timerPlay" (click)="startTimer()" *ngIf="timerState === 'stop'" size="large" color="success" name="play-circle-outline"></ion-icon>
+          <ion-icon id="timerStop" (click)="stopTimer()" *ngIf="timerState === 'start'" size="large" color="danger" name="stop-outline"></ion-icon>
+          <ion-label [color]="timerState === 'start' ? 'dark' : 'medium'"> {{timerHour}}:{{time | async}}</ion-label>
         </ion-item>
       </ion-row>
     </ion-grid>
@@ -26,14 +26,14 @@
   <div class="card">
     <img id="titleImage" src="{{this.recipeImages[this.data.$key + '_' + (this.currentImg)]}}"/>
   </div>
-  <ion-card style="border-radius: 25px;">
+  <ion-card style="border-radius: 25px; margin-top: -50px">
     <ion-card-header color="light">
       <ion-card-title>{{data.name}}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-list lines="none">
-        <ion-item><ion-icon slot="start" color="primary" name="restaurant-outline" ></ion-icon> Ready in {{data.recipeTime}} mins </ion-item>
-        <ion-item><ion-icon slot="start" [color]="difficultyColor" name="flame-outline"></ion-icon> <ion-label>Difficulty: {{data.recipeDifficulty}} </ion-label></ion-item>
+        <ion-item><ion-icon slot="start" color="primary" name="restaurant-outline" ></ion-icon>Ready in: <b> {{data.recipeTime}} mins </b></ion-item>
+        <ion-item><ion-icon slot="start" [color]="difficultyColor" name="flame-outline"></ion-icon> <ion-label>Difficulty: <b>{{data.recipeDifficulty}}</b> </ion-label></ion-item>
         <ion-item *ngIf="data.videoUrl !== ''" href="{{data.videoUrl}}"><ion-icon slot="start" color="danger" name="logo-youtube"></ion-icon> Video available </ion-item>
       </ion-list>
     </ion-card-content>
@@ -47,6 +47,7 @@
       </ul>
     </ion-card-content>
   </ion-card>
+
 
   <div id="recipeText">
   </div>
