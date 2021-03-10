@@ -16,13 +16,15 @@ export class PresentationPage implements OnInit {
   recipeKeys: [];
   recipesRes: any;
   imgs: []; // Title images downloaded from the firebase storage
+  suggestionsNumber = 3; // suggested recipes
+  dataFetched: boolean; // flag that indicates when all recipes data have been downloaded from the database
 
   // Options for images slider
   option = {
-    slidesPerView: 1.5,
+    slidesPerView: 1.2,
     centeredSlides: true,
     loop: false,
-    spaceBetween: 2,
+    spaceBetween: 1,
   };
 
   constructor(
@@ -35,10 +37,10 @@ export class PresentationPage implements OnInit {
   ngOnInit() {
     this.recipesRes = this.aptService.getRecipesList();
     this.recipesRes.snapshotChanges().subscribe(res => {
+      this.dataFetched = false;
       this.recipes = [];
       const rndRes = [];
-      const suggestionsNumber = 3;
-      for (let i = 0; i < suggestionsNumber; i++){
+      for (let i = 0; i < this.suggestionsNumber; i++){
         rndRes.push(res[Math.floor(Math.random() * res.length)]); // push a random element
       }
       rndRes.forEach(item => {
@@ -52,14 +54,16 @@ export class PresentationPage implements OnInit {
           myRecipeItem.title_image = this.imgs;
         });
         this.recipes.push(myRecipeItem as RecipeItem);
-      })
+      });
+      this.dataFetched = true;
     });
   }
 
   openRecipe(recipeP: any){
     const navigationExtras: NavigationExtras = {
       state: {
-        recipe: recipeP
+        recipe: recipeP,
+        lastPage: 'presentation'
       }
     };
     this.router.navigate(['view-recipe'], navigationExtras);

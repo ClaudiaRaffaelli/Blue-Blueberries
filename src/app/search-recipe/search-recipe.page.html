@@ -3,9 +3,9 @@
 
   <ion-content mode="ios">
     <ion-card>
+      <!-- SEARCH BY NAME -->
+      <ion-card-header><b>Search recipe</b></ion-card-header>
       <ion-card-content>
-        <!-- SEARCH BY NAME -->
-        <h1><ion-label color="dark"><b>Search recipe</b></ion-label></h1>
         <ion-searchbar (ionChange)="onChangeName($event)" debounce="250" animated placeholder="Cake, pasta, ...">
         </ion-searchbar>
       </ion-card-content>

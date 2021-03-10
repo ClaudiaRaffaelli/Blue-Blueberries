@@ -1,21 +1,20 @@
 <!-- Default back button -->
 <ion-header>
   <ion-toolbar>
-    <br>
     <ion-grid color="secondary">
       <ion-row class="ion-justify-content-between">
           <ion-buttons>
-            <ion-back-button defaultHref="home" text="" icon="chevron-back-outline"></ion-back-button>
+            <ion-back-button defaultHref="{{this.lastPage}}" text="" icon="chevron-back-outline"></ion-back-button>
           </ion-buttons>
         <ion-buttons>
-          <ion-icon (click)="toggleTimer()" name="stopwatch-outline" size="large" [color]="timerState === 'start' ? 'primary' : 'dark'"></ion-icon>
+          <ion-icon (click)="toggleTimer()" name="stopwatch-outline" size="large" [color]="timerState === 'start' ? 'success' : 'medium'"></ion-icon>
         </ion-buttons>
       </ion-row>
       <ion-row class="ion-justify-content-center" *ngIf="timerToggle">
         <ion-item lines="none">
-          <ion-icon (click)="startTimer()" *ngIf="timerState === 'stop'" size="large" color="dark" name="play-circle-outline"></ion-icon>
-          <ion-icon (click)="stopTimer()" *ngIf="timerState === 'start'" size="large" color="primary" name="stop-outline"></ion-icon>
-          <ion-label [color]="timerState === 'start' ? 'primary' : 'dark'"> {{timerHour}}:{{time | async}}</ion-label>
+          <ion-icon (click)="startTimer()" *ngIf="timerState === 'stop'" size="large" color="medium" name="play-circle-outline"></ion-icon>
+          <ion-icon (click)="stopTimer()" *ngIf="timerState === 'start'" size="large" color="success" name="stop-outline"></ion-icon>
+          <ion-label [color]="timerState === 'start' ? 'success' : 'medium'"> {{timerHour}}:{{time | async}}</ion-label>
         </ion-item>
       </ion-row>
     </ion-grid>
@@ -27,23 +26,25 @@
   <div class="card">
     <img id="titleImage" src="{{this.recipeImages[this.data.$key + '_' + (this.currentImg)]}}"/>
   </div>
-  <ion-card>
-    <ion-card-header>
+  <ion-card style="border-radius: 25px;">
+    <ion-card-header color="light">
       <ion-card-title>{{data.name}}</ion-card-title>
     </ion-card-header>
-
-
     <ion-card-content>
-      <br>
-
-      <div>
-        <ion-item>Ready in {{data.recipeTime}} mins </ion-item>
-        <ion-item>Difficulty: {{data.recipeDifficulty}} </ion-item>
-          <ul *ngFor="let ingredient of data.ingredients | keyvalue">
-            <li *ngIf="ingredient.value.selected && ingredient.value.dose!=0">{{ingredient.value.dose}} {{ingredient.value.unit}} {{ingredient.key.toLowerCase()}}</li>
-            <li *ngIf="ingredient.value.selected && ingredient.value.dose==0">{{ingredient.value.unit}} {{ingredient.key.toLowerCase()}}</li>
-          </ul>
-      </div>
+      <ion-list lines="none">
+        <ion-item><ion-icon slot="start" color="primary" name="restaurant-outline" ></ion-icon> Ready in {{data.recipeTime}} mins </ion-item>
+        <ion-item><ion-icon slot="start" [color]="difficultyColor" name="flame-outline"></ion-icon> <ion-label>Difficulty: {{data.recipeDifficulty}} </ion-label></ion-item>
+        <ion-item *ngIf="data.videoUrl !== ''" href="{{data.videoUrl}}"><ion-icon slot="start" color="danger" name="logo-youtube"></ion-icon> Video available </ion-item>
+      </ion-list>
+    </ion-card-content>
+    <ion-card-header>
+      <h1><ion-icon color="tertiary" name="reader-outline"></ion-icon> Ingredients</h1>
+    </ion-card-header>
+    <ion-card-content>
+      <ul *ngFor="let ingredient of data.ingredients | keyvalue">
+        <li *ngIf="ingredient.value.selected && ingredient.value.dose!=0">{{ingredient.value.dose}} {{ingredient.value.unit}} {{ingredient.key.toLowerCase()}}</li>
+        <li *ngIf="ingredient.value.selected && ingredient.value.dose==0">{{ingredient.value.unit}} {{ingredient.key.toLowerCase()}}</li>
+      </ul>
     </ion-card-content>
   </ion-card>
 

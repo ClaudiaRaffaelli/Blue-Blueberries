@@ -80,7 +80,8 @@ export class AddRecipePage implements OnInit {
       recipeDifficulty: [''],
       recipeTime: [''],
       ingredientsForm: new IngredientsDic(),
-      imgsCount: 0
+      imgsCount: 0,
+      videoUrl: ''
     });
     this.imagesUploaded = [];
     // This variable is needed for the searchbar functionality
@@ -97,7 +98,8 @@ export class AddRecipePage implements OnInit {
       recipeDifficulty: [''],
       recipeTime: [''],
       ingredientsForm: new IngredientsDic(),
-      imgsCount: 0
+      imgsCount: 0,
+      videoUrl: ''
     });
     this.imagesUploaded = [];
     this.ingredients = this.recipeForm.value.ingredientsForm.ingredients;
@@ -111,7 +113,7 @@ export class AddRecipePage implements OnInit {
       console.log(this.recipeForm.value);
       this.aptService.createRecipeItem(this.recipeForm.value).then(res => {
         this.recipeForm.reset();
-        this.router.navigate(['/home']);
+        this.router.navigate(['/presentation']);
       })
         .catch(error => console.log(error));
     }

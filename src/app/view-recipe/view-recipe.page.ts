@@ -18,6 +18,7 @@ export class ViewRecipePage implements OnInit {
   pathReference: any;
   currentImg: number;
   recipeTextSteps: [];
+  difficultyColor: string;
   // timer parameters
   time: BehaviorSubject<string> = new BehaviorSubject('00:00');
   timer: number; // in seconds
@@ -25,7 +26,9 @@ export class ViewRecipePage implements OnInit {
   duration = 0; // starting time (in minutes)
   timerHour = 0;
   timerState: 'start' | 'stop' = 'stop'; // it can be either start or stop
-  timerToggle = false;
+  timerToggle: boolean;
+
+  lastPage: string;
 
   // Options for images slider
   option = {
@@ -36,13 +39,28 @@ export class ViewRecipePage implements OnInit {
   };
 
   constructor(private aptService: RecipeItemService, private route: ActivatedRoute, private router: Router) {
+    this.timerToggle = false;
     this.route.queryParams.subscribe(async params => {
       if (this.router.getCurrentNavigation().extras.state) {
         this.data = this.router.getCurrentNavigation().extras.state.recipe;
+        this.lastPage = this.router.getCurrentNavigation().extras.state.lastPage;
 
         document.getElementById('recipeText').textContent = ' '; // clear previous recipe
         this.recipeImages = {};
         this.currentImg = 0; // images on database are indexed from 0 to n
+
+        // set difficulty icon's color
+        switch (this.data.recipeDifficulty){
+          case 'easy':
+            this.difficultyColor = 'success';
+            break;
+          case 'medium':
+            this.difficultyColor = 'warning';
+            break;
+          case 'hard':
+            this.difficultyColor = 'danger';
+            break;
+        }
 
         // this.recipeTextSteps = this.data.recipeText.split('<endStep>');
         // Set title image
@@ -59,9 +77,20 @@ export class ViewRecipePage implements OnInit {
 
           const recipeText = document.getElementById('recipeText');
           const ionCard = document.createElement('ion-card');
+          ionCard.setAttribute('style', 'border-radius: 25px;');
+          const ionCardHeader = document.createElement('ion-card-header');
+          const ionCardTitle = document.createElement('ion-card-content');
+          const ionCardH1 = document.createElement('h1');
           const ionCardContent = document.createElement('ion-card-content');
+          ionCardH1.textContent = 'Step ' + (j + 1);
+          ionCardTitle.appendChild(ionCardH1);
+          ionCardHeader.appendChild(ionCardTitle);
+          ionCardHeader.setAttribute('color', 'light');
+          ionCardHeader.setAttribute('font-color', 'warning');
+
           // @ts-ignore
           ionCardContent.textContent = text; // place the text in a ion-card-content tag
+          ionCard.appendChild(ionCardHeader);
           ionCard.appendChild(ionCardContent);
           recipeText.appendChild(ionCard);
 
@@ -71,7 +100,6 @@ export class ViewRecipePage implements OnInit {
             slides.className = 'ion-margin-top';
             slides.options = this.option;
             for (let i = 0; i < imagesNumber; i++){ // Insert all the images in this block
-
               const slide = document.createElement('ion-slide');
               const imgCard = document.createElement('ion-card');
               imgCard.className = 'recipeImageCard';

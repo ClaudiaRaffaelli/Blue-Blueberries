@@ -21,7 +21,8 @@ export class RecipeItemService {
       recipeDifficulty: apt.recipeDifficulty,
       recipeTime: apt.recipeTime,
       ingredients: apt.ingredientsForm.ingredients,
-      imgsCount: apt.imgsCount
+      imgsCount: apt.imgsCount,
+      videoUrl: apt.videoUrl
     });
   }
 

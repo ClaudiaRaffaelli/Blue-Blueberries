@@ -17,6 +17,7 @@ export class HomePage implements OnInit {
   imgs: []; // Title images downloaded from the firebase storage
   recipesRes: any;
   query = {}; // query from search-page
+  dataFetched: boolean; // flag that indicates when all recipes data have been downloaded from the database
 
   constructor(
     private aptService: RecipeItemService,
@@ -28,6 +29,7 @@ export class HomePage implements OnInit {
 
       this.recipesRes = this.aptService.getRecipesList();
       this.recipesRes.snapshotChanges().subscribe(res => {
+        this.dataFetched = false;
         this.recipes = [];
         res.forEach(item => {
           const myRecipeItem = item.payload.toJSON();
@@ -111,7 +113,7 @@ export class HomePage implements OnInit {
           }
 
         });
-        console.log(this.recipes);
+        this.dataFetched = true;
       });
     }
   });
@@ -119,29 +121,14 @@ export class HomePage implements OnInit {
 
 
   ngOnInit() {
-    // const myIngredients = new IngredientsDic();
-    // const tortaAlleMele = new IngredientsDic();
-    //
-    // myIngredients.ingredients['apple'] = true;
-    // tortaAlleMele.ingredients['apple'] = true;
-    // //console.log(myIngredients.ingredients);
-    //
-    // for (const key in myIngredients.ingredients){
-    //   if ( !myIngredients.ingredients[key] && tortaAlleMele.ingredients[key]){
-    //     console.log('Non puoi farla');
-    //     break;
-    //   }
-    // }
-
-    // this.fetchRecipeItems();
-
   }
 
 
   openRecipe(recipeP: any){
     const navigationExtras: NavigationExtras = {
       state: {
-        recipe: recipeP
+        recipe: recipeP,
+        lastPage: 'home'
       }
     };
     this.router.navigate(['view-recipe'], navigationExtras);
