@@ -19,8 +19,9 @@
           </ion-item>
         <ion-list *ngIf="searchRequiredTime" lines="none">
           <ion-item>
-            <ion-icon slot="start" name="time-outline"></ion-icon><ion-range min="0" max="120" step="5" value="120" (ionChange)="timeRequiredChange($event)"></ion-range>
-            {{maxRequiredTime}} min.
+            <ion-label>Time</ion-label>
+            <ion-datetime *ngIf="this.platform.is('desktop')" mode="ios" (ionChange)="timeRequiredChange($event)" minuteValues="0,5,10,15,30,45,50" displayFormat="HH:mm" pickerFormat="HH mm" value="00:00"></ion-datetime>
+            <ion-datetime *ngIf="this.platform.is('android')" mode="md" (ionChange)="timeRequiredChange($event)" minuteValues="0,5,10,15,30,45,50" displayFormat="HH:mm" pickerFormat="HH mm" value="00:00"></ion-datetime>
           </ion-item>
         </ion-list>
       </ion-card>

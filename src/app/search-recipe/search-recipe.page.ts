@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {IngredientsDic} from '../shared/recipeItem';
 import {NavigationExtras, Router} from '@angular/router';
+import {Platform} from '@ionic/angular';
 
 @Component({
   selector: 'app-search-recipe',
@@ -27,7 +28,7 @@ export class SearchRecipePage implements OnInit {
   searchRequiredTime: boolean;
   maxRequiredTime: number;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, public platform: Platform) {
     this.queryRecipeName = '';
     this.difficulty = 'easy';
     this.showAvailableSearchBarResults = false;
@@ -128,7 +129,9 @@ export class SearchRecipePage implements OnInit {
 
   // save the max time required
   timeRequiredChange(event){
-    this.maxRequiredTime = event.target.value;
+    const hoursInMinutes = parseInt(String(event.target.value.split(':')[0] * 60) , 10);
+    const minutes = parseInt(event.target.value.split(':')[1], 10);
+    this.maxRequiredTime = hoursInMinutes + minutes;
   }
 
 
