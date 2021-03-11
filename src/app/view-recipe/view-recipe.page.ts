@@ -5,6 +5,7 @@ import {RecipeItem} from '../shared/recipeItem';
 import {RecipeItemService} from '../shared/recipe-item.service';
 import {BehaviorSubject} from 'rxjs';
 import * as Bounce from 'bounce.js';
+import {Platform} from '@ionic/angular';
 
 @Component({
   selector: 'app-view-recipe',
@@ -25,7 +26,7 @@ export class ViewRecipePage implements OnInit {
   timer: number; // in seconds
   interval;
   duration = 0; // starting time (in minutes)
-  timerHour = 0;
+  timerHour = '';
   timerState: 'start' | 'stop' = 'stop'; // it can be either start or stop
   timerToggle: boolean;
 
@@ -39,7 +40,10 @@ export class ViewRecipePage implements OnInit {
     spaceBetween: 2,
   };
 
-  constructor(private aptService: RecipeItemService, private route: ActivatedRoute, private router: Router) {
+  constructor(private aptService: RecipeItemService,
+              private route: ActivatedRoute,
+              private router: Router,
+              public platform: Platform) {
     this.timerToggle = false;
     this.route.queryParams.subscribe(async params => {
       if (this.router.getCurrentNavigation().extras.state) {
@@ -140,7 +144,6 @@ export class ViewRecipePage implements OnInit {
 
   startTimer() {
     this.timerState = 'start';
-    this.bounceTimer('timerPlay');
     clearInterval(this.interval);
     this.timer = this.duration * 60;
     this.updateTimeValue();
@@ -153,31 +156,34 @@ export class ViewRecipePage implements OnInit {
     clearInterval(this.interval);
     this.time.next('00:00');
     this.timerState = 'stop';
-    this.bounceTimer('timerStop');
   }
 
-  updateTimeValue() {
-    let minutes: any = this.timer / 60;
+  async updateTimeValue() {
+    let minutes: any = (this.timer / 60) % 60;
+    let hour: any = (this.timer / 60) / 60;
     let seconds: any = this.timer % 60;
 
+    hour = String('0' + Math.floor(hour)).slice(-2);
     minutes = String('0' + Math.floor(minutes)).slice(-2);
     seconds = String('0' + Math.floor(seconds)).slice(-2);
 
-    const text = minutes + ':' + seconds;
+    const text = hour + ':' + minutes + ':' + seconds;
     this.time.next(text);
 
-    if ((this.timer) % 10 === 0 ){
+    if ((this.timer) % 30 === 0) {
       this.bounceTimer('timer');
     }
-    ++this.timer;
-    if (this.timer > 3600) { // 99 minutes
-      this.timerHour++;
-      this.startTimer();
+    --this.timer;
+    if (this.timer === 0) {
+      this.stopTimer();
     }
   }
 
   setTimer(event) {
-    this.duration = event.target.value;
+    const hoursInMinutes = parseInt(String(event.target.value.split(':')[0] * 60) , 10);
+    const minutes = parseInt(event.target.value.split(':')[1], 10);
+    this.duration = hoursInMinutes + minutes;
+    this.startTimer();
   }
 
   toggleTimer() {
@@ -198,24 +204,8 @@ export class ViewRecipePage implements OnInit {
         .applyTo(document.getElementById(id));
   }
 
+
 }
 
 
-/*
-this.recipes = [];
-res.forEach(item => {
-  const myRecipeItem = item.payload.toJSON();
-  // @ts-ignore
-  myRecipeItem.$key = item.key;
-  // get title image
-  this.pathReference = firebase.storage().ref().child(item.key + '/' + item.key + '_0.jpg').getDownloadURL().then(url => {
-    this.imgs = url;
-    // @ts-ignore
-    myRecipeItem.title_image = this.imgs;
-  });
 
-  // @ts-ignore
-  if ((myRecipeItem.recipeTime as RecipeItem) < 20000000000) {
-    this.recipes.push(myRecipeItem as RecipeItem);
-  }
-});*/
