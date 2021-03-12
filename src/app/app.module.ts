@@ -20,6 +20,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { environment } from '../environments/environment';
 
 
+
 @NgModule({
     declarations: [AppComponent, PopoverCollectionsComponent],
     entryComponents: [PopoverCollectionsComponent],

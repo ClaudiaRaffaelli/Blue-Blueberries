@@ -7,16 +7,29 @@
             <ion-back-button defaultHref="{{this.lastPage}}" text="" icon="chevron-back-outline"></ion-back-button>
           </ion-buttons>
         <ion-buttons>
-          <ion-icon id="timer" (click)="toggleTimer()" name="stopwatch-outline" size="large" [color]="timerState === 'start' ? 'success' : 'tertiary'"></ion-icon>
+            <ion-icon id="timer" (click)="toggleTimer()" name="stopwatch-outline" size="large" [color]="timerState === 'start' ? 'success' : 'tertiary'"></ion-icon>
         </ion-buttons>
       </ion-row>
-      <ion-row class="ion-justify-content-center" *ngIf="timerToggle">
+
+      <ion-row class="ion-justify-content-center" *ngIf="timerToggle && timerState === 'start'">
         <ion-item lines="none">
-          <ion-icon id="timerPlay" (click)="startTimer()" *ngIf="timerState === 'stop'" size="large" color="success" name="play-circle-outline"></ion-icon>
-          <ion-icon id="timerStop" (click)="stopTimer()" *ngIf="timerState === 'start'" size="large" color="danger" name="stop-outline"></ion-icon>
-          <ion-label [color]="timerState === 'start' ? 'dark' : 'medium'"> {{timerHour}}:{{time | async}}</ion-label>
+          <ion-chip color="success">
+            <ion-icon id="timerPlay" (click)="startTimer()" *ngIf="timerState === 'stop'" size="large" color="success" name="play-circle-outline"></ion-icon>
+            <ion-icon id="timerStop" (click)="stopTimer()" *ngIf="timerState === 'start'" size="large" color="success" name="stop-outline"></ion-icon>
+            <ion-label [color]="timerState === 'start' ? 'success' : 'medium'"> {{time | async}}</ion-label>
+          </ion-chip>
         </ion-item>
       </ion-row>
+
+      <ion-row class="ion-justify-content-center" *ngIf="timerToggle && timerState === 'stop'">
+          <ion-chip color="tertiary">
+            <ion-icon name="play-circle-outline" size="large"></ion-icon>
+            <ion-label>
+              <ion-datetime mode="md" (ionChange)="setTimer($event)" displayFormat="HH:mm" pickerFormat="HH mm" value="00:00"></ion-datetime>
+            </ion-label>
+          </ion-chip>
+      </ion-row>
+
     </ion-grid>
   </ion-toolbar>
 </ion-header>
