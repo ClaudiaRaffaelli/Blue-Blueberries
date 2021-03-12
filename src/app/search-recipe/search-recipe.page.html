@@ -106,6 +106,14 @@
           </ion-row>
         </ion-grid>
     <br>
+
+    <ion-button (click)="speak()"><ion-icon name="mic-outline"></ion-icon></ion-button>
+    Testo: {{speechToText}}
+    <br>
+    Ingredienti riconosciuti: {{pippo}}
+    <br>
+    <br>
+
     <ion-button (click)="submit()" class="ion-activatable ripple-parent" color="success" expand="block">
       Search
       <ion-ripple-effect></ion-ripple-effect>

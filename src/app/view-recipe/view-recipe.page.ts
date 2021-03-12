@@ -82,7 +82,7 @@ export class ViewRecipePage implements OnInit {
 
           const recipeText = document.getElementById('recipeText');
           const ionCard = document.createElement('ion-card');
-          ionCard.setAttribute('style', 'border-radius: 25px; margin-top: 5px !important;');
+          ionCard.setAttribute('style', 'border-radius: 15px; margin-top: 1px !important;');
           const ionCardHeader = document.createElement('ion-card-header');
           const ionCardTitle = document.createElement('ion-card-content');
           const ionCardH1 = document.createElement('h1');
@@ -90,8 +90,7 @@ export class ViewRecipePage implements OnInit {
           ionCardH1.textContent = 'Step ' + (j + 1);
           ionCardTitle.appendChild(ionCardH1);
           ionCardHeader.appendChild(ionCardTitle);
-          ionCardHeader.setAttribute('color', 'light');
-          ionCardHeader.setAttribute('font-color', 'warning');
+          ionCardHeader.setAttribute('color', 'tertiary');
 
           // @ts-ignore
           ionCardContent.textContent = text; // place the text in a ion-card-content tag

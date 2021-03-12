@@ -12,13 +12,14 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireStorageModule } from '@angular/fire/storage';
-import { PopoverCollectionsComponent } from "./popover-collections/popover-collections.component";
+import { PopoverCollectionsComponent } from './popover-collections/popover-collections.component';
 // local storage imports
 import { IonicStorageModule } from '@ionic/storage';
 
 // environment
 import { environment } from '../environments/environment';
-import {FormsModule} from "@angular/forms";
+import {FormsModule} from '@angular/forms';
+import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx';
 
 
 
@@ -30,7 +31,7 @@ import {FormsModule} from "@angular/forms";
         AngularFireAuthModule,
         AngularFireDatabaseModule,
         AngularFireStorageModule, FormsModule],
-    providers: [{provide: RouteReuseStrategy, useClass: IonicRouteStrategy}],
+    providers: [SpeechRecognition, {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}],
     bootstrap: [AppComponent],
     exports: [
         PopoverCollectionsComponent

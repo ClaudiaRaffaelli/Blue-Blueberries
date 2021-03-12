@@ -1,7 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone} from '@angular/core';
 import {IngredientsDic} from '../shared/recipeItem';
 import {NavigationExtras, Router} from '@angular/router';
 import {Platform} from '@ionic/angular';
+import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx';
+
+
+// import { Plugins } from '@capacitor/core';
+// const { SpeechRecognition } = Plugins;
+
 
 @Component({
   selector: 'app-search-recipe',
@@ -27,8 +33,19 @@ export class SearchRecipePage implements OnInit {
   difficulty: string;
   searchRequiredTime: boolean;
   maxRequiredTime: number;
+  speechToText = '';
+  pippo = '';
+  micky = '';
+  speechOptions = {
+    language: 'en-US',
+    matches: 1,
+    prompt: 'say it',      // Android only
+    showPopup: true,  // Android only
+    showPartial: false
+  };
 
-  constructor(private router: Router, public platform: Platform) {
+
+  constructor(private router: Router, public platform: Platform, private speechRecognition: SpeechRecognition, public ngZone: NgZone) {
     this.queryRecipeName = '';
     this.difficulty = 'easy';
     this.showAvailableSearchBarResults = false;
@@ -42,10 +59,79 @@ export class SearchRecipePage implements OnInit {
     this.searchDifficulty = false;
     this.searchRequiredTime = false;
     this.maxRequiredTime = 120;
+
+
+    // Check feature available
+    this.speechRecognition.isRecognitionAvailable()
+        .then((available: boolean) => {
+          if (available){
+            this.speechRecognition.hasPermission()
+                .then((hasPermission: boolean) => {
+                  if (!hasPermission){
+                    // Request permissions
+                    this.speechRecognition.requestPermission();
+                  }
+                });
+          }
+        });
+
+
+  }
+
+  speak() {
+    this.speechRecognition.startListening(this.speechOptions)
+        .subscribe(
+            (matches: string[]) => {
+              this.ngZone.run(() => {
+                this.pippo = '';
+                this.micky = '';
+                this.speechToText = matches[0];
+                const ingredients = Object.keys(this.ing.ingredients);
+                // tslint:disable-next-line:prefer-for-of
+                for (let i = 0; i < ingredients.length; i++) {
+                  this.micky += ingredients[i] + ' ';
+                  if (matches[0].toLowerCase().includes(ingredients[i].toLowerCase())){
+                    this.pippo += ingredients[i];
+                    this.toggleAvailableIngredient(ingredients[i]);
+                  }
+                }
+                this.stop();
+              });
+            }
+        );
+  }
+
+  stop(){
+    // Stop the recognition process (iOS only)
+    this.speechRecognition.stopListening();
   }
 
   ngOnInit() {
+    // SpeechRecognition.hasPermission().then( (val) => {
+    //   if (val.permission === false){
+    //     SpeechRecognition.requestPermission();
+    //   }
+    // });
+
   }
+
+  // speak(){
+  //   SpeechRecognition.start({
+  //     language: 'en-US',
+  //     maxResults: 2,
+  //     prompt: 'Say your available ingredients',
+  //     partialResults: true,
+  //     popup: true
+  //   }).then( (results) => {
+  //     const speechResult = document.getElementById('speechResults');
+  //     speechResult.textContent = results;
+  //   });
+  // }
+  //
+  // stop(){
+  //   SpeechRecognition.stop();
+  // }
+
 
   onChangeName(event){
     this.queryRecipeName = event.target.value;
@@ -140,24 +226,24 @@ export class SearchRecipePage implements OnInit {
   submit(){
     const query: {[queryRequest: string]: {}} = {};
     if (this.queryRecipeName !== ''){
-      query['recipeName'] = this.queryRecipeName;
+      query.recipeName = this.queryRecipeName;
     }
     if (this.searchAvailableIngredients){
-      query['availableIngredients'] = this.ing.ingredients;
+      query.availableIngredients = this.ing.ingredients;
     }
     if (this.showUndesiredIngredients){
-      query['undesiredIngredients'] = this.ingUndesired.ingredients;
+      query.undesiredIngredients = this.ingUndesired.ingredients;
     }
     if (this.searchDifficulty){
-      query['difficulty'] = this.difficulty;
+      query.difficulty = this.difficulty;
     }
     if (this.searchRequiredTime){
-      query['requiredTime'] = this.maxRequiredTime;
+      query.requiredTime = this.maxRequiredTime;
     }
 
     const navigationExtras: NavigationExtras = {
       state: {
-        query: query
+        query
       }
     };
     this.router.navigate(['home'], navigationExtras);
