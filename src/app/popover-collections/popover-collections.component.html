@@ -1,0 +1,7 @@
+
+<ion-content>
+<ion-list *ngFor="let collectionItem of collectionsItems" class="user-list">
+  <ion-item (click)="addToCollection(collectionItem)"> {{collectionItem.name}}</ion-item>
+</ion-list>
+  <ion-item> Add collection </ion-item>
+</ion-content>

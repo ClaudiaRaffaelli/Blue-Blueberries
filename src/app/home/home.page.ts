@@ -4,6 +4,8 @@ import { RecipeItemService } from './../shared/recipe-item.service';
 import firebase from 'firebase';
 import 'firebase/storage'; // in order to use images stored in the firebase database
 import {Router, NavigationExtras, ActivatedRoute} from '@angular/router'; // pass data between two pages
+import {PopoverController} from "@ionic/angular";
+import {PopoverCollectionsComponent} from "../popover-collections/popover-collections.component";
 
 @Component({
   selector: 'app-home',
@@ -22,7 +24,9 @@ export class HomePage implements OnInit {
   constructor(
     private aptService: RecipeItemService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    public popoverController: PopoverController,
+    private popoverComponent: PopoverCollectionsComponent
   ) { this.route.queryParams.subscribe(async params => {
     if (this.router.getCurrentNavigation().extras.state) {
       this.query = this.router.getCurrentNavigation().extras.state.query;
@@ -121,6 +125,29 @@ export class HomePage implements OnInit {
 
 
   ngOnInit() {
+  }
+
+
+  async presentPopover(eve: any, recipeKey: string) {
+    const popover = await this.popoverController.create({
+      component: PopoverCollectionsComponent,
+      cssClass: 'popOver',
+      componentProps: {
+        // communicating the recipe key to the popover for when the recipe will be added to the collection
+        "recipeKey": recipeKey,
+      },
+      event: eve,
+      mode: 'ios',
+      translucent: true
+    });
+
+    popover.onWillDismiss().then(() =>{
+          //alert("before dismissing the popover")
+    });
+    popover.onDidDismiss().then(() => {
+          //alert("popover dismissed")
+    });
+    return await popover.present();
   }
 
 

@@ -4,8 +4,10 @@
       <ion-card style="border-radius: 25px; margin: 5px !important;">
         <ion-card-header>
           <ion-card-title>{{recipeItem.name}}</ion-card-title>
+          <button ion-button icon-only clear (click)="presentPopover($event, recipeItem.$key)" style="position: absolute; right: +25px; top: +13px;">
+            <ion-icon size = "large" name="heart"></ion-icon>
+          </button>
         </ion-card-header>
-
         <ion-card-content (click)="openRecipe(recipeItem)">
           <div class="card">
             <img src="{{recipeItem.title_image}}" style="border-radius: 10px;"/>

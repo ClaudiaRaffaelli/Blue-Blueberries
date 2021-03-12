@@ -10,13 +10,13 @@ import firebase from 'firebase';
 // TODO fai nel database sezione per sole collezioni
 
 export class CollectionItemService {
-  public savedCollectionsListRef: string [];
+  savedCollectionsListRef: [];
   pathReference: any;
   imgs: []; // Title images downloaded from the firebase storage
   currentCoverImage: any;
+  collections: [];
 
   constructor(private storage: Storage) {
-
     /*// todo questo è da spostare i collections.page.ts
     this.getCollectionList().then(res => {
       this.savedCollectionsListRef = res;
@@ -38,11 +38,17 @@ export class CollectionItemService {
   }
 
   // Local storage methods for handling personalized collections
-  addCollectionItem(collectionName, recipeItemList){
+  addCollectionItem(collectionName){
+
+    let collectionItem = new CollectionItem()
+    collectionItem.recipeList = [];
+    collectionItem.recipeNumber = 0;
+    collectionItem.name = collectionName;
+
     // todo numero massimo di collezioni creabili
-    // key: collectionName (string), value: list of recipeItem objects
-    // the list of recipeItem is first converted into a string
-    let json = JSON.stringify(recipeItemList);
+    // key: collectionName (string), value: the collectionItem object
+    // the collectionItem is empty and with no recipe, and it is first converted into a string
+    let json = JSON.stringify(collectionItem);
     this.storage.set(collectionName, json);
 
     // updating the list of collections
@@ -67,20 +73,20 @@ export class CollectionItemService {
     });
   }
 
-  deleteCollectionItem(collectionName){
+  async deleteCollectionItem(collectionName){
     // delete an entire collection by collection name (e.g. "My Christmas Recipes")
-    this.storage.remove(collectionName)
+    await this.storage.remove(collectionName)
 
     // updating the list of collections
-    this.storage.get("CollectionsList").then(valueStr => {
+    await this.storage.get("CollectionsList").then(valueStr => {
       let value = valueStr ? JSON.parse(valueStr) : {};
 
       // removing the item from the list
-      //todo non funziona granché bene, non rimuove tutto
       value = value.filter(v => v !== collectionName);
+      console.log("value:", value)
 
       // Save the entire data again
-      this.storage.set(collectionName, JSON.stringify(value));
+      this.storage.set("CollectionsList", JSON.stringify(value));
     });
   }
 
@@ -90,6 +96,7 @@ export class CollectionItemService {
     // Get the entire data
     await this.storage.get(collectionName).then(async valueStr => {
       let value = valueStr ? JSON.parse(valueStr) : {};
+      console.log("value", value)
 
       // if this is the first time we add a recipe to the collection, we take the first image of the collection
       // as cover photo
@@ -99,7 +106,7 @@ export class CollectionItemService {
           return res;
         });
       }
-
+      console.log(recipe)
       // pushing the new recipe key
       value.recipeList.push(recipe);
       // updating the number of recipes

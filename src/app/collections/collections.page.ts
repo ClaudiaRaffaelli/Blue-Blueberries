@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Injectable, OnInit} from '@angular/core';
 //import {RecipeItem} from '../shared/recipeItem';
 //import {CollectionItem} from '../shared/collectionItem';
 import {RecipeItemService} from '../shared/recipe-item.service';
@@ -7,12 +7,16 @@ import {CollectionItemService} from '../shared/collection-item.service';
 import 'firebase/storage'; // in order to use images stored in the firebase database
 import {NavigationExtras, Router} from '@angular/router'; // pass data between two pages
 import {Storage} from '@ionic/storage';
+import {PopoverCollectionsComponent} from "../popover-collections/popover-collections.component";
 
 @Component({
   selector: 'app-collections',
   templateUrl: './collections.page.html',
   styleUrls: ['./collections.page.scss'],
 })
+
+@Injectable({ providedIn: 'root' })
+
 export class CollectionsPage implements OnInit {
 
   recipes = []; // Here are going to be saved all the recipes downloaded from the database
@@ -26,29 +30,18 @@ export class CollectionsPage implements OnInit {
       private localDBService: CollectionItemService,
       private aptService: RecipeItemService,
       private router: Router,
-      private storage: Storage
+      private storage: Storage,
+      private popoverComponent: PopoverCollectionsComponent,
   ) {
     // making sure that local storage is ready
     storage.ready().then(() => {
     });
+
+
   }
 
   ngOnInit() {
 
-    this.localDBService.getCollectionList().then(res => {
-      this.savedCollectionsListRef = res;
-      // todo iterare su tutte le collezioni estraendo le info necessarie avendo l'array di tutti i nomi di collezioni
-      console.log("lista collezioni: ", this.savedCollectionsListRef)
-
-      this.collections = [];
-      // looping through all collections fetched
-      for (let coll of res){
-        this.localDBService.getCollectionItem(coll).then(item => {
-          this.collections.push(item)
-        })
-      }
-
-    })
 
     // ---------- PARTE DI TESTING  ---------
     /*
@@ -102,6 +95,23 @@ export class CollectionsPage implements OnInit {
       );
     });*/
 
+  }
+
+
+  ionViewWillEnter(){
+    console.log("Re-loading collection each time I enter")
+    this.localDBService.getCollectionList().then(res => {
+      this.savedCollectionsListRef = res;
+
+      //console.log("lista collezioni: ", this.savedCollectionsListRef)
+      this.collections = [];
+      // looping through all collections fetched
+      for (let coll of res){
+        this.localDBService.getCollectionItem(coll).then(item => {
+          this.collections.push(item)
+        })
+      }
+    })
   }
 
   openCollection(collectionP: any){
