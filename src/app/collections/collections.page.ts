@@ -1,9 +1,6 @@
 import {Component, Injectable, OnInit} from '@angular/core';
-//import {RecipeItem} from '../shared/recipeItem';
-//import {CollectionItem} from '../shared/collectionItem';
 import {RecipeItemService} from '../shared/recipe-item.service';
 import {CollectionItemService} from '../shared/collection-item.service';
-//import firebase from 'firebase';
 import 'firebase/storage'; // in order to use images stored in the firebase database
 import {NavigationExtras, Router} from '@angular/router'; // pass data between two pages
 import {Storage} from '@ionic/storage';
@@ -37,66 +34,30 @@ export class CollectionsPage implements OnInit {
     storage.ready().then(() => {
     });
 
-
   }
 
+  // TODO sistema pulsante per aggiunta alle collezioni: vuoto quando non è in nessuna collezione, pieno quando in almeno una
+  // TODO sistema il routing all'interno delle collezioni personali: mancano i pulsanti per tornare indietro
+  // TODO magari non un'immagine singola mostrata da fuori una collezione ma un collage
   ngOnInit() {
 
 
     // ---------- PARTE DI TESTING  ---------
     /*
 
-    this.fetchRecipeItems();
-    const recipesRes = this.aptService.getRecipesList();
-    recipesRes.snapshotChanges().subscribe(res => {
-      this.recipes = [];
-      res.forEach(item => {
-        const myRecipeItem = item.payload.toJSON();
-
-        // TODO testing di aggiunta ricetta singola
-        // TODO d'ora in poi non salviamo tutta la ricetta dentro ma solo la sua key
-        // saving locally only the key of the recipe and not the whole data
-        //this.localDBService.addRecipeToCollectionItem("Pranzo da sola", item.key)
-        // aggiungo cheesecake esplicitamente
-        //this.localDBService.addRecipeToCollectionItem("Pranzo da sola","192b5b1614930271726" )
-        //this.localDBService.addRecipeToCollectionItem("Le mie cene romantiche", item.key)
-        //this.deleteRecipeFromCollectionItem("CollezioneA", myRecipeItem)
-
-      });
-
-      // TODO some testing
       let collectionItem = new CollectionItem()
       collectionItem.recipeList = []
       collectionItem.recipeNumber = 0
 
       //collectionItem.name= "Pranzo da sola"
       //this.localDBService.addCollectionItem(collectionItem.name, collectionItem)
-      //collectionItem.name= "Le mie cene romantiche"
-      //this.localDBService.addCollectionItem(collectionItem.name, collectionItem)
-      //this.localDBService.deleteCollectionItem("CollezioneD")
 
-      this.localDBService.getCollectionItem("MiaCollezione").then(
-          (item) => console.log('Il contenuto della collezione Mia è ', item)
-      );
-      this.localDBService.getCollectionItem("CollezioneA").then(
-          (item) => console.log('Il contenuto della collezione A è ', item)
-      );
-      this.localDBService.getCollectionItem("CollezioneB").then(
-          (item) => console.log('Il contenuto della collezione B è ', item)
-      );
-      this.localDBService.getCollectionItem("CollezioneC").then(
-          (item) => console.log('Il contenuto della collezione C è ', item)
-      );
-      this.localDBService.getCollectionItem("CollezioneD").then(
-          (item) => console.log('Il contenuto della collezione D è ', item)
-      );
       this.localDBService.getCollectionItem("CollezioneE").then(
           (item) => console.log('Il contenuto della collezione E è ', item)
       );
     });*/
 
   }
-
 
   ionViewWillEnter(){
     console.log("Re-loading collection each time I enter")

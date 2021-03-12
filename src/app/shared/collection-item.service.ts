@@ -16,15 +16,7 @@ export class CollectionItemService {
   currentCoverImage: any;
   collections: [];
 
-  constructor(private storage: Storage) {
-    /*// todo questo è da spostare i collections.page.ts
-    this.getCollectionList().then(res => {
-      this.savedCollectionsListRef = res;
-      // todo iterare su tutte le collezioni estraendo le info necessarie avendo l'array di tutti i nomi di collezioni
-      console.log("lista collezioni: ", this.savedCollectionsListRef)
-    })*/
-
-  }
+  constructor(private storage: Storage) {}
 
   getCollectionList(){
     // getting the array of collections

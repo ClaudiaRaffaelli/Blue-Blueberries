@@ -3,5 +3,8 @@
 <ion-list *ngFor="let collectionItem of collectionsItems" class="user-list">
   <ion-item (click)="addToCollection(collectionItem)"> {{collectionItem.name}}</ion-item>
 </ion-list>
-  <ion-item> Add collection </ion-item>
+  <ion-item>
+    <ion-label position="floating" inputmode="text">Add collection: </ion-label>
+    <ion-input (keyup.enter)="eventHandlerInputText()" [(ngModel)]="collectionNameFromInput"></ion-input>
+  </ion-item>
 </ion-content>

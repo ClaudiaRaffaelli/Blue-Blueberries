@@ -18,6 +18,7 @@ import { IonicStorageModule } from '@ionic/storage';
 
 // environment
 import { environment } from '../environments/environment';
+import {FormsModule} from "@angular/forms";
 
 
 
@@ -28,7 +29,7 @@ import { environment } from '../environments/environment';
         AngularFireModule.initializeApp(environment.firebaseConfig),
         AngularFireAuthModule,
         AngularFireDatabaseModule,
-        AngularFireStorageModule],
+        AngularFireStorageModule, FormsModule],
     providers: [{provide: RouteReuseStrategy, useClass: IonicRouteStrategy}],
     bootstrap: [AppComponent],
     exports: [
