@@ -2,3 +2,22 @@
   margin: 1px !important;
   border: 1px !important;
 }
+
+
+div.scroll {
+  margin: 4px;
+  padding: 4px;
+  width: 300px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
+::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  display: none;
+}
+
+ion-card{
+  border-radius: 12px;
+}

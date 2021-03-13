@@ -35,7 +35,7 @@ export class IngredientsDic{
     Lemons: {selected: false, dose: 0, unit: ''},
     apricots: {selected: false, dose: 0, unit: ''},
     Oranges: {selected: false, dose: 0, unit: ''},
-    Pistachios: {selected: false, dose: 0, unit: ''},
+    Pistacchio: {selected: false, dose: 0, unit: ''},
     Tahini: {selected: false, dose: 0, unit: ''},
     Chickpeas: {selected: false, dose: 0, unit: ''}
   };

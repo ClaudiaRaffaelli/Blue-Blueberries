@@ -197,7 +197,7 @@ export class ViewRecipePage implements OnInit {
           from: {x: 1, y: 1},
           to: {x: 3, y: 2},
           easing: 'sway',
-          duration: 500,
+          duration: 300,
           delay: 50,
         })
         .applyTo(document.getElementById(id));

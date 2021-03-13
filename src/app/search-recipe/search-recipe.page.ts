@@ -3,6 +3,7 @@ import {IngredientsDic} from '../shared/recipeItem';
 import {NavigationExtras, Router} from '@angular/router';
 import {Platform} from '@ionic/angular';
 import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx';
+import levenshtein from 'fast-levenshtein';
 
 
 // import { Plugins } from '@capacitor/core';
@@ -33,13 +34,11 @@ export class SearchRecipePage implements OnInit {
   difficulty: string;
   searchRequiredTime: boolean;
   maxRequiredTime: number;
-  speechToText = '';
-  pippo = '';
-  micky = '';
+  availableSTT = '';
   speechOptions = {
     language: 'en-US',
     matches: 1,
-    prompt: 'say it',      // Android only
+    prompt: '',      // Android only
     showPopup: true,  // Android only
     showPartial: false
   };
@@ -58,7 +57,7 @@ export class SearchRecipePage implements OnInit {
     this.searchUndesiredIngredients = false;
     this.searchDifficulty = false;
     this.searchRequiredTime = false;
-    this.maxRequiredTime = 120;
+    this.maxRequiredTime = 30;
 
 
     // Check feature available
@@ -74,63 +73,46 @@ export class SearchRecipePage implements OnInit {
                 });
           }
         });
-
-
   }
 
-  speak() {
+  speakIngredients(type: string) {
     this.speechRecognition.startListening(this.speechOptions)
         .subscribe(
             (matches: string[]) => {
+              // ngZone.run is required so that the script can go back to angularZone (when the user has finished using the speechToText)
+              // in order to update the view (if necessary)
               this.ngZone.run(() => {
-                this.pippo = '';
-                this.micky = '';
-                this.speechToText = matches[0];
                 const ingredients = Object.keys(this.ing.ingredients);
                 // tslint:disable-next-line:prefer-for-of
                 for (let i = 0; i < ingredients.length; i++) {
-                  this.micky += ingredients[i] + ' ';
-                  if (matches[0].toLowerCase().includes(ingredients[i].toLowerCase())){
-                    this.pippo += ingredients[i];
-                    this.toggleAvailableIngredient(ingredients[i]);
+                  // matches[0] is the first guess of the speechToText plugin (max 5, but is fixed to 1 in speechOptions variable)
+                  const words = matches[0].toLowerCase().split(' '); // get all the words
+                  // tslint:disable-next-line:prefer-for-of
+                  for (let j = 0; j < words.length; j++){
+                    if (levenshtein.get(words[j], ingredients[i].toLowerCase()) <= 1){
+                      if (type === 'available'){
+                        this.ing.ingredients[ingredients[i]].selected = true;
+                      }else if (type === 'undesired'){
+                        this.ingUndesired.ingredients[ingredients[i]].selected = true;
+                      }
+                    }
                   }
                 }
-                this.stop();
+                this.stopSpeakingIngredients();
               });
             }
         );
   }
 
-  stop(){
+  stopSpeakingIngredients(){
     // Stop the recognition process (iOS only)
     this.speechRecognition.stopListening();
   }
 
+
   ngOnInit() {
-    // SpeechRecognition.hasPermission().then( (val) => {
-    //   if (val.permission === false){
-    //     SpeechRecognition.requestPermission();
-    //   }
-    // });
 
   }
-
-  // speak(){
-  //   SpeechRecognition.start({
-  //     language: 'en-US',
-  //     maxResults: 2,
-  //     prompt: 'Say your available ingredients',
-  //     partialResults: true,
-  //     popup: true
-  //   }).then( (results) => {
-  //     const speechResult = document.getElementById('speechResults');
-  //     speechResult.textContent = results;
-  //   });
-  // }
-  //
-  // stop(){
-  //   SpeechRecognition.stop();
-  // }
 
 
   onChangeName(event){

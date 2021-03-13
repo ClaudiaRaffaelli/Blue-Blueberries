@@ -15,7 +15,7 @@
         <ion-item lines="none">
           <ion-chip color="success">
             <ion-icon id="timerPlay" (click)="startTimer()" *ngIf="timerState === 'stop'" size="large" color="success" name="play-circle-outline"></ion-icon>
-            <ion-icon id="timerStop" (click)="stopTimer()" *ngIf="timerState === 'start'" size="large" color="success" name="stop-outline"></ion-icon>
+            <ion-icon id="timerStop" (click)="stopTimer()" *ngIf="timerState === 'start'" size="large" color="danger" name="stop-outline"></ion-icon>
             <ion-label [color]="timerState === 'start' ? 'success' : 'medium'"> {{time | async}}</ion-label>
           </ion-chip>
         </ion-item>
