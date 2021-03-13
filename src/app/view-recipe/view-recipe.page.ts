@@ -201,6 +201,7 @@ export class ViewRecipePage implements OnInit {
           delay: 50,
         })
         .applyTo(document.getElementById(id));
+
   }
 
 
