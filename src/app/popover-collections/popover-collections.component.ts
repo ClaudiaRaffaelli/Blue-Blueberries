@@ -96,6 +96,7 @@ export class PopoverCollectionsComponent implements OnInit {
       // adding the collection to the database and getting back the new item once inserted to be displayed
       // immediately on the opened popup
       this.collectionsItems.push(await this.localDBService.addCollectionItem(this.collectionNameFromInput))
+      this.collectionNameFromInput = "";
     }
   }
 
