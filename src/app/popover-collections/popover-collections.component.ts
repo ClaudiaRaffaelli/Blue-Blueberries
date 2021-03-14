@@ -1,8 +1,12 @@
-import {Component, Injectable, OnInit} from '@angular/core';
+import {Component, Injectable, NgZone, OnInit} from '@angular/core';
 import {CollectionItemService} from '../shared/collection-item.service';
 import {RecipeItemService} from "../shared/recipe-item.service";
 import firebase from "firebase";
 import {NavParams} from "@ionic/angular";
+import { NavController } from '@ionic/angular';
+import {Router, NavigationExtras, ActivatedRoute, NavigationEnd} from '@angular/router'; // pass data between two pages
+import {ChangeDetectorRef} from "@angular/core";
+
 
 @Component({
   selector: 'app-popover-collections',
@@ -18,20 +22,23 @@ export class PopoverCollectionsComponent implements OnInit {
   recipeKey: string;
   public navParams = new NavParams();
   collectionNameFromInput: string;
+  // array that for current recipe says if the recipe is in the collection (same order as collectionsItems)
+  recipeInCollection: boolean [] = []
 
   constructor(
       private localDBService: CollectionItemService,
-  ) {
+) {
     // retrieving data from the popover componentProps (recipe key from the recipe the popover is opened on)
     this.recipeKey = this.navParams.get("recipeKey")
     this.collectionNameFromInput = ""
   }
 
+  // TODO ridimensiona la grandezza del popup
+
   ngOnInit() {
-    // TODO per aggiornare le collezioni fare stessa cosa in collections ad ogni refresh
-    this.localDBService.getCollectionList().then(res => {
+    this.collectionNameFromInput = ""
+    this.localDBService.getCollectionList().then(async res => {
       this.collectionsNames = res;
-      //console.log("primo scan lista collezioni: ", this.collectionsNames)
 
       this.collectionsItems = [];
       // looping through all collections fetched, extracting them and adding them to the array
@@ -39,17 +46,23 @@ export class PopoverCollectionsComponent implements OnInit {
         this.localDBService.getCollectionItem(coll).then(item => {
           this.collectionsItems.push(item)
         })
+        // for each collection set a boolean to know if the recipe is in the collection or not
+        // this is used to show a different icon in the popup
+        this.recipeInCollection.push(await this.localDBService.isRecipeInCollection(coll, this.recipeKey))
+
       }
     })
-
   }
 
-  async addToCollection(collectionItem){
+
+  async addToCollection(collectionItem, collectionIndex){
     // the recipeKey has already been set by opening the popover and is ready to be inserted into
     // the clicked collection (the entire collectionItem at input)
 
-    //console.log(collectionItem.name)
+    // adding the recipe to the collection
     await this.localDBService.addRecipeToCollectionItem(collectionItem.name, this.recipeKey)
+    // updating the icon by setting the recipe as added to the collection
+    this.recipeInCollection[collectionIndex] = true;
 
     /*this.localDBService.getCollectionItem(collectionItem.name).then(
         (item) => console.log(collectionItem.name, ': ', item)
@@ -66,19 +79,17 @@ export class PopoverCollectionsComponent implements OnInit {
 
   async eventHandlerInputText(){
     // detects enter event on the input text for adding a new collection
-    console.log("prima", this.collectionsNames)
+
     // before adding the collection we check that the input of the user is not blank
     let checkString = this.collectionNameFromInput
     if (checkString.replace(/\s/g, '').length) {
       // removed all the whitespaces in the string and the length is still >0
-      await this.localDBService.addCollectionItem(this.collectionNameFromInput);
 
-      // TODO update the popup to show the new added collection immediately
-      //this.collectionsNames.push(this.collectionNameFromInput);
-      //console.log("dopo", this.collectionsNames)
-      //(this.collectionsNames as any).push(this.collectionNameFromInput);
+      // TODO magari un'animazione per quando l'elemento è aggiunto in lista mostrata dal popup?
+      // adding the collection to the database and getting back the new item once inserted to be displayed
+      // immediately on the opened popup
+      this.collectionsItems.push(await this.localDBService.addCollectionItem(this.collectionNameFromInput))
     }
-
   }
 
 }

@@ -23,6 +23,7 @@
     "@capacitor/android": "^2.4.6",
     "@capacitor/core": "2.4.6",
     "@google-cloud/storage": "^5.8.0",
+    "@ionic-native/core": "^5.31.1",
     "@ionic-native/in-app-browser": "^5.31.1",
     "@ionic-native/local-notifications": "^5.31.1",
     "@ionic-native/speech-recognition": "^5.31.1",
@@ -58,7 +59,8 @@
     "codelyzer": "^6.0.0",
     "cordova-android": "^9.0.0",
     "cordova-browser": "^6.0.0",
-    "cordova-ios": "^4.0.1",
+    "cordova-ios": "^6.2.0",
+    "cordova-plugin": "^1.0.0",
     "cordova-plugin-apiai": "^1.7.4",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
@@ -95,7 +97,6 @@
       "cordova-plugin-speechrecognition": {}
     },
     "platforms": [
-      "ios",
       "browser",
       "android"
     ]

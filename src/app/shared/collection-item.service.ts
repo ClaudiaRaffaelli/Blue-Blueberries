@@ -56,6 +56,7 @@ export class CollectionItemService {
       this.storage.set("CollectionsList", JSON.stringify(value));
     });
 
+    return collectionItem;
   }
 
   getCollectionItem(collectionName){
@@ -133,6 +134,16 @@ export class CollectionItemService {
 
       // Save the entire data again
       this.storage.set(collectionName, JSON.stringify(value));
+    });
+  }
+
+  isRecipeInCollection(collectionName, recipeKey){
+    // Get the entire data
+    return this.storage.get(collectionName).then(valueStr => {
+      let value = valueStr ? JSON.parse(valueStr) : {};
+
+      // if recipeList includes the key returns true, otherwise false
+      return !!value.recipeList.includes(recipeKey);
     });
   }
 }

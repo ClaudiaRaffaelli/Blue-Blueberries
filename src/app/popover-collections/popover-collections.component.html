@@ -1,10 +1,17 @@
 
 <ion-content>
-<ion-list *ngFor="let collectionItem of collectionsItems" class="user-list">
-  <ion-item (click)="addToCollection(collectionItem)"> {{collectionItem.name}}</ion-item>
-</ion-list>
+  <ion-list *ngFor="let collectionItem of collectionsItems; let collectionIndex=index;" class="user-list">
+    <ion-item (click)="addToCollection(collectionItem, collectionIndex)">
+      <ion-icon name="add" *ngIf="!recipeInCollection[collectionIndex]"></ion-icon>
+      <ion-icon name="remove" *ngIf="recipeInCollection[collectionIndex]"></ion-icon>
+<!--        <ion-icon name="arrow-forward" item-left></ion-icon>-->
+      <ion-label>{{collectionItem.name}}</ion-label>
+    </ion-item>
+  </ion-list>
   <ion-item>
     <ion-label position="floating" inputmode="text">Add collection: </ion-label>
     <ion-input (keyup.enter)="eventHandlerInputText()" [(ngModel)]="collectionNameFromInput"></ion-input>
   </ion-item>
 </ion-content>
+
+
