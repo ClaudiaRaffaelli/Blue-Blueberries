@@ -83,25 +83,23 @@ export class CollectionItemService {
     });
   }
 
-  async addRecipeToCollectionItem(collectionName, recipe){
+  async addRecipeToCollectionItem(collectionName, recipeKey){
     // TODO gestire no duplicati di ricetta (controllare che recipe non sia già nella collectionName)
 
     // Get the entire data
     await this.storage.get(collectionName).then(async valueStr => {
       let value = valueStr ? JSON.parse(valueStr) : {};
-      console.log("value", value)
 
       // if this is the first time we add a recipe to the collection, we take the first image of the collection
       // as cover photo
       if (value.recipeNumber == 0){
-        value.coverPhoto = await this.getCoverImage(recipe).then(async res => {
+        value.coverPhoto = await this.getCoverImage(recipeKey).then(async res => {
           value.coverPhoto = res;
           return res;
         });
       }
-      console.log(recipe)
       // pushing the new recipe key
-      value.recipeList.push(recipe);
+      value.recipeList.push(recipeKey);
       // updating the number of recipes
       value.recipeNumber = value.recipeList.length
 
@@ -121,15 +119,14 @@ export class CollectionItemService {
 
   }
 
-  deleteRecipeFromCollectionItem(collectionName, recipe){
-    // TODO gestire no duplicati di ricetta (controllare che recipe non sia già nella collectionName)
+  deleteRecipeFromCollectionItem(collectionName, recipeKey){
     // TODO se nella collezione non ho più elementi devo valutare di resettare l'immagine di copertina
     // Get the entire data
-    this.storage.get(collectionName).then(valueStr => {
+    this.storage.get(collectionName).then( valueStr => {
       let value = valueStr ? JSON.parse(valueStr) : {};
 
       // checking that there is an item to delete
-      value.recipeList = value.recipeList.filter(({ $key }) => $key !== recipe.$key);
+      value.recipeList = value.recipeList.filter($key => $key.toString() !== recipeKey);
       value.recipeNumber = value.recipeList.length
 
       // Save the entire data again

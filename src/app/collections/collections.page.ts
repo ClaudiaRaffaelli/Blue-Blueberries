@@ -41,22 +41,6 @@ export class CollectionsPage implements OnInit {
   // TODO magari non un'immagine singola mostrata da fuori una collezione ma un collage
   ngOnInit() {
 
-
-    // ---------- PARTE DI TESTING  ---------
-    /*
-
-      let collectionItem = new CollectionItem()
-      collectionItem.recipeList = []
-      collectionItem.recipeNumber = 0
-
-      //collectionItem.name= "Pranzo da sola"
-      //this.localDBService.addCollectionItem(collectionItem.name, collectionItem)
-
-      this.localDBService.getCollectionItem("CollezioneE").then(
-          (item) => console.log('Il contenuto della collezione E è ', item)
-      );
-    });*/
-
   }
 
   ionViewWillEnter(){
@@ -90,9 +74,3 @@ export class CollectionsPage implements OnInit {
   }
 
 }
-
-
-
-
-
-

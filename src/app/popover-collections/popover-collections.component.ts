@@ -55,14 +55,21 @@ export class PopoverCollectionsComponent implements OnInit {
   }
 
 
-  async addToCollection(collectionItem, collectionIndex){
-    // the recipeKey has already been set by opening the popover and is ready to be inserted into
+  async addRemoveToFromCollection(collectionItem, collectionIndex){
+    // the recipeKey has already been set by opening the popover and is ready to be inserted or deleted from
     // the clicked collection (the entire collectionItem at input)
 
-    // adding the recipe to the collection
-    await this.localDBService.addRecipeToCollectionItem(collectionItem.name, this.recipeKey)
-    // updating the icon by setting the recipe as added to the collection
-    this.recipeInCollection[collectionIndex] = true;
+    if (this.recipeInCollection[collectionIndex] === false){
+      // adding the recipe to the collection
+      await this.localDBService.addRecipeToCollectionItem(collectionItem.name, this.recipeKey)
+      // updating the icon by setting the recipe as added to the collection
+      this.recipeInCollection[collectionIndex] = true;
+    }else{
+      // removing the recipe from the collection
+      await this.localDBService.deleteRecipeFromCollectionItem(collectionItem.name, this.recipeKey)
+      this.recipeInCollection[collectionIndex] = false;
+    }
+
 
     /*this.localDBService.getCollectionItem(collectionItem.name).then(
         (item) => console.log(collectionItem.name, ': ', item)
