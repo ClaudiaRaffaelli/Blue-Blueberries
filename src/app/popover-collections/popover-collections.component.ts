@@ -1,11 +1,6 @@
 import {Component, Injectable, NgZone, OnInit} from '@angular/core';
 import {CollectionItemService} from '../shared/collection-item.service';
-import {RecipeItemService} from "../shared/recipe-item.service";
-import firebase from "firebase";
 import {NavParams} from "@ionic/angular";
-import { NavController } from '@ionic/angular';
-import {Router, NavigationExtras, ActivatedRoute, NavigationEnd} from '@angular/router'; // pass data between two pages
-import {ChangeDetectorRef} from "@angular/core";
 
 
 @Component({
@@ -54,7 +49,6 @@ export class PopoverCollectionsComponent implements OnInit {
     })
   }
 
-
   async addRemoveToFromCollection(collectionItem, collectionIndex){
     // the recipeKey has already been set by opening the popover and is ready to be inserted or deleted from
     // the clicked collection (the entire collectionItem at input)
@@ -69,15 +63,6 @@ export class PopoverCollectionsComponent implements OnInit {
       await this.localDBService.deleteRecipeFromCollectionItem(collectionItem.name, this.recipeKey)
       this.recipeInCollection[collectionIndex] = false;
     }
-
-
-    /*this.localDBService.getCollectionItem(collectionItem.name).then(
-        (item) => console.log(collectionItem.name, ': ', item)
-    );*/
-    /*
-    await this.localDBService.deleteCollectionItem("My romantic dinners")
-    await this.localDBService.deleteCollectionItem("Nights alone")
-    await this.localDBService.deleteCollectionItem("My favorite desserts")*/
 
     /*this.localDBService.getCollectionItem(collectionItem.name).then(
         (item) => console.log(collectionItem.name, ': ', item)
@@ -97,7 +82,17 @@ export class PopoverCollectionsComponent implements OnInit {
       // immediately on the opened popup
       this.collectionsItems.push(await this.localDBService.addCollectionItem(this.collectionNameFromInput))
       this.collectionNameFromInput = "";
+      this.collectionsNames.push(this.collectionNameFromInput)
     }
+  }
+
+  async deleteCollection(collectionItem, collectionIndex){
+
+    await this.localDBService.deleteCollectionItem(collectionItem.name).then(valueStr => {
+      // removing the item name from the list of names
+      this.collectionsNames = this.collectionsNames.filter(v => v !== collectionItem.name);
+      this.collectionsItems.splice(collectionIndex, 1);
+    });
   }
 
 }

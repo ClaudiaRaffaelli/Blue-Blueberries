@@ -84,8 +84,6 @@ export class CollectionItemService {
   }
 
   async addRecipeToCollectionItem(collectionName, recipeKey){
-    // TODO gestire no duplicati di ricetta (controllare che recipe non sia già nella collectionName)
-
     // Get the entire data
     await this.storage.get(collectionName).then(async valueStr => {
       let value = valueStr ? JSON.parse(valueStr) : {};
@@ -110,17 +108,14 @@ export class CollectionItemService {
 
   // Get cover image from recipe
   async getCoverImage(recipeKey): Promise<any> {
-
     const path = recipeKey + "/" + recipeKey + "_0.jpg";
     const urlSrc = await firebase.storage().ref().child(path).getDownloadURL().then(url => {
       return url;
     });
     return urlSrc;
-
   }
 
   deleteRecipeFromCollectionItem(collectionName, recipeKey){
-    // TODO se nella collezione non ho più elementi devo valutare di resettare l'immagine di copertina
     // Get the entire data
     this.storage.get(collectionName).then( valueStr => {
       let value = valueStr ? JSON.parse(valueStr) : {};
@@ -128,6 +123,10 @@ export class CollectionItemService {
       // checking that there is an item to delete
       value.recipeList = value.recipeList.filter($key => $key.toString() !== recipeKey);
       value.recipeNumber = value.recipeList.length
+      // if there are no more recipe in the collection we delete the cover image
+      if (value.recipeNumber === 0){
+        value.coverPhoto = null;
+      }
 
       // Save the entire data again
       this.storage.set(collectionName, JSON.stringify(value));
