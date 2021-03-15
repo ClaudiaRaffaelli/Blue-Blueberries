@@ -1,5 +1,5 @@
 
-<ion-content>
+<ion-content >
   <ion-list *ngFor="let collectionItem of collectionsItems; let collectionIndex=index;" class="user-list">
     <ion-item-sliding>
       <ion-item (click)="addRemoveToFromCollection(collectionItem, collectionIndex)">
@@ -15,7 +15,8 @@
     </ion-item-sliding>
 
   </ion-list>
-  <ion-item>
+<!--   no more than 15 custom collections allowed-->
+  <ion-item *ngIf="collectionsNames.length<15">
     <ion-input (keyup.enter)="eventHandlerInputText()" [(ngModel)]="collectionNameFromInput" clearInput="true" placeholder="Add collection"></ion-input>
     <button (click)="eventHandlerInputText()" clear slot="end">Add</button>
   </ion-item>

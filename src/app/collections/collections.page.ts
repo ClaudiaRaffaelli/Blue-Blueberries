@@ -39,6 +39,7 @@ export class CollectionsPage implements OnInit {
   // TODO sistema pulsante per aggiunta alle collezioni: vuoto quando non è in nessuna collezione, pieno quando in almeno una
   // TODO sistema il routing all'interno delle collezioni personali: mancano i pulsanti per tornare indietro
   // TODO magari non un'immagine singola mostrata da fuori una collezione ma un collage
+  // TODO controlla che quando elimino una ricetta l'immagine di copertina non sia l'immagine della ricetta rimossa
   ngOnInit() {
 
   }
@@ -70,6 +71,15 @@ export class CollectionsPage implements OnInit {
 
   fetchRecipeItems() {
     this.aptService.getRecipesList().valueChanges().subscribe(res => {
+    });
+  }
+
+  async deleteCollection(collectionItem, collectionIndex){
+    console.log("deleting")
+    // deleting the collection from the local storage
+    await this.localDBService.deleteCollectionItem(collectionItem.name).then(valueStr => {
+      // removing the collection from the saved list
+      this.collections.splice(collectionIndex, 1);
     });
   }
 

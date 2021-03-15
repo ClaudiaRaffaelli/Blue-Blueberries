@@ -2,22 +2,36 @@
   <br>
   <ion-list class="ios list-ios hydrated">
 
-    <ion-item *ngFor="let collectionItem of collections" class="user-list">
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>{{collectionItem.name}}</ion-card-title>
-        </ion-card-header>
+    <ion-item *ngFor="let collectionItem of collections; let collectionIndex=index;" class="user-list">
 
-        <ion-card-content (click)="openCollection(collectionItem)">
-          <div class="card">
-            <img src="{{collectionItem.coverPhoto}}"/>
-          </div>
-          <br>
-          <div>
-            <ion-icon name="archive"></ion-icon> {{collectionItem.recipeNumber}} recipes
-          </div>
-        </ion-card-content>
-      </ion-card>
+      <ion-item-sliding>
+        <ion-item>
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>{{collectionItem.name}}</ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content (click)="openCollection(collectionItem)">
+              <div class="card">
+                <img src="{{collectionItem.coverPhoto}}"/>
+              </div>
+              <br>
+              <div>
+                <ion-icon name="archive"></ion-icon> {{collectionItem.recipeNumber}} recipes
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-item>
+        <ion-item-options side="end">
+          <ion-item-option color="danger">
+<!--            TODO: in order to delete the collection it is needed to press exactly on the trash icon, not good-->
+            <ion-icon slot="top" name="trash" (click)="deleteCollection(collectionItem, collectionIndex)">Delete collection</ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+
     </ion-item>
   </ion-list>
+
+
 </ion-content>

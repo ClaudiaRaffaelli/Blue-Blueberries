@@ -7,8 +7,6 @@ import firebase from 'firebase';
   providedIn: 'root'
 })
 
-// TODO fai nel database sezione per sole collezioni
-
 export class CollectionItemService {
   savedCollectionsListRef: [];
   pathReference: any;
@@ -37,7 +35,6 @@ export class CollectionItemService {
     collectionItem.recipeNumber = 0;
     collectionItem.name = collectionName;
 
-    // todo numero massimo di collezioni creabili
     // key: collectionName (string), value: the collectionItem object
     // the collectionItem is empty and with no recipe, and it is first converted into a string
     let json = JSON.stringify(collectionItem);

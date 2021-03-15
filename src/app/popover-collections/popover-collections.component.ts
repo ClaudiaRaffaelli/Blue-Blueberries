@@ -1,4 +1,4 @@
-import {Component, Injectable, NgZone, OnInit} from '@angular/core';
+import {Component, Injectable, OnInit} from '@angular/core';
 import {CollectionItemService} from '../shared/collection-item.service';
 import {NavParams} from "@ionic/angular";
 
