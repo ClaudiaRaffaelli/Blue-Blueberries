@@ -36,7 +36,6 @@ export class HomePage implements OnInit {
       // If we are navigating from the page where there are listed all the collection.
       // in this page are shown all the recipes from that collection
       if (this.isCollection === true){
-        console.log("true")
         this.recipes = []
         this.collection = this.router.getCurrentNavigation().extras.state.collection;
 
@@ -48,7 +47,6 @@ export class HomePage implements OnInit {
               const myRecipeItem = snapshot.val();
               // @ts-ignore
               myRecipeItem.$key = recipeKey;
-              console.log(myRecipeItem)
               return myRecipeItem
             }
             else {
@@ -65,7 +63,7 @@ export class HomePage implements OnInit {
             myRecipeItem.title_image = this.imgs;
           });
           this.recipes.push(myRecipeItem as RecipeItem);
-          console.log(this.recipes)
+          //console.log(this.recipes)
         }
         this.dataFetched = true;
       } else{

@@ -6,6 +6,8 @@ import {RecipeItemService} from '../shared/recipe-item.service';
 import {BehaviorSubject} from 'rxjs';
 import * as Bounce from 'bounce.js';
 import {Platform} from '@ionic/angular';
+import {PopoverCollectionsComponent} from "../popover-collections/popover-collections.component";
+import {PopoverController} from "@ionic/angular";
 
 @Component({
   selector: 'app-view-recipe',
@@ -43,7 +45,8 @@ export class ViewRecipePage implements OnInit {
   constructor(private aptService: RecipeItemService,
               private route: ActivatedRoute,
               private router: Router,
-              public platform: Platform) {
+              public platform: Platform,
+              private popoverController: PopoverController) {
     this.timerToggle = false;
     this.route.queryParams.subscribe(async params => {
       if (this.router.getCurrentNavigation().extras.state) {
@@ -202,6 +205,28 @@ export class ViewRecipePage implements OnInit {
         })
         .applyTo(document.getElementById(id));
 
+  }
+
+  async presentPopover(eve: any, recipeKey: string) {
+    const popover = await this.popoverController.create({
+      component: PopoverCollectionsComponent,
+      cssClass: 'popOver',
+      componentProps: {
+        // communicating the recipe key to the popover for when the recipe will be added to the collection
+        "recipeKey": recipeKey,
+      },
+      event: eve,
+      mode: 'ios',
+      translucent: true
+    });
+
+    popover.onWillDismiss().then(() =>{
+      //alert("before dismissing the popover")
+    });
+    popover.onDidDismiss().then(() => {
+      //alert("popover dismissed")
+    });
+    return await popover.present();
   }
 
 
