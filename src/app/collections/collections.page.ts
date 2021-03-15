@@ -4,13 +4,15 @@ import {CollectionItemService} from '../shared/collection-item.service';
 import 'firebase/storage'; // in order to use images stored in the firebase database
 import {NavigationExtras, Router} from '@angular/router'; // pass data between two pages
 import {Storage} from '@ionic/storage';
-import {PopoverCollectionsComponent} from "../popover-collections/popover-collections.component";
 
 @Component({
   selector: 'app-collections',
   templateUrl: './collections.page.html',
   styleUrls: ['./collections.page.scss'],
 })
+
+// TODO cuore nella pagina della ricetta nella parte di fianco al timer
+
 
 @Injectable({ providedIn: 'root' })
 
@@ -28,7 +30,6 @@ export class CollectionsPage implements OnInit {
       private aptService: RecipeItemService,
       private router: Router,
       private storage: Storage,
-      private popoverComponent: PopoverCollectionsComponent,
   ) {
     // making sure that local storage is ready
     storage.ready().then(() => {
@@ -63,10 +64,11 @@ export class CollectionsPage implements OnInit {
   openCollection(collectionP: any){
     const navigationExtras: NavigationExtras = {
       state: {
-        collection: collectionP
+        collection: collectionP,
+        isCollection: true
       }
     };
-    this.router.navigate(['view-collection'], navigationExtras);
+    this.router.navigate(['home'], navigationExtras);
   }
 
   fetchRecipeItems() {
@@ -75,7 +77,6 @@ export class CollectionsPage implements OnInit {
   }
 
   async deleteCollection(collectionItem, collectionIndex){
-    console.log("deleting")
     // deleting the collection from the local storage
     await this.localDBService.deleteCollectionItem(collectionItem.name).then(valueStr => {
       // removing the collection from the saved list
