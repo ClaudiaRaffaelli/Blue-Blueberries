@@ -20,7 +20,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { environment } from '../environments/environment';
 import {FormsModule} from '@angular/forms';
 import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx';
-
+import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
 
 
 @NgModule({
@@ -31,7 +31,7 @@ import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx';
         AngularFireAuthModule,
         AngularFireDatabaseModule,
         AngularFireStorageModule, FormsModule],
-    providers: [SpeechRecognition, {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}],
+    providers: [SpeechRecognition, TextToSpeech, {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}],
     bootstrap: [AppComponent],
     exports: [
         PopoverCollectionsComponent

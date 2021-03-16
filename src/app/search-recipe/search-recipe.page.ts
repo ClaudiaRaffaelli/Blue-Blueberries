@@ -225,7 +225,8 @@ export class SearchRecipePage implements OnInit {
 
     const navigationExtras: NavigationExtras = {
       state: {
-        query
+        query,
+        lastPage: 'search-recipe'
       }
     };
     this.router.navigate(['home'], navigationExtras);

@@ -65,7 +65,8 @@ export class CollectionsPage implements OnInit {
     const navigationExtras: NavigationExtras = {
       state: {
         collection: collectionP,
-        isCollection: true
+        isCollection: true,
+        lastPage: 'collections'
       }
     };
     this.router.navigate(['home'], navigationExtras);

@@ -1,13 +1,12 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import firebase from 'firebase';
-import {RecipeItem} from '../shared/recipeItem';
 import {RecipeItemService} from '../shared/recipe-item.service';
 import {BehaviorSubject} from 'rxjs';
 import * as Bounce from 'bounce.js';
 import {Platform} from '@ionic/angular';
-import {PopoverCollectionsComponent} from "../popover-collections/popover-collections.component";
-import {PopoverController} from "@ionic/angular";
+import {TextToSpeech} from '@ionic-native/text-to-speech/ngx';
+
 
 @Component({
   selector: 'app-view-recipe',
@@ -33,6 +32,7 @@ export class ViewRecipePage implements OnInit {
   timerToggle: boolean;
 
   lastPage: string;
+  textSteps: {[id: string]: string};
 
   // Options for images slider
   option = {
@@ -46,11 +46,14 @@ export class ViewRecipePage implements OnInit {
               private route: ActivatedRoute,
               private router: Router,
               public platform: Platform,
-              private popoverController: PopoverController) {
+              private tts: TextToSpeech) {
     this.timerToggle = false;
     this.route.queryParams.subscribe(async params => {
       if (this.router.getCurrentNavigation().extras.state) {
         this.data = this.router.getCurrentNavigation().extras.state.recipe;
+        if (!this.data){
+          this.router.navigate(['presentation']);
+        }
         this.lastPage = this.router.getCurrentNavigation().extras.state.lastPage;
 
         document.getElementById('recipeText').textContent = ' '; // clear previous recipe
@@ -70,33 +73,56 @@ export class ViewRecipePage implements OnInit {
             break;
         }
 
-        // this.recipeTextSteps = this.data.recipeText.split('<endStep>');
+
         // Set title image
         const titleImage = document.getElementById('titleImage'); // Set title image (first image, with index 0)
         let urlSrc = await this.getNextImage();
         titleImage.setAttribute('src', urlSrc);
 
+        this.textSteps = {};
         // Get all recipe's steps (they are separated with <endStep> keywords)
         const recipeBlocks = this.data.recipeText.split('<endStep>');
         // tslint:disable-next-line:forin
         for (let j = 0; j < recipeBlocks.length; j++) { // for each step
           const innerBlocks = recipeBlocks[j].split('<endText>');   // separate the text from the images => text <endText> <img> <img> ...
-          const text = innerBlocks[0]; // get the text in the current step (block)
+          this.textSteps[j] = innerBlocks[0]; // get the text in the current step (block)
 
           const recipeText = document.getElementById('recipeText');
           const ionCard = document.createElement('ion-card');
           ionCard.setAttribute('style', 'border-radius: 15px; margin-top: 1px !important;');
           const ionCardHeader = document.createElement('ion-card-header');
-          const ionCardTitle = document.createElement('ion-card-content');
-          const ionCardH1 = document.createElement('h1');
-          const ionCardContent = document.createElement('ion-card-content');
-          ionCardH1.textContent = 'Step ' + (j + 1);
-          ionCardTitle.appendChild(ionCardH1);
-          ionCardHeader.appendChild(ionCardTitle);
+          const ionCardHeaderLabel = document.createElement('ion-label');
+          const ionCardHeaderLabelH1 = document.createElement('h1');
+
+          const ionMicIconButton = document.createElement('ion-icon');
+          ionMicIconButton.setAttribute('name', 'mic-outline');
+          ionMicIconButton.setAttribute('size', 'large');
+          ionMicIconButton.addEventListener('click', () => { this.speak(j); });
+
+          const ionGrid = document.createElement('ion-grid');
+          const ionRow = document.createElement('ion-row');
+          ionRow.setAttribute('class', 'ion-align-items-center');
+          const ionColStep = document.createElement('ion-col');
+          ionColStep.setAttribute('size', '5');
+          const ionColBlank = document.createElement('ion-col');
+          ionColBlank.setAttribute('size', '5');
+          const ionColMic = document.createElement('ion-col');
+          ionColMic.setAttribute('size', '2');
+
+          ionCardHeaderLabel.textContent = 'Step ' + (j + 1);
+          ionCardHeaderLabelH1.appendChild(ionCardHeaderLabel);
+          ionColStep.appendChild(ionCardHeaderLabelH1);
+          ionColMic.appendChild(ionMicIconButton);
+          ionRow.appendChild(ionColStep);
+          ionRow.appendChild(ionColBlank);
+          ionRow.appendChild(ionColMic);
+          ionGrid.appendChild(ionRow);
+          ionCardHeader.appendChild(ionGrid);
           ionCardHeader.setAttribute('color', 'tertiary');
 
+          const ionCardContent = document.createElement('ion-card-content');
           // @ts-ignore
-          ionCardContent.textContent = text; // place the text in a ion-card-content tag
+          ionCardContent.textContent = this.textSteps[j]; // place the text in a ion-card-content tag
           ionCard.appendChild(ionCardHeader);
           ionCard.appendChild(ionCardContent);
           recipeText.appendChild(ionCard);
@@ -207,30 +233,19 @@ export class ViewRecipePage implements OnInit {
 
   }
 
-  async presentPopover(eve: any, recipeKey: string) {
-    const popover = await this.popoverController.create({
-      component: PopoverCollectionsComponent,
-      cssClass: 'popOver',
-      componentProps: {
-        // communicating the recipe key to the popover for when the recipe will be added to the collection
-        "recipeKey": recipeKey,
-      },
-      event: eve,
-      mode: 'ios',
-      translucent: true
-    });
-
-    popover.onWillDismiss().then(() =>{
-      //alert("before dismissing the popover")
-    });
-    popover.onDidDismiss().then(() => {
-      //alert("popover dismissed")
-    });
-    return await popover.present();
+  async speak(stepNumber){
+    await this.tts.speak({
+      text: 'Step ' + (stepNumber + 1) + '. ' + this.textSteps[stepNumber],
+      rate: 0.9
+    })
+        .then(() => console.log('Success'))
+        .catch((reason: any) => console.log(reason));
   }
 
+  stopSpeaking(){
+    this.tts.speak('')
+        .then(() => console.log('Success'))
+        .catch((reason: any) => console.log(reason));
+  }
 
 }
-
-
-

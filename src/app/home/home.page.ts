@@ -14,6 +14,7 @@ import {PopoverCollectionsComponent} from "../popover-collections/popover-collec
 })
 
 export class HomePage implements OnInit {
+  lastPage = '';
   recipes = []; // Here are going to be saved all the recipes downloaded from the database
   pathReference: any;
   imgs: []; // Title images downloaded from the firebase storage
@@ -32,6 +33,7 @@ export class HomePage implements OnInit {
     if (this.router.getCurrentNavigation().extras.state) {
       this.query = this.router.getCurrentNavigation().extras.state.query;
       this.isCollection = this.router.getCurrentNavigation().extras.state.isCollection;
+      this.lastPage = this.router.getCurrentNavigation().extras.state.lastPage;
 
       // If we are navigating from the page where there are listed all the collection.
       // in this page are shown all the recipes from that collection

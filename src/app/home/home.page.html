@@ -1,3 +1,15 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-grid color="secondary">
+      <ion-row class="ion-justify-content-between">
+        <ion-buttons>
+          <ion-back-button defaultHref="{{this.lastPage}}" text="" icon="chevron-back-outline"></ion-back-button>
+        </ion-buttons>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content color="light">
   <ion-list *ngIf="dataFetched" lines="none" class="ios list-ios hydrated ion-justify-content-center">
     <ion-item *ngFor="let recipeItem of recipes" class="user-list" color="light">

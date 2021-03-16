@@ -4,7 +4,7 @@
   <ion-content mode="ios">
     <ion-card>
       <!-- SEARCH BY NAME -->
-      <ion-card-header><b>Search recipe by keywords</b></ion-card-header>
+      <ion-card-header><b>Search recipe by keyword</b></ion-card-header>
       <ion-card-content>
         <ion-searchbar (ionChange)="onChangeName($event)" debounce="250" animated placeholder="Cake, pasta, ...">
         </ion-searchbar>
@@ -13,19 +13,6 @@
 
 
     <h1><ion-item lines="none"><b>Advanced filters</b></ion-item></h1>
-      <ion-card>
-          <ion-item lines="none">
-            Max time required<ion-toggle checked="false" (click)="toggleRequiredTime()" color="secondary" slot="end"></ion-toggle>
-          </ion-item>
-        <ion-list *ngIf="searchRequiredTime" lines="none">
-          <ion-item>
-            <ion-label>Time</ion-label>
-            <ion-datetime *ngIf="this.platform.is('desktop')" mode="ios" (ionChange)="timeRequiredChange($event)" minuteValues="0,5,10,15,30,45,50" displayFormat="HH:mm" pickerFormat="HH mm" value="00:30"></ion-datetime>
-            <ion-datetime *ngIf="this.platform.is('android')" mode="md" (ionChange)="timeRequiredChange($event)" minuteValues="0,5,10,15,30,45,50" displayFormat="HH:mm" pickerFormat="HH mm" value="00:30"></ion-datetime>
-          </ion-item>
-        </ion-list>
-      </ion-card>
-
 
       <ion-card>
         <ion-item lines="none">
@@ -70,6 +57,20 @@
               </span>
         </ion-col>
         </ion-card-content>
+      </ion-card>
+
+      <!-- MAX TIME REQUIRED -->
+      <ion-card>
+        <ion-item lines="none">
+          Max time required<ion-toggle checked="false" (click)="toggleRequiredTime()" color="secondary" slot="end"></ion-toggle>
+        </ion-item>
+        <ion-list *ngIf="searchRequiredTime" lines="none">
+          <ion-item>
+            <ion-label>Time</ion-label>
+            <ion-datetime *ngIf="this.platform.is('desktop')" mode="ios" (ionChange)="timeRequiredChange($event)" minuteValues="0,5,10,15,30,45,50" displayFormat="HH:mm" pickerFormat="HH mm" value="00:30"></ion-datetime>
+            <ion-datetime *ngIf="this.platform.is('android')" mode="md" (ionChange)="timeRequiredChange($event)" minuteValues="0,5,10,15,30,45,50" displayFormat="HH:mm" pickerFormat="HH mm" value="00:30"></ion-datetime>
+          </ion-item>
+        </ion-list>
       </ion-card>
 
       <!-- UNDESIRED INGREDIENTS -->
