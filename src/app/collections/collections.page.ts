@@ -12,7 +12,7 @@ import {Storage} from '@ionic/storage';
 })
 
 // TODO cuore nella pagina della ricetta nella parte di fianco al timer
-
+// TODO card collezioni della stessa grandezza anche se senza immagine dentro
 
 @Injectable({ providedIn: 'root' })
 
