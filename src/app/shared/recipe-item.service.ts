@@ -26,6 +26,13 @@ export class RecipeItemService {
     });
   }
 
+  createCollection(recipeKey: string, collectionName: string){
+    this.savedRecipesListRef = this.db.list('/collections/' + collectionName);
+    return this.savedRecipesListRef.set(recipeKey, {
+      name: ''
+    });
+  }
+
   // Get Single
   getRecipe(id: string) {
     this.savedRecipesRef = this.db.object('/recipes/' + id);

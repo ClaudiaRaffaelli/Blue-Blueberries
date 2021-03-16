@@ -38,7 +38,7 @@ export class HomePage implements OnInit {
       // If we are navigating from the page where there are listed all the collection.
       // in this page are shown all the recipes from that collection
       if (this.isCollection === true){
-        this.recipes = []
+        this.recipes = [];
         this.collection = this.router.getCurrentNavigation().extras.state.collection;
 
         var database = firebase.database().ref();

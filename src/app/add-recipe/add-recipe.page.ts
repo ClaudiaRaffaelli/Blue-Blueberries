@@ -81,7 +81,8 @@ export class AddRecipePage implements OnInit {
       recipeTime: [''],
       ingredientsForm: new IngredientsDic(),
       imgsCount: 0,
-      videoUrl: ''
+      videoUrl: '',
+      collection: ''
     });
     this.imagesUploaded = [];
     // This variable is needed for the searchbar functionality
@@ -99,7 +100,8 @@ export class AddRecipePage implements OnInit {
       recipeTime: [''],
       ingredientsForm: new IngredientsDic(),
       imgsCount: 0,
-      videoUrl: ''
+      videoUrl: '',
+      collection: ''
     });
     this.imagesUploaded = [];
     this.ingredients = this.recipeForm.value.ingredientsForm.ingredients;
@@ -111,6 +113,9 @@ export class AddRecipePage implements OnInit {
       return false;
     } else {
       console.log(this.recipeForm.value);
+      if (this.recipeForm.value.collection !== ''){
+        this.aptService.createCollection(this.recipeForm.value.$key, this.recipeForm.value.collection);
+      }
       this.aptService.createRecipeItem(this.recipeForm.value).then(res => {
         this.recipeForm.reset();
         this.router.navigate(['/presentation']);
