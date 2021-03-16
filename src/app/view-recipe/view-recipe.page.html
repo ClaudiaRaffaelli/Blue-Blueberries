@@ -1,18 +1,15 @@
 <!-- Default back button -->
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="light">
     <ion-grid color="secondary">
       <ion-row class="ion-justify-content-between">
         <ion-buttons>
           <ion-back-button defaultHref="{{this.lastPage}}" text="" icon="chevron-back-outline"></ion-back-button>
         </ion-buttons>
 
-        <button style="position: absolute; right: +40px; top: +13px;">
-          <ion-icon size = "large" name="heart" (click)="presentPopover($event, data.$key)"></ion-icon>
-        </button>
-
-        <ion-buttons>
-            <ion-icon id="timer" (click)="toggleTimer()" name="stopwatch-outline" size="large" [color]="timerState === 'start' ? 'success' : 'tertiary'"></ion-icon>
+        <ion-buttons color="light" style="position: absolute; right: +40px; top: +13px;">
+          <ion-icon id="presentPopover" size = "large" name="heart" (click)="presentPopover($event, data.$key)" color="danger"></ion-icon>
+          <ion-icon id="timer" (click)="toggleTimer()" name="stopwatch-outline" size="large" [color]="timerState === 'start' ? 'success' : 'tertiary'"></ion-icon>
         </ion-buttons>
       </ion-row>
 
@@ -41,17 +38,18 @@
 
 
 <ion-content>
+
   <div class="pickgradient">
     <img id="titleImage" src="{{this.recipeImages[this.data.$key + '_' + (this.currentImg)]}}"/>
   </div>
   <ion-card style="border-radius: 15px; margin-top: -70px">
-    <ion-card-header color="tertiary">
+    <ion-card-header color="light">
       <ion-card-title>{{data.name}}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-list lines="none">
-        <ion-item><ion-icon slot="start" color="primary" name="restaurant-outline" ></ion-icon>Ready in: <b> {{data.recipeTime}} mins </b></ion-item>
-        <ion-item><ion-icon slot="start" [color]="difficultyColor" name="flame-outline"></ion-icon> <ion-label>Difficulty: <b>{{data.recipeDifficulty}}</b> </ion-label></ion-item>
+        <ion-item><ion-icon slot="start" color="primary" name="restaurant-outline" ></ion-icon><span>Ready in: </span> <span> <b>{{data.recipeTime}} mins</b></span></ion-item>
+        <ion-item><ion-icon slot="start" [color]="difficultyColor" name="flame-outline"></ion-icon> <span>Difficulty: </span> <span><b>{{data.recipeDifficulty}}</b> </span></ion-item>
         <ion-item *ngIf="data.videoUrl !== ''" href="{{data.videoUrl}}"><ion-icon slot="start" color="danger" name="logo-youtube"></ion-icon> Video available </ion-item>
       </ion-list>
     </ion-card-content>

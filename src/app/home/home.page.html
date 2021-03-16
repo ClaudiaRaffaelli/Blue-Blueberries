@@ -13,26 +13,26 @@
 <ion-content color="light">
   <ion-list *ngIf="dataFetched" lines="none" class="ios list-ios hydrated ion-justify-content-center">
     <ion-item *ngFor="let recipeItem of recipes" class="user-list" color="light">
-      <ion-card style="border-radius: 25px; margin: 5px !important;">
-        <ion-card-header>
-          <ion-card-title>{{recipeItem.name}}</ion-card-title>
-          <button ion-button icon-only clear (click)="presentPopover($event, recipeItem.$key)" style="position: absolute; right: +25px; top: +13px;">
-            <ion-icon size = "large" name="heart"></ion-icon>
-          </button>
-        </ion-card-header>
-        <ion-card-content (click)="openRecipe(recipeItem)">
-          <div class="card">
-            <img src="{{recipeItem.title_image}}" style="border-radius: 10px;"/>
+      <ion-card style="border-radius: 15px; margin: 10px !important;">
+          <div class="card" disabled="true">
+            <img src="{{recipeItem.title_image}}" (click)="openRecipe(recipeItem)"/>
+              <ion-icon color="danger" (click)="presentPopover($event, recipeItem.$key)" style="position: absolute; right: +25px; top: +13px;" size = "large" name="heart"></ion-icon>
           </div>
-          <br>
-          <ion-item size="small">
-            Ready in {{recipeItem.recipeTime}} mins
-          </ion-item>
-          <br>
-          <ion-item>
-            Difficulty: {{recipeItem.recipeDifficulty}}
-          </ion-item>
-        </ion-card-content>
+          <ion-card-header (click)="openRecipe(recipeItem)">
+            <ion-card-title>{{recipeItem.name}}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content (click)="openRecipe(recipeItem)">
+              <h2>
+                  <ion-list>
+                      <span>
+                          <ion-icon slot="start" color="primary" name="restaurant-outline" ></ion-icon> {{recipeItem.recipeTime}} mins
+                      </span>
+                      <span>
+                          <ion-icon slot="start" color="danger" name="flame-outline"></ion-icon>{{recipeItem.recipeDifficulty}}
+                      </span>
+                  </ion-list>
+              </h2>
+          </ion-card-content>
       </ion-card>
     </ion-item>
   </ion-list>

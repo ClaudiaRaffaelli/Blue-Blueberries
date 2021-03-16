@@ -1,15 +1,18 @@
-
 <ion-content *ngIf="dataFetched" color="light">
-  <ion-item lines="none" color="light"><h1><ion-label color="">Picks for you</ion-label></h1></ion-item>
+  <ion-card style="margin: 0px !important;">
+    <h1><ion-card-header>Picks for you</ion-card-header></h1>
   <ion-slides [options]="option" class="ion-margin-top">
     <ion-slide *ngFor="let recipeItem of recipes">
-      <ion-card (click)="openRecipe(recipeItem)">
-        <img src="{{recipeItem.title_image}}">
+      <ion-card (click)="openRecipe(recipeItem)" class="myCard pickgradient">
+          <img src="{{recipeItem.title_image}}" class="pickgradient">
+        <div class="myOverlay pick">
+          <div>{{ recipeItem.name }}</div>
+        </div>
       </ion-card>
     </ion-slide>
   </ion-slides>
-
-  </ion-content>
+  </ion-card>
+</ion-content>
 
 <ion-content *ngIf="!dataFetched" color="light">
   <ion-item lines="none" color="light"><h1>Picks for you</h1></ion-item>

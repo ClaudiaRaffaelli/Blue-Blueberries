@@ -27,7 +27,7 @@
             <ion-col size="3"></ion-col>
             <ion-col size="6" class="ion-text-center">
               or use your voice <br>
-              <ion-button color="secondary" (click)="speakIngredients('available')"><ion-icon name="mic-outline"></ion-icon></ion-button>
+              <ion-button shape="round" color="secondary" (click)="speakIngredients('available')"><ion-icon name="mic-outline"></ion-icon></ion-button>
             </ion-col>
             <ion-col size="3"></ion-col>
           </ion-row>
@@ -44,12 +44,13 @@
             </ion-chip>
           </span>
         </ion-col>
-        <hr>
+        </ion-card-content>
         <!-- AVAILABLE INGREDIENTS SELECTED -->
-        <ion-col size="12" *ngIf="searchAvailableIngredients">
+        <ion-card-content *ngIf="searchAvailableIngredients">
+        <ion-col size="12">
               <span *ngFor="let ingredient of this.availableIngredientsKeys">
                 <span *ngIf="this.ing.ingredients[ingredient].selected">
-                  <ion-chip *ngIf="showAvailableIngredients && this.ing.ingredients[ingredient].selected " color="success">
+                  <ion-chip *ngIf="this.ing.ingredients[ingredient].selected" color="success">
                     <ion-label color="success">{{ingredient}}</ion-label>
                     <ion-icon (click)="toggleAvailableIngredient(ingredient)" name="close"></ion-icon>
                   </ion-chip>
@@ -87,7 +88,7 @@
             <ion-col size="3"></ion-col>
             <ion-col size="6" class="ion-text-center">
               or use your voice <br>
-              <ion-button color="secondary" (click)="speakIngredients('undesired')"><ion-icon name="mic-outline"></ion-icon></ion-button>
+              <ion-button shape="round" color="secondary" (click)="speakIngredients('undesired')"><ion-icon name="mic-outline"></ion-icon></ion-button>
             </ion-col>
             <ion-col size="3"></ion-col>
           </ion-row>
@@ -104,9 +105,10 @@
               </ion-chip>
           </span>
         </ion-col>
-        <hr>
+        </ion-card-content>
         <!-- UNDESIRED INGREDIENTS SELECTED -->
-        <ion-col size="12" *ngIf="searchUndesiredIngredients">
+        <ion-card-content *ngIf="searchUndesiredIngredients" >
+        <ion-col size="12">
           <span *ngFor="let ingredient of this.undesiredIngredientsKeys">
             <span *ngIf="this.ingUndesired.ingredients[ingredient].selected">
               <ion-chip *ngIf="showUndesiredIngredients && this.ingUndesired.ingredients[ingredient].selected " color="danger">

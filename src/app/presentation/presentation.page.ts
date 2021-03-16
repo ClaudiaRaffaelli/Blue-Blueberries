@@ -67,7 +67,6 @@ export class PresentationPage implements OnInit {
       }
     };
     this.router.navigate(['view-recipe'], navigationExtras);
-
   }
 
 }

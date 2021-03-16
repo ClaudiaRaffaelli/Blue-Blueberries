@@ -120,7 +120,7 @@ export class ViewRecipePage implements OnInit {
           ionRow.appendChild(ionColMic);
           ionGrid.appendChild(ionRow);
           ionCardHeader.appendChild(ionGrid);
-          ionCardHeader.setAttribute('color', 'tertiary');
+          ionCardHeader.setAttribute('color', 'light');
 
           const ionCardContent = document.createElement('ion-card-content');
           // @ts-ignore
@@ -226,7 +226,7 @@ export class ViewRecipePage implements OnInit {
     bounce
         .scale({
           from: {x: 1, y: 1},
-          to: {x: 3, y: 2},
+          to: {x: 2, y: 2},
           easing: 'sway',
           duration: 300,
           delay: 50,
@@ -251,6 +251,7 @@ export class ViewRecipePage implements OnInit {
   }
 
   async presentPopover(eve: any, recipeKey: string) {
+    this.bounceTimer('presentPopover');
     const popover = await this.popoverController.create({
       component: PopoverCollectionsComponent,
       cssClass: 'popOver',
