@@ -4,6 +4,7 @@ import {NavigationExtras, Router} from '@angular/router';
 import {Platform} from '@ionic/angular';
 import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx';
 import levenshtein from 'fast-levenshtein';
+import {Insomnia} from '@ionic-native/insomnia/ngx';
 
 
 // import { Plugins } from '@capacitor/core';
@@ -44,7 +45,8 @@ export class SearchRecipePage implements OnInit {
   };
 
 
-  constructor(private router: Router, public platform: Platform, private speechRecognition: SpeechRecognition, public ngZone: NgZone) {
+  constructor(private router: Router, public platform: Platform, private speechRecognition: SpeechRecognition,
+              public ngZone: NgZone, private insomnia: Insomnia) {
     this.queryRecipeName = '';
     this.difficulty = 'easy';
     this.showAvailableSearchBarResults = false;
@@ -58,6 +60,7 @@ export class SearchRecipePage implements OnInit {
     this.searchDifficulty = false;
     this.searchRequiredTime = false;
     this.maxRequiredTime = 30;
+    this.insomnia.allowSleepAgain();
 
 
     // Check feature available

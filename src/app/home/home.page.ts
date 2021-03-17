@@ -4,8 +4,9 @@ import { RecipeItemService } from './../shared/recipe-item.service';
 import firebase from 'firebase';
 import 'firebase/storage'; // in order to use images stored in the firebase database
 import {Router, NavigationExtras, ActivatedRoute} from '@angular/router'; // pass data between two pages
-import {PopoverController} from "@ionic/angular";
-import {PopoverCollectionsComponent} from "../popover-collections/popover-collections.component";
+import {PopoverController} from '@ionic/angular';
+import {PopoverCollectionsComponent} from '../popover-collections/popover-collections.component';
+import {Insomnia} from '@ionic-native/insomnia/ngx';
 
 @Component({
   selector: 'app-home',
@@ -21,38 +22,42 @@ export class HomePage implements OnInit {
   recipesRes: any;
   query = {}; // query from search-page
   dataFetched: boolean; // flag that indicates when all recipes data have been downloaded from the database
-  collection : any; // collection got from custom collection page
-  titlePage = "";
+  collection: any; // collection got from custom collection page
+  titlePage = '';
 
   constructor(
     private aptService: RecipeItemService,
     private route: ActivatedRoute,
     private router: Router,
     public popoverController: PopoverController,
-  ) { this.route.queryParams.subscribe(async params => {
+    private insomnia: Insomnia
+  ) {
+    this.insomnia.allowSleepAgain();
+    this.route.queryParams.subscribe(async params => {
     if (this.router.getCurrentNavigation().extras.state) {
       this.query = this.router.getCurrentNavigation().extras.state.query;
       this.lastPage = this.router.getCurrentNavigation().extras.state.lastPage;
 
       // If we are navigating from the page where there are listed all the collection.
       // in this page are shown all the recipes from that collection
-      if (this.lastPage === "collections" || this.lastPage === "presentation"){
+      if (this.lastPage === 'collections' || this.lastPage === 'presentation'){
         this.recipes = [];
         this.collection = this.router.getCurrentNavigation().extras.state.collection;
         this.titlePage = this.collection.name;
 
-        var database = firebase.database().ref();
-        for (let recipeKey of this.collection["recipeList"]){
+        const database = firebase.database().ref();
+        for (const recipeKey of this.collection.recipeList){
 
-          const myRecipeItem = await database.child("recipes").child(recipeKey).get().then(function(snapshot) {
+          const myRecipeItem = await database.child('recipes').child(recipeKey).get().then(function(snapshot) {
             if (snapshot.exists()) {
+              // tslint:disable-next-line:no-shadowed-variable
               const myRecipeItem = snapshot.val();
               // @ts-ignore
               myRecipeItem.$key = recipeKey;
-              return myRecipeItem
+              return myRecipeItem;
             }
             else {
-              console.log("No data available");
+              console.log('No data available');
             }
           }).catch(function(error) {
             console.error(error);
@@ -65,12 +70,12 @@ export class HomePage implements OnInit {
             myRecipeItem.title_image = this.imgs;
           });
           this.recipes.push(myRecipeItem as RecipeItem);
-          //console.log(this.recipes)
+          // console.log(this.recipes)
         }
         this.dataFetched = true;
       } else{
         // navigating here from the search page
-        this.titlePage = "";
+        this.titlePage = '';
         this.recipesRes = this.aptService.getRecipesList();
         this.recipesRes.snapshotChanges().subscribe(res => {
           this.dataFetched = false;
@@ -96,60 +101,73 @@ export class HomePage implements OnInit {
               // filtersSatisfied is changed to false in order to save computational time because the next filters are not going to be checked
               let filtersSatisfied = true;
               // Check queries one by one
-              if (this.query['recipeName'] && (filtersSatisfied === true)){
-                if (myRecipeItem.name.toLowerCase().indexOf(this.query['recipeName'].toLowerCase()) !== -1){
-                  if (--numberOfFilters === 0)
-                    this.recipes.push(myRecipeItem as RecipeItem);
-                }else{
-                  filtersSatisfied = false;
-                }
-              }
-              if (this.query['difficulty'] && (filtersSatisfied === true)){
+              // @ts-ignore
+              if (this.query.recipeName && (filtersSatisfied === true)){
                 // @ts-ignore
-                if ((myRecipeItem.recipeDifficulty as RecipeItem) === this.query['difficulty']) {
-                  if (--numberOfFilters === 0)
+                if (myRecipeItem.name.toLowerCase().indexOf(this.query.recipeName.toLowerCase()) !== -1){
+                  if (--numberOfFilters === 0) {
                     this.recipes.push(myRecipeItem as RecipeItem);
+                  }
                 }else{
                   filtersSatisfied = false;
                 }
               }
-              if (this.query['requiredTime'] && (filtersSatisfied === true)){
+              // @ts-ignore
+              if (this.query.difficulty && (filtersSatisfied === true)){
                 // @ts-ignore
-                if ((myRecipeItem.recipeTime as RecipeItem) <= this.query['requiredTime']) {
-                  if (--numberOfFilters === 0)
+                if ((myRecipeItem.recipeDifficulty as RecipeItem) === this.query.difficulty) {
+                  if (--numberOfFilters === 0) {
                     this.recipes.push(myRecipeItem as RecipeItem);
+                  }
                 }else{
                   filtersSatisfied = false;
                 }
               }
-              if (this.query['availableIngredients'] && (filtersSatisfied === true)){
+              // @ts-ignore
+              if (this.query.requiredTime && (filtersSatisfied === true)){
+                // @ts-ignore
+                if ((myRecipeItem.recipeTime as RecipeItem) <= this.query.requiredTime) {
+                  if (--numberOfFilters === 0) {
+                    this.recipes.push(myRecipeItem as RecipeItem);
+                  }
+                }else{
+                  filtersSatisfied = false;
+                }
+              }
+              // @ts-ignore
+              if (this.query.availableIngredients && (filtersSatisfied === true)){
                 let filterOk = true;
                 for (const ingredient in myRecipeItem.ingredients){
-                  if (myRecipeItem.ingredients[ingredient].selected && !this.query['availableIngredients'][ingredient].selected){
+                  // @ts-ignore
+                  if (myRecipeItem.ingredients[ingredient].selected && !this.query.availableIngredients[ingredient].selected){
                     filterOk = false;
                     filtersSatisfied = false;
                     break;
                   }
                 }
                 if (filterOk){
-                  if (--numberOfFilters === 0)
+                  if (--numberOfFilters === 0) {
                     this.recipes.push(myRecipeItem as RecipeItem);
+                  }
                 }else{
                   filtersSatisfied = false;
                 }
               }
-              if (this.query['undesiredIngredients'] && (filtersSatisfied === true)){
+              // @ts-ignore
+              if (this.query.undesiredIngredients && (filtersSatisfied === true)){
                 let filterOk = true;
                 for (const ingredient in myRecipeItem.ingredients){
-                  if (myRecipeItem.ingredients[ingredient].selected && this.query['undesiredIngredients'][ingredient].selected){
+                  // @ts-ignore
+                  if (myRecipeItem.ingredients[ingredient].selected && this.query.undesiredIngredients[ingredient].selected){
                     filterOk = false;
                     filtersSatisfied = false;
                     break;
                   }
                 }
                 if (filterOk){
-                  if (--numberOfFilters === 0)
+                  if (--numberOfFilters === 0) {
                     this.recipes.push(myRecipeItem as RecipeItem);
+                  }
                 }else{
                   filtersSatisfied = false;
                 }
@@ -175,18 +193,18 @@ export class HomePage implements OnInit {
       cssClass: 'popOver',
       componentProps: {
         // communicating the recipe key to the popover for when the recipe will be added to the collection
-        "recipeKey": recipeKey,
+        recipeKey: recipeKey,
       },
       event: eve,
       mode: 'ios',
       translucent: true
     });
 
-    popover.onWillDismiss().then(() =>{
-          //alert("before dismissing the popover")
+    popover.onWillDismiss().then(() => {
+          // alert("before dismissing the popover")
     });
     popover.onDidDismiss().then(() => {
-          //alert("popover dismissed")
+          // alert("popover dismissed")
     });
     return await popover.present();
   }

@@ -72,6 +72,7 @@ export class PresentationPage implements OnInit {
         let [firstRecipeKey] = Object.keys(collection.payload.toJSON());
 
         await firebase.storage().ref().child(firstRecipeKey + '/' + firstRecipeKey + '_0.jpg').getDownloadURL().then(async url => {
+          console.log(url);
           collectionItem.coverImage = url;
         });
 

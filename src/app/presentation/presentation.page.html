@@ -14,17 +14,17 @@
   </ion-card>
 
   <!--  Now we display the fixed collections -->
-  <ion-list class="ios list-ios hydrated">
+  <ion-list lines="none" class="ios list-ios hydrated">
 
     <ion-item *ngFor="let collectionItem of collections" class="user-list">
 
-      <ion-card style="border-radius: 15px; margin: 10px !important;">
+      <ion-card style="border-radius: 15px; margin: 10px !important;" (click)="openCollection(collectionItem)">
         <ion-card-header (click)="openCollection(collectionItem)">
           <ion-card-title>{{collectionItem.name}}</ion-card-title>
         </ion-card-header>
         <div class="card" disabled="true">
 <!--          todo per qualche ragione l'immagine non viene presa anche se è correttamente salvata-->
-          <img (click)="openCollection(collectionItem)" src="{{collectionItem.coverImage}}" />
+          <img [src]="collectionItem.coverImage"/>
         </div>
         <ion-card-content (click)="openCollection(collectionItem)">
           <div>

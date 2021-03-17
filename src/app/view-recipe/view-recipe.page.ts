@@ -6,7 +6,8 @@ import {BehaviorSubject} from 'rxjs';
 import * as Bounce from 'bounce.js';
 import {Platform, PopoverController} from '@ionic/angular';
 import {TextToSpeech} from '@ionic-native/text-to-speech/ngx';
-import {PopoverCollectionsComponent} from "../popover-collections/popover-collections.component";
+import {PopoverCollectionsComponent} from '../popover-collections/popover-collections.component';
+import { Insomnia } from '@ionic-native/insomnia/ngx';
 
 
 @Component({
@@ -48,7 +49,9 @@ export class ViewRecipePage implements OnInit {
               private router: Router,
               public platform: Platform,
               private tts: TextToSpeech,
-              public popoverController: PopoverController) {
+              public popoverController: PopoverController,
+              private insomnia: Insomnia) {
+    this.insomnia.keepAwake();
     this.timerToggle = false;
     this.route.queryParams.subscribe(async params => {
       if (this.router.getCurrentNavigation().extras.state) {
@@ -257,18 +260,18 @@ export class ViewRecipePage implements OnInit {
       cssClass: 'popOver',
       componentProps: {
         // communicating the recipe key to the popover for when the recipe will be added to the collection
-        "recipeKey": recipeKey,
+        recipeKey: recipeKey,
       },
       event: eve,
       mode: 'ios',
       translucent: true
     });
 
-    popover.onWillDismiss().then(() =>{
-      //alert("before dismissing the popover")
+    popover.onWillDismiss().then(() => {
+      // alert("before dismissing the popover")
     });
     popover.onDidDismiss().then(() => {
-      //alert("popover dismissed")
+      // alert("popover dismissed")
     });
     return await popover.present();
   }
