@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import firebase from 'firebase';
 import {RecipeItemService} from '../shared/recipe-item.service';
 import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
-import {RecipeItem} from '../shared/recipeItem';
+import {IngredientsDic, RecipeItem} from '../shared/recipeItem';
+import {PopoverController} from "@ionic/angular";
+import {CollectionItemService} from "../shared/collection-item.service";
 
 @Component({
   selector: 'app-presentation',
@@ -10,14 +12,18 @@ import {RecipeItem} from '../shared/recipeItem';
   styleUrls: ['./presentation.page.scss'],
 })
 export class PresentationPage implements OnInit {
-  recipes = [];
+  suggestedRecipes = [];
   randomSuggestions = [];
   pathReference: any;
   recipeKeys: [];
   recipesRes: any;
+  collectionsRes: any;
   imgs: []; // Title images downloaded from the firebase storage
   suggestionsNumber = 3; // suggested recipes
   dataFetched: boolean; // flag that indicates when all recipes data have been downloaded from the database
+  collections = []
+  collectionImages = []; // contains the cover image of a collection
+
 
   // Options for images slider
   option = {
@@ -30,15 +36,17 @@ export class PresentationPage implements OnInit {
   constructor(
       private aptService: RecipeItemService,
       private route: ActivatedRoute,
-      private router: Router) {
+      private router: Router,
+      private popoverController: PopoverController,
+      private collectionService: CollectionItemService) {
   }
 
 
-  ngOnInit() {
+  async ngOnInit() {
     this.recipesRes = this.aptService.getRecipesList();
     this.recipesRes.snapshotChanges().subscribe(res => {
       this.dataFetched = false;
-      this.recipes = [];
+      this.suggestedRecipes = [];
       const rndRes = [];
       for (let i = 0; i < this.suggestionsNumber; i++){
         rndRes.push(res[Math.floor(Math.random() * res.length)]); // push a random element
@@ -53,10 +61,37 @@ export class PresentationPage implements OnInit {
           // @ts-ignore
           myRecipeItem.title_image = this.imgs;
         });
-        this.recipes.push(myRecipeItem as RecipeItem);
+        this.suggestedRecipes.push(myRecipeItem as RecipeItem);
+      });
+
+    });
+
+    // importing the collections
+    this.collectionsRes = this.aptService.getCollectionsList();
+    await this.collectionsRes.snapshotChanges().subscribe( col => {
+      col.forEach( async collection => {
+
+        let collectionItem = new FixedCollectionItem()
+        collectionItem.name = collection.key
+
+        // taking from the first recipe in the collection the cover image for the collection itself
+        let [firstRecipeKey] = Object.keys(collection.payload.toJSON());
+
+        await firebase.storage().ref().child(firstRecipeKey + '/' + firstRecipeKey + '_0.jpg').getDownloadURL().then(async url => {
+          collectionItem.coverImage = url;
+        });
+
+        collectionItem.recipeList = Object.keys(collection.payload.toJSON());
+
+        collectionItem.numberOfRecipes = collectionItem.recipeList.length;
+        this.collections.push(collectionItem);
+
+
       });
       this.dataFetched = true;
+
     });
+
   }
 
   openRecipe(recipeP: any){
@@ -69,4 +104,22 @@ export class PresentationPage implements OnInit {
     this.router.navigate(['view-recipe'], navigationExtras);
   }
 
+  openCollection(collectionP: any){
+
+    const navigationExtras: NavigationExtras = {
+      state: {
+        collection: collectionP,
+        lastPage: 'presentation'
+      }
+    };
+    this.router.navigate(['home'], navigationExtras);
+  }
+
+}
+
+export class FixedCollectionItem {
+  name: string;
+  recipeList: any;
+  numberOfRecipes: number;
+  coverImage: any;
 }

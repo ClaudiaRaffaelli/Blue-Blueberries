@@ -65,7 +65,6 @@ export class CollectionsPage implements OnInit {
     const navigationExtras: NavigationExtras = {
       state: {
         collection: collectionP,
-        isCollection: true,
         lastPage: 'collections'
       }
     };

@@ -21,8 +21,8 @@ export class HomePage implements OnInit {
   recipesRes: any;
   query = {}; // query from search-page
   dataFetched: boolean; // flag that indicates when all recipes data have been downloaded from the database
-  isCollection = false;
-  collection = {}; // collection got from custom collection page
+  collection : any; // collection got from custom collection page
+  titlePage = "";
 
   constructor(
     private aptService: RecipeItemService,
@@ -32,14 +32,14 @@ export class HomePage implements OnInit {
   ) { this.route.queryParams.subscribe(async params => {
     if (this.router.getCurrentNavigation().extras.state) {
       this.query = this.router.getCurrentNavigation().extras.state.query;
-      this.isCollection = this.router.getCurrentNavigation().extras.state.isCollection;
       this.lastPage = this.router.getCurrentNavigation().extras.state.lastPage;
 
       // If we are navigating from the page where there are listed all the collection.
       // in this page are shown all the recipes from that collection
-      if (this.isCollection === true){
+      if (this.lastPage === "collections" || this.lastPage === "presentation"){
         this.recipes = [];
         this.collection = this.router.getCurrentNavigation().extras.state.collection;
+        this.titlePage = this.collection.name;
 
         var database = firebase.database().ref();
         for (let recipeKey of this.collection["recipeList"]){
@@ -70,6 +70,7 @@ export class HomePage implements OnInit {
         this.dataFetched = true;
       } else{
         // navigating here from the search page
+        this.titlePage = "";
         this.recipesRes = this.aptService.getRecipesList();
         this.recipesRes.snapshotChanges().subscribe(res => {
           this.dataFetched = false;

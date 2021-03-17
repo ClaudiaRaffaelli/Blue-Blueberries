@@ -9,6 +9,7 @@ import { AngularFireDatabase, AngularFireList, AngularFireObject } from '@angula
 export class RecipeItemService {
   savedRecipesListRef: AngularFireList<any>;
   savedRecipesRef: AngularFireObject<any>;
+  savedCollectionsListRef: AngularFireList<unknown>;
 
   constructor(private db: AngularFireDatabase) { }
 
@@ -31,6 +32,11 @@ export class RecipeItemService {
     return this.savedRecipesListRef.set(recipeKey, {
       name: ''
     });
+  }
+
+  getCollectionsList(){
+    this.savedCollectionsListRef = this.db.list('/collections');
+    return this.savedCollectionsListRef;
   }
 
   // Get Single

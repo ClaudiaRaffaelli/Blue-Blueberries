@@ -2,7 +2,7 @@
   <ion-card style="margin: 0px !important;">
     <h1><ion-card-header>Picks for you</ion-card-header></h1>
   <ion-slides [options]="option" class="ion-margin-top">
-    <ion-slide *ngFor="let recipeItem of recipes">
+    <ion-slide *ngFor="let recipeItem of suggestedRecipes">
       <ion-card (click)="openRecipe(recipeItem)" class="myCard pickgradient">
           <img src="{{recipeItem.title_image}}" class="pickgradient">
         <div class="myOverlay pick">
@@ -12,6 +12,28 @@
     </ion-slide>
   </ion-slides>
   </ion-card>
+
+  <!--  Now we display the fixed collections -->
+  <ion-list class="ios list-ios hydrated">
+
+    <ion-item *ngFor="let collectionItem of collections" class="user-list">
+
+      <ion-card style="border-radius: 15px; margin: 10px !important;">
+        <ion-card-header (click)="openCollection(collectionItem)">
+          <ion-card-title>{{collectionItem.name}}</ion-card-title>
+        </ion-card-header>
+        <div class="card" disabled="true">
+<!--          todo per qualche ragione l'immagine non viene presa anche se è correttamente salvata-->
+          <img (click)="openCollection(collectionItem)" src="{{collectionItem.coverImage}}" />
+        </div>
+        <ion-card-content (click)="openCollection(collectionItem)">
+          <div>
+            <ion-icon name="archive"></ion-icon> {{collectionItem.numberOfRecipes}} recipes
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </ion-item>
+  </ion-list>
 </ion-content>
 
 <ion-content *ngIf="!dataFetched" color="light">
