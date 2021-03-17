@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
+import {Storage} from "@ionic/storage";
 
 @Component({
   selector: 'app-groceries',
@@ -11,7 +12,8 @@ export class GroceriesPage implements OnInit {
   lastPage = '';
 
   constructor(private route: ActivatedRoute,
-              private router: Router,) {
+              private router: Router,
+              private storage: Storage) {
 
     this.route.queryParams.subscribe(async params => {
     if (this.router.getCurrentNavigation().extras.state) {
@@ -23,5 +25,13 @@ export class GroceriesPage implements OnInit {
 
   ngOnInit() {
   }
+
+
+
+
+
+
+
+
 
 }

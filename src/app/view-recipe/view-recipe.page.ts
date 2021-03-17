@@ -8,6 +8,7 @@ import {Platform, PopoverController} from '@ionic/angular';
 import {TextToSpeech} from '@ionic-native/text-to-speech/ngx';
 import {PopoverCollectionsComponent} from '../popover-collections/popover-collections.component';
 import { Insomnia } from '@ionic-native/insomnia/ngx';
+import {GroceriesService} from "../shared/groceries.service";
 
 
 @Component({
@@ -33,6 +34,8 @@ export class ViewRecipePage implements OnInit {
   timerState: 'start' | 'stop' = 'stop'; // it can be either start or stop
   timerToggle: boolean;
 
+  isInGroceryList: boolean;
+
   lastPage: string;
   textSteps: {[id: string]: string};
 
@@ -50,16 +53,23 @@ export class ViewRecipePage implements OnInit {
               public platform: Platform,
               private tts: TextToSpeech,
               public popoverController: PopoverController,
-              private insomnia: Insomnia) {
+              private insomnia: Insomnia,
+              private groceriesService: GroceriesService) {
     this.insomnia.keepAwake();
     this.timerToggle = false;
     this.route.queryParams.subscribe(async params => {
       if (this.router.getCurrentNavigation().extras.state) {
         this.data = this.router.getCurrentNavigation().extras.state.recipe;
+
         if (!this.data){
           this.router.navigate(['presentation']);
         }
         this.lastPage = this.router.getCurrentNavigation().extras.state.lastPage;
+
+        // find out if the recipe is in the grocery list and display a different icon accordingly
+        await groceriesService.getGroceryList().then( async groceryList =>{
+          this.isInGroceryList = !!groceryList.includes(this.data.$key);
+        });
 
         document.getElementById('recipeText').textContent = ' '; // clear previous recipe
         this.recipeImages = {};
@@ -78,11 +88,11 @@ export class ViewRecipePage implements OnInit {
             break;
         }
 
-
         // Set title image
         const titleImage = document.getElementById('titleImage'); // Set title image (first image, with index 0)
         let urlSrc = await this.getNextImage();
         titleImage.setAttribute('src', urlSrc);
+
 
         this.textSteps = {};
         // Get all recipe's steps (they are separated with <endStep> keywords)
@@ -274,6 +284,16 @@ export class ViewRecipePage implements OnInit {
       // alert("popover dismissed")
     });
     return await popover.present();
+  }
+
+  async addRemoveCart(recipeKey: string){
+    // TODO sarebbe carino fare l'icona con un numerello sopra che indica quante ricette sono nel carrello al momento:
+    //  riferimento: https://forum.ionicframework.com/t/how-to-add-a-badge-to-a-icon-inside-a-ion-button/70868
+
+
+    // toggle the recipe inside the cart and change the icon accordingly
+    await this.groceriesService.addRemoveRecipeFromGrocery(recipeKey);
+    this.isInGroceryList = ! this.isInGroceryList;
   }
 
 }

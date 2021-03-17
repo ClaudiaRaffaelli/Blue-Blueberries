@@ -59,6 +59,7 @@
     "@ionic/lab": "^3.2.10",
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "~2.0.3",
+    "SpeechRecognizer": "github:poiuytrez/SpeechRecognizer",
     "codelyzer": "^6.0.0",
     "cordova-browser": "^6.0.0",
     "cordova-ios": "^4.0.1",
@@ -84,7 +85,6 @@
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
     "protractor": "~7.0.0",
-    "SpeechRecognizer": "github:poiuytrez/SpeechRecognizer",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
     "typescript": "~4.0.2"

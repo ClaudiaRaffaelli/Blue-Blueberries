@@ -8,6 +8,8 @@
         </ion-buttons>
 
         <ion-buttons color="light" style="position: absolute; right: +40px; top: +13px;">
+          <ion-icon *ngIf="isInGroceryList" id="inGroceryList" size = "large" name="cart" (click)="addRemoveCart(data.$key)" color="primary"></ion-icon>
+          <ion-icon *ngIf="!isInGroceryList" id="notInGroceryList" size = "large" name="cart-outline" (click)="addRemoveCart(data.$key)" color="primary"></ion-icon>
           <ion-icon id="presentPopover" size = "large" name="heart" (click)="presentPopover($event, data.$key)" color="danger"></ion-icon>
           <ion-icon id="timer" (click)="toggleTimer()" name="stopwatch-outline" size="large" [color]="timerState === 'start' ? 'success' : 'tertiary'"></ion-icon>
         </ion-buttons>
