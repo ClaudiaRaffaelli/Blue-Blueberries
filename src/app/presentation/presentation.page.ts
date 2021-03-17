@@ -13,17 +13,13 @@ import {CollectionItemService} from "../shared/collection-item.service";
 })
 export class PresentationPage implements OnInit {
   suggestedRecipes = [];
-  randomSuggestions = [];
   pathReference: any;
-  recipeKeys: [];
   recipesRes: any;
   collectionsRes: any;
   imgs: []; // Title images downloaded from the firebase storage
   suggestionsNumber = 3; // suggested recipes
   dataFetched: boolean; // flag that indicates when all recipes data have been downloaded from the database
   collections = []
-  collectionImages = []; // contains the cover image of a collection
-
 
   // Options for images slider
   option = {
@@ -36,9 +32,7 @@ export class PresentationPage implements OnInit {
   constructor(
       private aptService: RecipeItemService,
       private route: ActivatedRoute,
-      private router: Router,
-      private popoverController: PopoverController,
-      private collectionService: CollectionItemService) {
+      private router: Router) {
   }
 
 
