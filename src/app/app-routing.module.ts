@@ -31,6 +31,14 @@ const routes: Routes = [
     path: 'presentation',
     loadChildren: () => import('./presentation/presentation.module').then( m => m.PresentationPageModule)
   },
+  {
+    path: 'settings',
+    loadChildren: () => import('./settings/settings.module').then( m => m.SettingsPageModule)
+  },
+  {
+    path: 'groceries',
+    loadChildren: () => import('./groceries/groceries.module').then( m => m.GroceriesPageModule)
+  },
 ];
 
 @NgModule({

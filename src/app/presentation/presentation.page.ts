@@ -3,8 +3,6 @@ import firebase from 'firebase';
 import {RecipeItemService} from '../shared/recipe-item.service';
 import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {IngredientsDic, RecipeItem} from '../shared/recipeItem';
-import {PopoverController} from "@ionic/angular";
-import {CollectionItemService} from "../shared/collection-item.service";
 
 @Component({
   selector: 'app-presentation',
