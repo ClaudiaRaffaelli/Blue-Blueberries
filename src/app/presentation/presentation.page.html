@@ -23,7 +23,6 @@
           <ion-card-title>{{collectionItem.name}}</ion-card-title>
         </ion-card-header>
         <div class="card" disabled="true">
-<!--          todo per qualche ragione l'immagine non viene presa anche se è correttamente salvata-->
           <img [src]="collectionItem.coverImage"/>
         </div>
         <ion-card-content (click)="openCollection(collectionItem)">

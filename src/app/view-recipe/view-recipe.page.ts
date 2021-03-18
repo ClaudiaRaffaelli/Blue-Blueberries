@@ -9,6 +9,7 @@ import {TextToSpeech} from '@ionic-native/text-to-speech/ngx';
 import {PopoverCollectionsComponent} from '../popover-collections/popover-collections.component';
 import { Insomnia } from '@ionic-native/insomnia/ngx';
 import {GroceriesService} from "../shared/groceries.service";
+import {Storage} from "@ionic/storage";
 
 
 @Component({
@@ -65,11 +66,6 @@ export class ViewRecipePage implements OnInit {
           this.router.navigate(['presentation']);
         }
         this.lastPage = this.router.getCurrentNavigation().extras.state.lastPage;
-
-        // find out if the recipe is in the grocery list and display a different icon accordingly
-        await groceriesService.getGroceryList().then( async groceryList =>{
-          this.isInGroceryList = !!groceryList.includes(this.data.$key);
-        });
 
         document.getElementById('recipeText').textContent = ' '; // clear previous recipe
         this.recipeImages = {};
@@ -166,6 +162,12 @@ export class ViewRecipePage implements OnInit {
 
           }
         }
+
+        // discovers if the recipe is in the grocery list
+        await groceriesService.getGroceryList().then( async groceryList =>{
+          console.log(groceryList);
+          this.isInGroceryList = !!groceryList.includes(this.data.$key);
+        });
       }
     });
   }

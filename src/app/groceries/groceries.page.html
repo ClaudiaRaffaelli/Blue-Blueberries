@@ -12,7 +12,16 @@
 </ion-header>
 
 
-
-<ion-content>
-
+<ion-content color="light">
+    <ion-slides [options]="option" class="ion-margin-top">
+      <ion-slide *ngFor="let recipeItem of recipesInGroceryList">
+        <ion-card  class="myCard pickgradient">
+          <ion-checkbox color="primary" style="position: absolute; left: +10px; top: +13px;"></ion-checkbox>
+          <img src="{{recipeItem.title_image}}" class="pickgradient" (click)="openRecipe(recipeItem)">
+          <div class="myOverlay pick">
+            <div>{{ recipeItem.name }}</div>
+          </div>
+        </ion-card>
+      </ion-slide>
+    </ion-slides>
 </ion-content>
