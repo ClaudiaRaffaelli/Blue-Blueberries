@@ -62,7 +62,7 @@
     "SpeechRecognizer": "github:poiuytrez/SpeechRecognizer",
     "codelyzer": "^6.0.0",
     "cordova-browser": "^6.0.0",
-    "cordova-ios": "^4.0.1",
+    "cordova-ios": "^6.2.0",
     "cordova-plugin-apiai": "^1.7.4",
     "cordova-plugin-crosswalk-webview": "^2.4.0",
     "cordova-plugin-device": "^2.0.2",

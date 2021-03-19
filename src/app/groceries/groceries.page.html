@@ -14,9 +14,9 @@
 
 <ion-content color="light">
     <ion-slides [options]="option" class="ion-margin-top">
-      <ion-slide *ngFor="let recipeItem of recipesInGroceryList">
+      <ion-slide *ngFor="let recipeItem of recipesInGroceryList; let recipeIndex=index">
         <ion-card  class="myCard pickgradient">
-          <ion-checkbox color="primary" style="position: absolute; left: +10px; top: +13px;"></ion-checkbox>
+          <ion-checkbox color="primary" checked="true" style="position: absolute; left: +10px; top: +13px;" (click)="checkUncheckRecipe(recipeIndex)"></ion-checkbox>
           <img src="{{recipeItem.title_image}}" class="pickgradient" (click)="openRecipe(recipeItem)">
           <div class="myOverlay pick">
             <div>{{ recipeItem.name }}</div>
@@ -24,4 +24,13 @@
         </ion-card>
       </ion-slide>
     </ion-slides>
+
+  <ion-list class="user-list">
+    <ion-item *ngFor="let ingredient of ingredients">
+      <ion-label>{{ingredient.name}} - {{ingredient.quantity}} {{ingredient.unity}}</ion-label>
+      <ion-checkbox color="primary" type="checkbox" (click)="checkUncheckIngredient($event)" ></ion-checkbox>
+    </ion-item>
+  </ion-list>
+
+
 </ion-content>
