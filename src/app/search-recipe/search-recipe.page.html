@@ -2,34 +2,30 @@
   <br>
 
   <ion-content mode="ios">
-    <ion-card>
       <!-- SEARCH BY NAME -->
-      <ion-card-header><b>Search recipe by keyword</b></ion-card-header>
       <ion-card-content>
         <ion-searchbar (ionChange)="onChangeName($event)" debounce="250" animated placeholder="Cake, pasta, ...">
         </ion-searchbar>
       </ion-card-content>
-    </ion-card>
-
 
     <h1><ion-item lines="none"><b>Advanced filters</b></ion-item></h1>
 
       <ion-card>
         <ion-item lines="none">
-          Available ingredients <ion-toggle checked="false" (click)="toggleSearchAvailableIngredients()" color="secondary" slot="end"></ion-toggle>
+          Available ingredients <ion-toggle [checked]="searchAvailableIngredients" (ionChange)="toggleSearchAvailableIngredients()" color="secondary" slot="end"></ion-toggle>
         </ion-item>
         <!-- SEARCH BAR -->
         <ion-searchbar *ngIf="searchAvailableIngredients" (ionChange)="_ionChangeAvailable($event)" debounce="250" animated placeholder="Type eggs, milk, ...">
         </ion-searchbar>
         <!-- SPEECH TO TEXT -->
-        <ion-grid *ngIf="searchAvailableIngredients" style="height: 100%">
+        <ion-grid *ngIf="searchAvailableIngredients"  style="height: 100%">
           <ion-row class="ion-align-items-center">
-            <ion-col size="3"></ion-col>
-            <ion-col size="6" class="ion-text-center">
-              or use your voice <br>
-              <ion-button shape="round" color="secondary" (click)="speakIngredients('available')"><ion-icon name="mic-outline"></ion-icon></ion-button>
+            <ion-col size="1"></ion-col>
+            <ion-col size="10" class="ion-text-center" style="font-size: 12px;">
+              <ion-icon name="mic-outline" color="primary"></ion-icon> "<b>I have</b> eggs, milk, ..." <br>
+              <!--<ion-button shape="round" color="secondary" (click)="speakIngredients('available')"><ion-icon name="mic-outline"></ion-icon></ion-button>-->
             </ion-col>
-            <ion-col size="3"></ion-col>
+            <ion-col size="1"></ion-col>
           </ion-row>
         </ion-grid>
         <!-- AVAILABLE INGREDIENTS SEARCH RESULT -->
@@ -63,7 +59,7 @@
       <!-- MAX TIME REQUIRED -->
       <ion-card>
         <ion-item lines="none">
-          Max time required<ion-toggle checked="false" (click)="toggleRequiredTime()" color="secondary" slot="end"></ion-toggle>
+          Max time required<ion-toggle [checked]="searchRequiredTime" (ionChange)="toggleRequiredTime()" color="secondary" slot="end"></ion-toggle>
         </ion-item>
         <ion-list *ngIf="searchRequiredTime" lines="none">
           <ion-item>
@@ -71,6 +67,7 @@
             <ion-datetime *ngIf="this.platform.is('desktop')" mode="ios" (ionChange)="timeRequiredChange($event)" minuteValues="0,5,10,15,30,45,50" displayFormat="HH:mm" pickerFormat="HH mm" value="00:30"></ion-datetime>
             <ion-datetime *ngIf="this.platform.is('android')" mode="md" (ionChange)="timeRequiredChange($event)" minuteValues="0,5,10,15,30,45,50" displayFormat="HH:mm" pickerFormat="HH mm" value="00:30"></ion-datetime>
           </ion-item>
+          <ion-row><ion-col size="12"></ion-col></ion-row>
         </ion-list>
       </ion-card>
 
@@ -78,19 +75,19 @@
       <ion-card>
         <!-- SEARCH BAR -->
         <ion-item lines="none">
-          Undesired ingredients <ion-toggle checked="false" (click)="toggleSearchUndesiredIngredients()" color="secondary" slot="end"></ion-toggle>
+          Undesired ingredients <ion-toggle [checked]="searchUndesiredIngredients" (ionChange)="toggleSearchUndesiredIngredients()" color="secondary" slot="end"></ion-toggle>
         </ion-item>
         <ion-searchbar *ngIf="searchUndesiredIngredients" (ionChange)="_ionChangeUndesired($event)" debounce="250" animated placeholder="Type milk, mushrooms, ...">
         </ion-searchbar>
         <!-- SPEECH TO TEXT -->
         <ion-grid *ngIf="searchUndesiredIngredients" style="height: 100%">
           <ion-row class="ion-align-items-center">
-            <ion-col size="3"></ion-col>
-            <ion-col size="6" class="ion-text-center">
-              or use your voice <br>
-              <ion-button shape="round" color="secondary" (click)="speakIngredients('undesired')"><ion-icon name="mic-outline"></ion-icon></ion-button>
+            <ion-col size="1"></ion-col>
+            <ion-col size="10" class="ion-text-center" style="font-size: 12px;">
+              <ion-icon name="mic-outline" color="primary"></ion-icon>"<b>I don't want</b> butter, lemons, ..."
+              <!--<ion-button shape="round" color="secondary" (click)="speakIngredients('undesired')"><ion-icon name="mic-outline"></ion-icon></ion-button>-->
             </ion-col>
-            <ion-col size="3"></ion-col>
+            <ion-col size="1"></ion-col>
           </ion-row>
         </ion-grid>
         <!-- UNDESIRED INGREDIENTS SEARCH RESULT -->
@@ -123,9 +120,9 @@
           <!-- DIFFICULTY -->
       <ion-card>
         <ion-item lines="none">
-          Difficulty <ion-toggle checked="false" (click)="toggleSearchDifficulty()" color="secondary" slot="end"></ion-toggle>
+          Difficulty <ion-toggle [checked]="searchDifficulty" (ionChange)="toggleSearchDifficulty()" color="secondary" slot="end"></ion-toggle>
         </ion-item>
-          <ion-segment *ngIf="searchDifficulty" (ionChange)="toggleDifficulty($event)" color="dark" value="easy">
+          <ion-segment *ngIf="searchDifficulty" (ionChange)="toggleDifficulty($event)" color="dark" [value]="difficulty">
             <ion-segment-button value="easy">
               <ion-label>Easy</ion-label>
             </ion-segment-button>
@@ -136,9 +133,20 @@
               <ion-label>hard</ion-label>
             </ion-segment-button>
           </ion-segment>
+        <!-- SPEECH TO TEXT -->
+        <ion-grid *ngIf="searchDifficulty" style="height: 100%">
+          <ion-row class="ion-align-items-center">
+            <ion-col size="1"></ion-col>
+            <ion-col size="10" class="ion-text-center" style="font-size: 12px;">
+              <ion-icon name="mic-outline" color="primary"></ion-icon> "<b>Set difficulty</b> to <b>medium</b>" <br>
+            </ion-col>
+            <ion-col size="1"></ion-col>
+          </ion-row>
+          <ion-row><ion-col size="12"></ion-col></ion-row>
+        </ion-grid>
       </ion-card>
-
-      <ion-card *ngIf="queryRecipeName !== '' || searchAvailableIngredients|| searchUndesiredIngredients || searchDifficulty || searchRequiredTime">
+<br><br>
+      <ion-card style="margin: 16px !important;" *ngIf="queryRecipeName !== '' || searchAvailableIngredients|| searchUndesiredIngredients || searchDifficulty || searchRequiredTime">
         <ion-card-header>
           <ion-item lines="none"><ion-icon slot="start" size="large" color="tertiary" name="reader-outline"></ion-icon><h1>Summary</h1></ion-item>
         </ion-card-header>
@@ -198,11 +206,62 @@
       </ion-card>
 
 
-    <br>
-    <ion-button (click)="submit()" class="ion-activatable ripple-parent" color="success" expand="block">
-      Search
-      <ion-ripple-effect></ion-ripple-effect>
-    </ion-button>
-    <br><br>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="3"></ion-col>
+      <ion-col size="6" class="ion-text-center">
+      <ion-button (click)="submit()" shape="round" color="primary">
+        Search
+        <ion-ripple-effect></ion-ripple-effect>
+      </ion-button>
+      </ion-col>
+        <ion-col size="3"></ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button *ngIf="voiceActiveSectionDisabled && !speaking" color="primary" (click)="startVoiceRecognition()" mode="ios">
+        <ion-icon name="mic-outline" mode="ios" style="font-size: 2em;"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button *ngIf="!voiceActiveSectionDisabled && !speaking" color="danger" (click)="closeVoiceRecognition()" mode="ios">
+        <ion-icon name="mic-outline" mode="ios" style="font-size: 2em;"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button *ngIf="speaking" color="warning" mode="ios">
+        <ion-icon name="mic-outline" mode="ios" style="font-size: 2em;"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+
+    <div class="assistant-overlay" *ngIf="speaking || !voiceActiveSectionDisabled">
+      <p style="color: blue"><span slot="start" class="ion-text-end">{{voiceTextUser}}</span></p>
+      <p><span slot="end" class="ion-text-end">{{voiceText}}</span></p>
+    </div>
+
+    <!--
+    <div *ngIf="voiceActiveSectionDisabled; else voicesection;">
+      <button type=”button” (click)="startVoiceRecognition()">Record</button>
+    </div>
+    <ng-template #voicesection>
+      <ng-container *ngIf="!voiceActiveSectionError; else failure">
+        <ng-container *ngIf="voiceText; else start">
+          <span>{{voiceText}}</span>
+        </ng-container>
+        <ng-template #start>
+          <ng-container *ngIf="voiceActiveSectionListening; else beginning">
+            <span>Listening…</span>
+          </ng-container>
+          <ng-template #beginning>
+            <span>Start talking…</span>
+          </ng-template>
+        </ng-template>
+      </ng-container>
+      <ng-template #failure>
+        <span>Didn’t catch that</span>
+      </ng-template>
+      <div>
+        <button (click)="closeVoiceRecognition()">Close</button>
+        <button (click)="startVoiceRecognition()">Restart</button>
+      </div>
+    </ng-template>
+    -->
 
   </ion-content>

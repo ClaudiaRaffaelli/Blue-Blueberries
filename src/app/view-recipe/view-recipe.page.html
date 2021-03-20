@@ -70,5 +70,43 @@
   <div id="recipeText">
   </div>
 
+
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button *ngIf="voiceActiveSectionDisabled" color="success" (click)="startVoiceRecognition()" mode="ios">
+      <ion-icon name="mic-outline" mode="ios" style="font-size: 2em;"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button *ngIf="!voiceActiveSectionDisabled" color="danger" (click)="closeVoiceRecognition()" mode="ios">
+      <ion-icon name="mic-outline" mode="ios" style="font-size: 2em;"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+
+  <div *ngIf="voiceActiveSectionDisabled; else voicesection;">
+    <button type=”button” (click)="startVoiceRecognition()">Record</button>
+  </div>
+  <ng-template #voicesection>
+    <ng-container *ngIf="!voiceActiveSectionError; else failure">
+      <ng-container *ngIf="voiceText; else start">
+        <span>{{voiceText}}</span>
+      </ng-container>
+      <ng-template #start>
+        <ng-container *ngIf="voiceActiveSectionListening; else beginning">
+          <span>Listening…</span>
+        </ng-container>
+        <ng-template #beginning>
+          <span>Start talking…</span>
+        </ng-template>
+      </ng-template>
+    </ng-container>
+    <ng-template #failure>
+      <span>Didn’t catch that</span>
+    </ng-template>
+    <div>
+      <button (click)="closeVoiceRecognition()">Close</button>
+      <button (click)="startVoiceRecognition()">Restart</button>
+    </div>
+  </ng-template>
+
 </ion-content>
 
