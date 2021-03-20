@@ -1,15 +1,18 @@
-import { Component, OnInit, NgZone} from '@angular/core';
+import {Component, NgZone, OnInit} from '@angular/core';
 import {IngredientsDic} from '../shared/recipeItem';
 import {NavigationExtras, Router} from '@angular/router';
 import {Platform} from '@ionic/angular';
-import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx';
+import {SpeechRecognition} from '@ionic-native/speech-recognition/ngx';
 import levenshtein from 'fast-levenshtein';
 import {Insomnia} from '@ionic-native/insomnia/ngx';
+import {TextToSpeech} from '@ionic-native/text-to-speech/ngx';
 
 
 // import { Plugins } from '@capacitor/core';
 // const { SpeechRecognition } = Plugins;
 
+
+declare const annyang: any;
 
 @Component({
   selector: 'app-search-recipe',
@@ -43,10 +46,19 @@ export class SearchRecipePage implements OnInit {
     showPopup: true,  // Android only
     showPartial: false
   };
+  speaking = false;
+  // voice assistant parameters
+  voiceActiveSectionDisabled = true;
+  voiceActiveSectionError = false;
+  voiceActiveSectionSuccess = false;
+  voiceActiveSectionListening = false;
+  voiceText: any;
+  voiceTextUser: string;
+  assistantButtonColor = 'primary';
 
 
   constructor(private router: Router, public platform: Platform, private speechRecognition: SpeechRecognition,
-              public ngZone: NgZone, private insomnia: Insomnia) {
+              public ngZone: NgZone, private insomnia: Insomnia, private tts: TextToSpeech) {
     this.queryRecipeName = '';
     this.difficulty = 'easy';
     this.showAvailableSearchBarResults = false;
@@ -62,7 +74,6 @@ export class SearchRecipePage implements OnInit {
     this.maxRequiredTime = 30;
     this.insomnia.allowSleepAgain();
 
-
     // Check feature available
     this.speechRecognition.isRecognitionAvailable()
         .then((available: boolean) => {
@@ -76,6 +87,28 @@ export class SearchRecipePage implements OnInit {
                 });
           }
         });
+
+    this.voiceActiveSectionDisabled = true;
+    this.voiceActiveSectionError = false;
+    this.voiceActiveSectionSuccess = false;
+    this.voiceText = undefined;
+    this.voiceTextUser = '';
+    if (annyang) {
+      // const difficultyCommand = {
+      //   'set difficulty': () => {
+      //     this.ngZone.run( () => {this.toggleSearchDifficulty(); });
+      //   }
+      // };
+      // const timerCommand = {
+      //   'set timer': () => {
+      //     this.ngZone.run( () => {this.toggleRequiredTime(); });
+      //   }
+      // };
+      // annyang.addCommands(difficultyCommand);
+      // annyang.addCommands(timerCommand);
+
+      this.initializeVoiceRecognitionCallback();
+    }
   }
 
   speakIngredients(type: string) {
@@ -235,6 +268,137 @@ export class SearchRecipePage implements OnInit {
     this.router.navigate(['home'], navigationExtras);
   }
 
+
+
+  // text-to-speech
+  stopSpeaking(){
+    this.tts.speak('')
+        .then(() => console.log('Success'))
+        .catch((reason: any) => console.log(reason));
+  }
+
+
+  speak(text: string) {
+    this.assistantButtonColor = 'warning';
+    annyang.abort();
+    this.speaking = true;
+    this.tts.speak({
+      text,
+      rate: 1, // voice speed
+      locale: 'en-US'
+    })
+        .then(() => {
+          this.startVoiceRecognition();
+          this.speaking = false;
+        })
+        .catch((reason: any) => this.closeVoiceRecognition());
+  }
+
+  // ANNYANG
+  initializeVoiceRecognitionCallback(): void {
+    annyang.addCallback('error', (err) => {
+      if (err.error === 'network'){
+        this.voiceText = 'Internet is require';
+        this.ngZone.run(() => this.closeVoiceRecognition());
+        this.ngZone.run(() => this.voiceActiveSectionSuccess = true);
+      } else if (this.voiceText === undefined) { // didn't catch that
+        this.ngZone.run(() => {
+          this.voiceActiveSectionError = true;
+          this.closeVoiceRecognition();
+          this.startVoiceRecognition();
+        });
+      }
+    });
+    annyang.addCallback('soundstart', (res) => {
+      this.ngZone.run(() => this.voiceActiveSectionListening = true);
+    });
+    annyang.addCallback('end', () => {
+      if (this.voiceText === undefined) {
+        this.ngZone.run(() => this.voiceActiveSectionError = true);
+      }
+      this.ngZone.run( () => this.closeVoiceRecognition());
+    });
+    annyang.addCallback('result', (userSaid) => {
+      this.ngZone.run(() => this.voiceActiveSectionError = false);
+      // annyang.abort();
+      this.ngZone.run(() => this.voiceText = userSaid[0]);
+      this.ngZone.run(() => this.voiceTextUser = userSaid[0]);
+      this.ngZone.run(() => this.performIntent());
+      this.ngZone.run(() => this.voiceActiveSectionListening = false);
+      this.ngZone.run(() => this.voiceActiveSectionSuccess = true);
+    });
+  }
+
+  startVoiceRecognition(): void {
+    if (annyang) {
+      this.voiceActiveSectionDisabled = false;
+      annyang.start({ autoRestart: false });
+      this.assistantButtonColor = 'danger';
+    }
+  }
+
+  closeVoiceRecognition(): void {
+    this.voiceActiveSectionDisabled = true;
+    this.voiceActiveSectionError = false;
+    this.voiceActiveSectionSuccess = false;
+    this.voiceActiveSectionListening = false;
+    if (annyang){
+      annyang.abort();
+    }
+  }
+
+  performIntent(){
+    if (this.voiceText.toLowerCase().includes('i have')){
+      const ingredients = Object.keys(this.ing.ingredients);
+      for (let i = 0; i < ingredients.length; i++) {
+        const queryIngredients = this.voiceText.toLowerCase().split('i have')[1].split(' ');
+        for (let j = 0; j < queryIngredients.length; j++) {
+          if (levenshtein.get(queryIngredients[j], ingredients[i].toLowerCase()) <= 1) {
+            this.ing.ingredients[ingredients[i]].selected = true;
+          }
+        }
+      }
+      this.voiceText = 'We should find something with these';
+      this.speak(this.voiceText);
+    }
+    else if (this.voiceText.toLowerCase().includes('i don\'t want')){
+      const ingredients = Object.keys(this.ingUndesired.ingredients);
+      for (let i = 0; i < ingredients.length; i++) {
+        const queryIngredients = this.voiceText.toLowerCase().split('i don\'t want')[1].split(' ');
+        for (let j = 0; j < queryIngredients.length; j++) {
+          if (levenshtein.get(queryIngredients[j], ingredients[i].toLowerCase()) <= 1) {
+            this.ingUndesired.ingredients[ingredients[i]].selected = true;
+          }
+        }
+      }
+      this.voiceText = 'Undesired ingredients set';
+      this.speak(this.voiceText);
+    }else if (this.voiceText.toLowerCase().includes('difficulty')){
+      if (this.voiceText.toLowerCase().includes('easy')){
+        this.difficulty = 'easy';
+        this.voiceText = 'Difficulty set to easy';
+        this.speak(this.voiceText);
+      }else if (this.voiceText.toLowerCase().includes('medium')){
+        this.difficulty = 'medium';
+        this.voiceText = 'Difficulty set to medium';
+        this.speak(this.voiceText);
+      }else if (this.voiceText.toLowerCase().includes('hard')){
+        this.difficulty = 'hard';
+        this.voiceText = 'Difficulty set to hard';
+        this.speak(this.voiceText);
+      }
+    }else if (this.voiceText.toLowerCase().includes('search') ||
+        this.voiceText.toLowerCase().includes('go')){
+      this.closeVoiceRecognition();
+      this.submit();
+    }else if (this.voiceText.toLowerCase().includes('bye')){
+      this.closeVoiceRecognition();
+    }
+    else{
+      this.voiceText = 'Sorry, I didn\'t understand';
+      this.speak(this.voiceText);
+    }
+  }
 }
 
 

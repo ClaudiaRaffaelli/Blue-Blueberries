@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, NgZone} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import firebase from 'firebase';
 import {RecipeItemService} from '../shared/recipe-item.service';
@@ -8,9 +8,9 @@ import {Platform, PopoverController} from '@ionic/angular';
 import {TextToSpeech} from '@ionic-native/text-to-speech/ngx';
 import {PopoverCollectionsComponent} from '../popover-collections/popover-collections.component';
 import { Insomnia } from '@ionic-native/insomnia/ngx';
-import {GroceriesService} from "../shared/groceries.service";
-import {Storage} from "@ionic/storage";
+import {GroceriesService} from '../shared/groceries.service';
 
+declare const annyang: any;
 
 @Component({
   selector: 'app-view-recipe',
@@ -48,6 +48,13 @@ export class ViewRecipePage implements OnInit {
     spaceBetween: 2,
   };
 
+  // voice assistant parameters (annyang)
+  voiceActiveSectionDisabled = true;
+  voiceActiveSectionError = false;
+  voiceActiveSectionSuccess = false;
+  voiceActiveSectionListening = false;
+  voiceText: any;
+
   constructor(private aptService: RecipeItemService,
               private route: ActivatedRoute,
               private router: Router,
@@ -55,7 +62,8 @@ export class ViewRecipePage implements OnInit {
               private tts: TextToSpeech,
               public popoverController: PopoverController,
               private insomnia: Insomnia,
-              private groceriesService: GroceriesService) {
+              private groceriesService: GroceriesService,
+              public ngZone: NgZone) {
     this.insomnia.keepAwake();
     this.timerToggle = false;
     this.route.queryParams.subscribe(async params => {
@@ -67,9 +75,14 @@ export class ViewRecipePage implements OnInit {
         }
         this.lastPage = this.router.getCurrentNavigation().extras.state.lastPage;
 
+        // find out if the recipe is in the grocery list and display a different icon accordingly
+        groceriesService.getGroceryList().then(groceryList => {
+          this.isInGroceryList = !!groceryList.includes(this.data.$key);
+        });
+
         document.getElementById('recipeText').textContent = ' '; // clear previous recipe
-        this.recipeImages = {};
         this.currentImg = 0; // images on database are indexed from 0 to n
+        this.recipeImages = {};
 
         // set difficulty icon's color
         switch (this.data.recipeDifficulty) {
@@ -108,7 +121,7 @@ export class ViewRecipePage implements OnInit {
           const ionMicIconButton = document.createElement('ion-icon');
           ionMicIconButton.setAttribute('name', 'mic-outline');
           ionMicIconButton.setAttribute('size', 'large');
-          ionMicIconButton.addEventListener('click', () => { this.speak(j); });
+          ionMicIconButton.addEventListener('click', () => { this.speak(j + 1); });
 
           const ionGrid = document.createElement('ion-grid');
           const ionRow = document.createElement('ion-row');
@@ -162,12 +175,6 @@ export class ViewRecipePage implements OnInit {
 
           }
         }
-
-        // discovers if the recipe is in the grocery list
-        await groceriesService.getGroceryList().then( async groceryList =>{
-          console.log(groceryList);
-          this.isInGroceryList = !!groceryList.includes(this.data.$key);
-        });
       }
     });
   }
@@ -251,12 +258,14 @@ export class ViewRecipePage implements OnInit {
   }
 
   async speak(stepNumber){
+    this.closeVoiceRecognition();
     await this.tts.speak({
-      text: 'Step ' + (stepNumber + 1) + '. ' + this.textSteps[stepNumber],
+      text: 'Step ' + (stepNumber) + '. ' + this.textSteps[stepNumber - 1],
       rate: 0.9
     })
         .then(() => console.log('Success'))
         .catch((reason: any) => console.log(reason));
+    this.startVoiceRecognition();
   }
 
   stopSpeaking(){
@@ -272,7 +281,7 @@ export class ViewRecipePage implements OnInit {
       cssClass: 'popOver',
       componentProps: {
         // communicating the recipe key to the popover for when the recipe will be added to the collection
-        recipeKey: recipeKey,
+        recipeKey,
       },
       event: eve,
       mode: 'ios',
@@ -296,6 +305,76 @@ export class ViewRecipePage implements OnInit {
     // toggle the recipe inside the cart and change the icon accordingly
     await this.groceriesService.addRemoveRecipeFromGrocery(recipeKey);
     this.isInGroceryList = ! this.isInGroceryList;
+  }
+
+
+  // ANNYANG
+  initializeVoiceRecognitionCallback(): void {
+    annyang.addCallback('error', (err) => {
+      if (err.error === 'network'){
+        this.voiceText = 'Internet is require';
+        annyang.abort();
+        this.ngZone.run(() => this.voiceActiveSectionSuccess = true);
+      } else if (this.voiceText === undefined) {
+        this.ngZone.run(() => this.voiceActiveSectionError = true);
+        annyang.abort();
+      }
+    });
+    annyang.addCallback('soundstart', (res) => {
+      this.ngZone.run(() => this.voiceActiveSectionListening = true);
+    });
+    annyang.addCallback('end', () => {
+      if (this.voiceText === undefined) {
+        this.ngZone.run(() => this.voiceActiveSectionError = true);
+        annyang.abort();
+      }
+    });
+    annyang.addCallback('result', (userSaid) => {
+      this.ngZone.run(() => this.voiceActiveSectionError = false);
+      const queryText: any = userSaid[0];
+      // annyang.abort();
+      this.voiceText = queryText;
+      if (this.voiceText.includes('step one')) {
+        this.speak(0);
+      }
+      this.ngZone.run(() => this.voiceActiveSectionListening = false);
+      this.ngZone.run(() => this.voiceActiveSectionSuccess = true);
+    });
+  }
+
+  startVoiceRecognition(): void {
+    this.voiceActiveSectionDisabled = false;
+    this.voiceActiveSectionError = false;
+    this.voiceActiveSectionSuccess = false;
+    this.voiceText = undefined;
+    if (annyang) {
+      const difficultyCommand = {
+        'step 1': () => {
+          this.ngZone.run( () => {this.speak(0); });
+        }
+      };
+      const timerCommand = {
+        '() step 2 ()': () => {
+          this.ngZone.run( () => {this.speak(1); });
+        }
+      };
+      annyang.addCommands(difficultyCommand);
+      annyang.addCommands(timerCommand);
+
+      this.initializeVoiceRecognitionCallback();
+      annyang.start({ autoRestart: true });
+    }
+  }
+
+  closeVoiceRecognition(): void {
+    this.voiceActiveSectionDisabled = true;
+    this.voiceActiveSectionError = false;
+    this.voiceActiveSectionSuccess = false;
+    this.voiceActiveSectionListening = false;
+    this.voiceText = undefined;
+    if (annyang){
+      annyang.abort();
+    }
   }
 
 }
