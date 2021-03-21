@@ -1,4 +1,5 @@
-import {Component, NgZone, OnInit} from '@angular/core';
+import {Component, NgZone, OnInit, ViewChild} from '@angular/core';
+import { IonContent } from '@ionic/angular';
 import {IngredientsDic} from '../shared/recipeItem';
 import {NavigationExtras, Router} from '@angular/router';
 import {Platform} from '@ionic/angular';
@@ -20,7 +21,7 @@ declare const annyang: any;
   styleUrls: ['./search-recipe.page.scss'],
 })
 export class SearchRecipePage implements OnInit {
-
+  @ViewChild(IonContent, { static: false }) content: IonContent;
   queryRecipeName: string;
   showAvailableSearchBarResults: boolean;
   showAvailableIngredients: boolean;
@@ -150,6 +151,13 @@ export class SearchRecipePage implements OnInit {
 
   }
 
+  reset_pulse_animation(element: string) {
+    const el = document.getElementById(element);
+    el.style.animation = 'none';
+    // tslint:disable-next-line:no-unused-expression
+    el.offsetHeight; /* trigger reflow */
+    el.style.animation = null;
+  }
 
   onChangeName(event){
     this.queryRecipeName = event.target.value;
@@ -210,11 +218,17 @@ export class SearchRecipePage implements OnInit {
   toggleSearchAvailableIngredients(){
     this.searchAvailableIngredients = !this.searchAvailableIngredients;
     this.showAvailableIngredients = !this.showAvailableIngredients;
+    if (this.searchAvailableIngredients){
+      this.reset_pulse_animation('mic_animated');
+    }
   }
 
   toggleSearchUndesiredIngredients(){
     this.searchUndesiredIngredients = !this.searchUndesiredIngredients;
     this.showUndesiredIngredients = !this.showUndesiredIngredients;
+    if (this.searchUndesiredIngredients){
+      this.reset_pulse_animation('mic_animated');
+    }
   }
 
   // show difficulty settings when searchDifficulty is true
@@ -360,6 +374,8 @@ export class SearchRecipePage implements OnInit {
       }
       this.voiceText = 'We should find something with these';
       this.speak(this.voiceText);
+      this.ScrollToPoint('summary_animated');
+      this.reset_pulse_animation('summary_animated');
     }
     else if (this.voiceText.toLowerCase().includes('i don\'t want')){
       const ingredients = Object.keys(this.ingUndesired.ingredients);
@@ -373,22 +389,10 @@ export class SearchRecipePage implements OnInit {
       }
       this.voiceText = 'Undesired ingredients set';
       this.speak(this.voiceText);
-    }else if (this.voiceText.toLowerCase().includes('difficulty')){
-      if (this.voiceText.toLowerCase().includes('easy')){
-        this.difficulty = 'easy';
-        this.voiceText = 'Difficulty set to easy';
-        this.speak(this.voiceText);
-      }else if (this.voiceText.toLowerCase().includes('medium')){
-        this.difficulty = 'medium';
-        this.voiceText = 'Difficulty set to medium';
-        this.speak(this.voiceText);
-      }else if (this.voiceText.toLowerCase().includes('hard')){
-        this.difficulty = 'hard';
-        this.voiceText = 'Difficulty set to hard';
-        this.speak(this.voiceText);
-      }
+      this.ScrollToPoint('summary_animated');
+      this.reset_pulse_animation('summary_animated');
     }else if (this.voiceText.toLowerCase().includes('search') ||
-        this.voiceText.toLowerCase().includes('go')){
+              this.voiceText.toLowerCase().includes('go')){
       this.closeVoiceRecognition();
       this.submit();
     }else if (this.voiceText.toLowerCase().includes('bye')){
@@ -398,6 +402,11 @@ export class SearchRecipePage implements OnInit {
       this.voiceText = 'Sorry, I didn\'t understand';
       this.speak(this.voiceText);
     }
+  }
+
+  ScrollToPoint(element: string) {
+    const yOffset = document.getElementById(element).offsetTop;
+    this.content.scrollToPoint(0, yOffset, 1500);
   }
 }
 

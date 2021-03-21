@@ -1,7 +1,6 @@
 
   <br>
-
-  <ion-content mode="ios">
+  <ion-content mode="ios" forceOverscroll="true">
       <!-- SEARCH BY NAME -->
       <ion-card-content>
         <ion-searchbar (ionChange)="onChangeName($event)" debounce="250" animated placeholder="Cake, pasta, ...">
@@ -146,7 +145,7 @@
         </ion-grid>
       </ion-card>
 <br><br>
-      <ion-card style="margin: 16px !important;" *ngIf="queryRecipeName !== '' || searchAvailableIngredients|| searchUndesiredIngredients || searchDifficulty || searchRequiredTime">
+      <ion-card id="summary_animated" style="margin: 16px !important;" *ngIf="queryRecipeName !== '' || searchAvailableIngredients|| searchUndesiredIngredients || searchDifficulty || searchRequiredTime">
         <ion-card-header>
           <ion-item lines="none"><ion-icon slot="start" size="large" color="tertiary" name="reader-outline"></ion-icon><h1>Summary</h1></ion-item>
         </ion-card-header>
@@ -219,7 +218,7 @@
       </ion-row>
     </ion-grid>
 
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab id="mic_animated" *ngIf="searchAvailableIngredients|| searchUndesiredIngredients" vertical="bottom" horizontal="end" slot="fixed">
       <ion-fab-button *ngIf="voiceActiveSectionDisabled && !speaking" color="primary" (click)="startVoiceRecognition()" mode="ios">
         <ion-icon name="mic-outline" mode="ios" style="font-size: 2em;"></ion-icon>
       </ion-fab-button>
@@ -232,8 +231,7 @@
     </ion-fab>
 
     <div class="assistant-overlay" *ngIf="speaking || !voiceActiveSectionDisabled">
-      <p style="color: blue"><span slot="start" class="ion-text-end">{{voiceTextUser}}</span></p>
-      <p><span slot="end" class="ion-text-end">{{voiceText}}</span></p>
+      <p style="color: #ffffff"><span slot="start" class="ion-text-end">{{voiceTextUser}}</span></p>
     </div>
 
     <!--
@@ -263,5 +261,6 @@
       </div>
     </ng-template>
     -->
+
 
   </ion-content>
