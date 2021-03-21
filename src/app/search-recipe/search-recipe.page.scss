@@ -28,13 +28,52 @@ ion-card{
   position: fixed;
   width: 65%;
   height: 12%;
-  background: rgba(0,0,0,0.9);
+  background: rgb(15, 81, 245);
   z-index: 20;
   bottom: 10px;
-  left: 10%;
+  right: 21%;
   color: white;
-  font-size: 11px;
+  font-size: 12px;
   border-radius: 25px;
-  padding: 10px;
+  padding: 12px;
+}
+/*pulse animation*/
+#mic_animated {
+  border-radius: 50%;
+  background: #cca92c;
+  display: block;
+  box-shadow: 0 0 0 rgb(199, 0, 255);
+  animation: pulse 1s;
 }
 
+#summary_animated {
+  display: block;
+  box-shadow: 0 0 0 rgb(199, 0, 255);
+  animation: pulse 1s;
+}
+
+@-webkit-keyframes pulse {
+  0% {
+    -webkit-box-shadow: 0 0 0 0 rgb(17, 42, 205);
+  }
+  70% {
+    -webkit-box-shadow: 0 0 0 10px rgba(204,169,44, 0);
+  }
+  100% {
+    -webkit-box-shadow: 0 0 0 0 rgba(204,169,44, 0);
+  }
+}
+@keyframes pulse {
+  0% {
+    -moz-box-shadow: 0 0 0 0 rgb(30, 39, 210);
+    box-shadow: 0 0 0 0 rgba(30, 39, 210, 0.4);
+  }
+  70% {
+    -moz-box-shadow: 0 0 0 10px rgba(204,169,44, 0);
+    box-shadow: 0 0 0 10px rgba(204,169,44, 0);
+  }
+  100% {
+    -moz-box-shadow: 0 0 0 0 rgba(204,169,44, 0);
+    box-shadow: 0 0 0 0 rgba(204,169,44, 0);
+  }
+}
