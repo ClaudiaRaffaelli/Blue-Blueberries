@@ -21,6 +21,7 @@ export class GroceriesPage implements OnInit {
   pathReference : any;
   ingredients = [];
   recipesCheck = []; // contains a boolean for each recipe that tells if the recipe is currently checked or not
+                     // at the beginning each recipe is checked
 
   // Options for images slider
   option = {
@@ -43,18 +44,6 @@ export class GroceriesPage implements OnInit {
         this.lastPage = this.router.getCurrentNavigation().extras.state.lastPage;
       }
     });
-
-    this.recipesInGroceryList = []; // contains the list of fetched recipeItems that are present in the grocery list
-    this.oldRecipesInGroceryList = []; //list that contains the recipeItems that were in the list last time we entered the page
-    this.lastTimeGroceryKeyRecipes = []; // keys of the recipes that were in the list last time we entered the page
-    this.thisTimeGroceryKeyRecipes = [];
-    this.ingredients = [];
-    this.recipesCheck = [];
-
-    // each time I enter the page the recipes shown in the grocery list needs to be updated
-    this.recipesInGroceryList = []
-    this.recipesCheck = []
-
   }
 
   async ngOnInit() {
@@ -92,14 +81,10 @@ export class GroceriesPage implements OnInit {
       }
       this.menageIngredientsList()
     });
-
-
   }
 
   async ionViewWillEnter(){
     this.lastTimeGroceryKeyRecipes = this.thisTimeGroceryKeyRecipes;
-
-
 
     await this.groceriesService.getGroceryList().then( async groceryList => {
 
@@ -119,22 +104,13 @@ export class GroceriesPage implements OnInit {
       this.oldRecipesInGroceryList = this.recipesInGroceryList
 
       // each time I enter the page the recipes shown in the grocery list needs to be updated
-      //this.recipesInGroceryList = []
       this.thisTimeGroceryKeyRecipes = groceryList;
-      //this.recipesCheck = []
 
       // check if there are any differences between the recipe names before and after entering the page
-      let newRemoved = _.difference(this.lastTimeGroceryKeyRecipes, this.thisTimeGroceryKeyRecipes)
-      console.log("new removed")
-      console.log(newRemoved)
       let newAdded = _.difference(this.thisTimeGroceryKeyRecipes, this.lastTimeGroceryKeyRecipes)
-      console.log("new added")
-      console.log(newAdded)
 
       // getting the recipeItems from the list of keys
       const database = firebase.database().ref();
-
-
 
       // getting only the recipeItems for the added recipes
       let recipeKeyIndex = 0;
@@ -156,12 +132,8 @@ export class GroceriesPage implements OnInit {
           recipe.title_image = url;
         });
 
-        //newAddedItems.push(myRecipeItem as RecipeItem);
         this.recipesInGroceryList.push(recipe as RecipeItem);
         this.recipesCheck.push(true); // as default a new recipe added is checked
-
-        console.log("le ricette presenti")
-        console.log(this.recipesInGroceryList)
 
         // add the ingredients to the list of ingredients going through all of them
         for (let ingredient in recipe.ingredients) {
@@ -175,11 +147,10 @@ export class GroceriesPage implements OnInit {
               newIngredient.unity = recipe.ingredients[ingredient]["unit"];
               this.ingredients.push(newIngredient);
             }else{
-              // if already present, we only increment the quantity summing the new
-              // todo to be more precise we would have to consider different unity of the same ingredient,
-              //  but we assume that the unity is the same
+              // if already present, we only increment the quantity summing the new (assuming we are using the same unity)
               let myIngredient = this.ingredients.find(a=>a.name === ingredient);
               myIngredient.quantity = parseInt(myIngredient.quantity) + parseInt(recipe.ingredients[ingredient]["dose"]);
+              myIngredient.checked = false;
             }
           }
         }
@@ -205,45 +176,40 @@ export class GroceriesPage implements OnInit {
             console.error(error);
           });
 
+
+          // remove the ingredients from the list of ingredients going through all of them, but only if the
+          // the recipe is currently checked. Otherwise it means that the recipe's ingredients have already been removed
+          if (this.recipesCheck[toRemoveRecipeIndex] === true){
+            let ingredientIndex = 0;
+            for (let ingredient in recipe.ingredients) {
+              // going through all the ingredients that are present in the recipe
+              if (recipe.ingredients[ingredient]["selected"] === true){
+
+                // the ingredient is surely in the list of ingredients and we must decrement the dose
+                let myIngredient = this.ingredients.find(a=>a.name === ingredient);
+                myIngredient.quantity = parseInt(myIngredient.quantity) - parseInt(recipe.ingredients[ingredient]["dose"]);
+              }
+              ingredientIndex++;
+            }
+          }
           // sets the recipeCheck to undefined. This allows to maintain the index after the delete.
           // we will filter out the undefined when all the deleted recipes have been removed
           delete this.recipesCheck[toRemoveRecipeIndex];
           // same for the recipesInGroceryList
           delete this.recipesInGroceryList[toRemoveRecipeIndex];
-
-          let ingredientIndex = 0;
-          // add the ingredients to the list of ingredients going through all of them
-          for (let ingredient in recipe.ingredients) {
-            // going through all the ingredients that are present in the recipe
-            if (recipe.ingredients[ingredient]["selected"] === true){
-
-              // the ingredient is surely in the list of ingredients and we must decrement the dose
-              let myIngredient = this.ingredients.find(a=>a.name === ingredient);
-              myIngredient.quantity = parseInt(myIngredient.quantity) - parseInt(recipe.ingredients[ingredient]["dose"]);
-
-            }
-            ingredientIndex++;
-          }
         }
       }
 
       // removing the checks that were set to undefined because the relative recipe has been deleted
-      console.log(this.recipesCheck)
       this.recipesCheck = await this.recipesCheck.filter(function (el) {
-        console.log("el")
-        console.log(el)
         return el != undefined;
       });
       // if the new quantity is zero we must remove this ingredient from the list
       this.ingredients= await this.ingredients.filter(function (el) {
-        console.log("el")
-        console.log(el)
         return el.quantity != 0;
       });
       // removing the recipes from the grocery list that were set to undefined because not present anymore
       this.recipesInGroceryList= await this.recipesInGroceryList.filter(function (el) {
-        console.log("el")
-        console.log(el)
         return el != undefined;
       });
     });
@@ -269,15 +235,54 @@ export class GroceriesPage implements OnInit {
               newIngredient.unity = recipe.ingredients[ingredient]["unit"];
               this.ingredients.push(newIngredient);
             }else{
-              // if already present, we only increment the quantity summing the new
-              // todo to be more precise we would have to consider different unity of the same ingredient,
-              //  but we assume that the unity is the same
+              // if already present, we only increment the quantity summing the new (assuming we are using the same unity)
               let myIngredient = this.ingredients.find(a=>a.name === ingredient);
               myIngredient.quantity = parseInt(myIngredient.quantity) + parseInt(recipe.ingredients[ingredient]["dose"]);
             }
           }
         }
       }
+    });
+  }
+
+  async hideDeleteIngredientsForRecipe(recipeIndex){
+    // takes as input the index of the recipe in recipesInGroceryList and add / subtracts the relative ingredients
+
+    if(this.recipesCheck[recipeIndex] === true){
+      // going through all the ingredients
+      for (let ingredient in this.recipesInGroceryList[recipeIndex].ingredients) {
+        // going through all the ingredients that are present in the recipe
+        if (this.recipesInGroceryList[recipeIndex].ingredients[ingredient]["selected"] === true){
+          // we add to the ingredient list displayed this ingredient if the item is not already present
+          if (! this.ingredients.map(a=>a.name).includes(ingredient)){
+            let newIngredient = new Ingredient();
+            newIngredient.name = ingredient;
+            newIngredient.quantity = this.recipesInGroceryList[recipeIndex].ingredients[ingredient]["dose"];
+            newIngredient.unity = this.recipesInGroceryList[recipeIndex].ingredients[ingredient]["unit"];
+            this.ingredients.push(newIngredient);
+          }else{
+            // if already present, we only increment the quantity summing the new (assuming we are using the same unity)
+            let myIngredient = this.ingredients.find(a=>a.name === ingredient);
+            //let ingredientIndex = this.ingredients.indexOf(myIngredient)
+            myIngredient.quantity = parseInt(myIngredient.quantity) + parseInt(this.recipesInGroceryList[recipeIndex].ingredients[ingredient]["dose"]);
+            myIngredient.checked = false;
+          }
+        }
+      }
+    }else{
+      // going through all the ingredients
+      for (let ingredient in this.recipesInGroceryList[recipeIndex].ingredients) {
+        // going through all the ingredients that are present in the recipe
+        if (this.recipesInGroceryList[recipeIndex].ingredients[ingredient]["selected"] === true){
+          // we add to the ingredient list displayed this ingredient if the item is not already present
+          let myIngredient = this.ingredients.find(a=>a.name === ingredient);
+          myIngredient.quantity = parseInt(myIngredient.quantity) - parseInt(this.recipesInGroceryList[recipeIndex].ingredients[ingredient]["dose"]) ;
+        }
+      }
+    }
+    // if the new quantity is zero we must remove this ingredient from the list
+    this.ingredients= await this.ingredients.filter(function (el) {
+      return el.quantity != 0;
     });
   }
 
@@ -292,12 +297,13 @@ export class GroceriesPage implements OnInit {
   }
 
   checkUncheckRecipe(recipeIndex){
+    // keeping track of the check on each recipe
     this.recipesCheck[recipeIndex] = !this.recipesCheck[recipeIndex];
-    // todo questo è da vedere
-    //this.menageIngredientsList()
+    this.hideDeleteIngredientsForRecipe(recipeIndex);
   }
 
-  checkUncheckIngredient(event){
+  checkUncheckIngredient(event, ingredient){
+    ingredient.checked = !event.target.checked;
 
     if( ! event.target.checked ){
       event.target.parentNode.style.textDecoration = "line-through";
@@ -305,14 +311,12 @@ export class GroceriesPage implements OnInit {
 
       const parent = event.target.parentElement.parentElement;
       parent.appendChild(event.target.parentElement);
-
     }else{
       event.target.parentNode.style.textDecoration = "none";
       event.target.parentNode.style.opacity = 1;
 
       const parent = event.target.parentElement.parentElement;
       parent.insertBefore(event.target.parentElement, parent.firstChild);
-
     }
   }
 }
@@ -322,5 +326,5 @@ export class Ingredient{
   name : string;
   quantity : number;
   unity: string;
-  checked: boolean;
+  checked: boolean = false;
 }

@@ -26,9 +26,10 @@
     </ion-slides>
 
   <ion-list class="user-list">
-    <ion-item *ngFor="let ingredient of ingredients">
+    <ion-item *ngFor="let ingredient of ingredients; let ingredientIndex=index">
       <ion-label>{{ingredient.name}} - {{ingredient.quantity}} {{ingredient.unity}}</ion-label>
-      <ion-checkbox color="primary" type="checkbox" (click)="checkUncheckIngredient($event)" ></ion-checkbox>
+      <ion-checkbox *ngIf="ingredient.checked" checked="true" color="primary" type="checkbox" (click)="checkUncheckIngredient($event, ingredient)" ></ion-checkbox>
+      <ion-checkbox *ngIf="!ingredient.checked" checked="false" color="primary" type="checkbox" (click)="checkUncheckIngredient($event, ingredient)" ></ion-checkbox>
     </ion-item>
   </ion-list>
 
