@@ -18,6 +18,7 @@
         <ion-card  class="myCard pickgradient">
           <ion-checkbox color="primary" checked="true" style="position: absolute; left: +10px; top: +13px;" (click)="checkUncheckRecipe(recipeIndex)"></ion-checkbox>
           <img src="{{recipeItem.title_image}}" class="pickgradient" (click)="openRecipe(recipeItem)">
+          <ion-icon (click)="deleteRecipe(recipeItem.$key)" style="position: absolute; right: -10px; top: -15px;" size = "large" name="close-circle"></ion-icon>
           <div class="myOverlay pick">
             <div>{{ recipeItem.name }}</div>
           </div>

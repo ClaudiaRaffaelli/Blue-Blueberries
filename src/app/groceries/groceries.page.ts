@@ -22,6 +22,7 @@ export class GroceriesPage implements OnInit {
   ingredients = [];
   recipesCheck = []; // contains a boolean for each recipe that tells if the recipe is currently checked or not
                      // at the beginning each recipe is checked
+  database : any; // reference to the firebase
 
   // Options for images slider
   option = {
@@ -44,10 +45,11 @@ export class GroceriesPage implements OnInit {
         this.lastPage = this.router.getCurrentNavigation().extras.state.lastPage;
       }
     });
+
+    this.database = firebase.database().ref();
   }
 
   // todo gestione dei q.b.
-  // todo aggiunta di x per eliminare da lista della spesa velocemente
   // todo decorazione check e uncheck ingredienti
 
   async ngOnInit() {
@@ -57,9 +59,8 @@ export class GroceriesPage implements OnInit {
       this.thisTimeGroceryKeyRecipes = groceryList;
 
       // getting the recipeItems from the list of keys
-      const database = firebase.database().ref();
       for (const recipeKey of groceryList){
-        const myRecipeItem = await this.getRecipeItem(database, recipeKey);
+        const myRecipeItem = await this.getRecipeItem(recipeKey);
         this.recipesInGroceryList.push(myRecipeItem as RecipeItem);
         this.recipesCheck.push(true); // as default a new recipe added is checked
       }
@@ -79,6 +80,8 @@ export class GroceriesPage implements OnInit {
     this.lastTimeGroceryKeyRecipes = this.thisTimeGroceryKeyRecipes;
 
     await this.groceriesService.getGroceryList().then( async groceryList => {
+      console.log("nuova grocery list")
+      console.log(groceryList)
 
       if(groceryList.length == 0){
         this.recipesInGroceryList = []; // contains the list of fetched recipeItems that are present in the grocery list
@@ -101,26 +104,21 @@ export class GroceriesPage implements OnInit {
       // check if there are any differences between the recipe names before and after entering the page
       let newAdded = _.difference(this.thisTimeGroceryKeyRecipes, this.lastTimeGroceryKeyRecipes)
 
-      // getting the recipeItems from the list of keys
-      const database = firebase.database().ref();
-
       // getting only the recipeItems for the added recipes
       for( let recipeKey of newAdded){
-        const recipe = await this.getRecipeItem(database, recipeKey);
+        const recipe = await this.getRecipeItem(recipeKey);
         this.recipesInGroceryList.push(recipe as RecipeItem);
         this.recipesCheck.push(true); // as default a new recipe added is checked
         // add the ingredients to the list of ingredients going through all of them
         this.iterateIngredientsAndAdd(recipe)
       }
 
-
       // deleting the recipeItems and ingredients of the removed recipe wrt the last time we entered the page
       for (let recipeKey of this.lastTimeGroceryKeyRecipes){
-        // if recipeKey has been deleted we fetch the recipeItem, remove the ingredients and the check from the array
         if (!this.thisTimeGroceryKeyRecipes.includes(recipeKey)){
           let toRemoveRecipeIndex = this.lastTimeGroceryKeyRecipes.indexOf(recipeKey)
 
-          const recipe = await this.getRecipeItem(database, recipeKey, false)
+          const recipe = await this.getRecipeItem(recipeKey, false)
 
           // remove the ingredients from the list of ingredients going through all of them, but only if the
           // the recipe is currently checked. Otherwise it means that the recipe's ingredients have already been removed
@@ -151,8 +149,8 @@ export class GroceriesPage implements OnInit {
     }
 
 
-  async getRecipeItem(database, recipeKey, imageRequired=true){
-    const myRecipeItem = await database.child('recipes').child(recipeKey).get().then(function(snapshot) {
+  async getRecipeItem(recipeKey, imageRequired=true){
+    const myRecipeItem = await this.database.child('recipes').child(recipeKey).get().then(function(snapshot) {
       if (snapshot.exists()) {
         // tslint:disable-next-line:no-shadowed-variable
         const myRecipeItem = snapshot.val();
@@ -237,6 +235,12 @@ export class GroceriesPage implements OnInit {
       }
     };
     this.router.navigate(['view-recipe'], navigationExtras);
+  }
+
+  async deleteRecipe(recipeKey: string){
+    // remove from the cart the recipeKey
+    await this.groceriesService.addRemoveRecipeFromGrocery(recipeKey);
+    await this.ionViewWillEnter();
   }
 
   checkUncheckRecipe(recipeIndex){

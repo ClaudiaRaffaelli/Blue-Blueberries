@@ -22,11 +22,9 @@ export class GroceriesService {
   }
 
 
-  addRemoveRecipeFromGrocery(recipeKey){
-    console.log("recipeKey");
-    console.log(recipeKey);
+  async addRemoveRecipeFromGrocery(recipeKey){
     // updating the list of collections
-    this.storage.get("GroceryList").then(valueStr => {
+    await this.storage.get("GroceryList").then(async valueStr => {
       let value = valueStr ? JSON.parse(valueStr) : {};
 
       // pushing the recipe key if not already present in the grocery list
@@ -36,9 +34,8 @@ export class GroceriesService {
         // if the key is already present we remove it from the list
         value = value.filter(v => v !== recipeKey);
       }
-
       // Save the entire data again
-      this.storage.set("GroceryList", JSON.stringify(value));
+      await this.storage.set("GroceryList", JSON.stringify(value));
     });
   }
 
