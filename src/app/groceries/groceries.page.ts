@@ -50,7 +50,7 @@ export class GroceriesPage implements OnInit {
   }
 
   // todo gestione dei q.b.
-  // todo decorazione check e uncheck ingredienti
+  // todo funzione di conversione per unità di misura diverse
 
   async ngOnInit() {
 
@@ -80,8 +80,6 @@ export class GroceriesPage implements OnInit {
     this.lastTimeGroceryKeyRecipes = this.thisTimeGroceryKeyRecipes;
 
     await this.groceriesService.getGroceryList().then( async groceryList => {
-      console.log("nuova grocery list")
-      console.log(groceryList)
 
       if(groceryList.length == 0){
         this.recipesInGroceryList = []; // contains the list of fetched recipeItems that are present in the grocery list
@@ -146,7 +144,10 @@ export class GroceriesPage implements OnInit {
         return el != undefined;
       });
     });
-    }
+    // if some ingredients has changed its status from checked to unchecked we make sure that the position at
+    // the top or bottom of the list is updated
+    await this.sortIngredients();
+  }
 
 
   async getRecipeItem(recipeKey, imageRequired=true){
@@ -211,6 +212,20 @@ export class GroceriesPage implements OnInit {
     }
   }
 
+  sortIngredients(){
+    // the unchecked ingredients needs to stay at the top and the checked at the bottom
+    let checked = [];
+    let unchecked = [];
+    for (let ingredient of this.ingredients){
+      if(ingredient.checked === false){
+        unchecked.push(ingredient);
+      }else{
+        checked.push(ingredient);
+      }
+    }
+    this.ingredients = unchecked.concat(checked);
+  }
+
 
   async hideDeleteIngredientsForRecipe(recipeIndex){
     // takes as input the index of the recipe in recipesInGroceryList and add / subtracts the relative ingredients
@@ -225,6 +240,7 @@ export class GroceriesPage implements OnInit {
     this.ingredients= await this.ingredients.filter(function (el) {
       return el.quantity != 0;
     });
+    this.sortIngredients();
   }
 
   openRecipe(recipeP: any){
@@ -249,22 +265,9 @@ export class GroceriesPage implements OnInit {
     this.hideDeleteIngredientsForRecipe(recipeIndex);
   }
 
-  checkUncheckIngredient(event, ingredient){
+  async checkUncheckIngredient(event, ingredient){
     ingredient.checked = !event.target.checked;
-
-    if( ! event.target.checked ){
-      event.target.parentNode.style.textDecoration = "line-through";
-      event.target.parentNode.style.opacity = 0.5;
-
-      const parent = event.target.parentElement.parentElement;
-      parent.appendChild(event.target.parentElement);
-    }else{
-      event.target.parentNode.style.textDecoration = "none";
-      event.target.parentNode.style.opacity = 1;
-
-      const parent = event.target.parentElement.parentElement;
-      parent.insertBefore(event.target.parentElement, parent.firstChild);
-    }
+    this.sortIngredients()
   }
 }
 

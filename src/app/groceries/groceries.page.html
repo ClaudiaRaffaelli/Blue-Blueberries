@@ -28,9 +28,10 @@
 
   <ion-list class="user-list">
     <ion-item *ngFor="let ingredient of ingredients; let ingredientIndex=index">
-      <ion-label>{{ingredient.name}} - {{ingredient.quantity}} {{ingredient.unity}}</ion-label>
-      <ion-checkbox *ngIf="ingredient.checked" checked="true" color="primary" type="checkbox" (click)="checkUncheckIngredient($event, ingredient)" ></ion-checkbox>
-      <ion-checkbox *ngIf="!ingredient.checked" checked="false" color="primary" type="checkbox" (click)="checkUncheckIngredient($event, ingredient)" ></ion-checkbox>
+      <ion-label *ngIf="ingredient.checked" style="text-decoration: line-through; opacity: 0.5">{{ingredient.name}} - {{ingredient.quantity}} {{ingredient.unity}}</ion-label>
+      <ion-label *ngIf="!ingredient.checked" style="text-decoration: none; opacity: 1">{{ingredient.name}} - {{ingredient.quantity}} {{ingredient.unity}}</ion-label>
+      <ion-checkbox *ngIf="ingredient.checked" checked="true" style="text-decoration: line-through; opacity: 0.5" color="primary" type="checkbox" (click)="checkUncheckIngredient($event, ingredient)" ></ion-checkbox>
+      <ion-checkbox *ngIf="!ingredient.checked" checked="false" style="text-decoration: none; opacity: 1" color="primary" type="checkbox" (click)="checkUncheckIngredient($event, ingredient)" ></ion-checkbox>
     </ion-item>
   </ion-list>
 
