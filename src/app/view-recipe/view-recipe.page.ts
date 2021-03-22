@@ -36,6 +36,7 @@ export class ViewRecipePage implements OnInit {
   timerToggle: boolean;
 
   isInGroceryList: boolean;
+  recipeNumberInCart : number; // holds the number of recipes currently inside the cart for the grocery list
 
   lastPage: string;
   textSteps: {[id: string]: string};
@@ -176,6 +177,8 @@ export class ViewRecipePage implements OnInit {
           }
         }
       }
+      //let recipeList = await this.groceriesService.getGroceryList();
+      //this.recipeNumberInCart=recipeList.length;
     });
   }
 
@@ -183,6 +186,11 @@ export class ViewRecipePage implements OnInit {
     if (this.data === undefined) {
       this.router.navigate(['home']);
     }
+  }
+
+  async ionViewWillEnter(){
+    let recipeList = await this.groceriesService.getGroceryList();
+    this.recipeNumberInCart=recipeList.length;
   }
 
   async getNextImage() {
@@ -298,13 +306,16 @@ export class ViewRecipePage implements OnInit {
   }
 
   async addRemoveCart(recipeKey: string){
-    // TODO sarebbe carino fare l'icona con un numerello sopra che indica quante ricette sono nel carrello al momento:
-    //  riferimento: https://forum.ionicframework.com/t/how-to-add-a-badge-to-a-icon-inside-a-ion-button/70868
-
 
     // toggle the recipe inside the cart and change the icon accordingly
     await this.groceriesService.addRemoveRecipeFromGrocery(recipeKey);
     this.isInGroceryList = ! this.isInGroceryList;
+    if(this.isInGroceryList === true){
+      // the recipe has been added, so there is one more recipe inside the cart
+      this.recipeNumberInCart ++;
+    }else{
+      this.recipeNumberInCart --;
+    }
   }
 
 
