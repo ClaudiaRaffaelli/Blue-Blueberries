@@ -34,6 +34,8 @@ export class CollectionsPage implements OnInit {
   }
 
   // TODO magari fare le collezioni più larghe, a causa dello slider sono molto compresse in width
+  // TODO immagine piatto vuoto quando la collezione è vuota
+  // todo collezione privata dei favorites fissa
 
   ngOnInit() {
 

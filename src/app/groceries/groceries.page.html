@@ -26,14 +26,23 @@
       </ion-slide>
     </ion-slides>
 
-  <ion-list class="user-list">
-    <ion-item *ngFor="let ingredient of ingredients; let ingredientIndex=index">
-      <ion-label *ngIf="ingredient.checked" style="text-decoration: line-through; opacity: 0.5">{{ingredient.name}} - {{ingredient.quantity}} {{ingredient.unity}}</ion-label>
-      <ion-label *ngIf="!ingredient.checked" style="text-decoration: none; opacity: 1">{{ingredient.name}} - {{ingredient.quantity}} {{ingredient.unity}}</ion-label>
-      <ion-checkbox *ngIf="ingredient.checked" checked="true" style="text-decoration: line-through; opacity: 0.5" color="primary" type="checkbox" (click)="checkUncheckIngredient($event, ingredient)" ></ion-checkbox>
-      <ion-checkbox *ngIf="!ingredient.checked" checked="false" style="text-decoration: none; opacity: 1" color="primary" type="checkbox" (click)="checkUncheckIngredient($event, ingredient)" ></ion-checkbox>
-    </ion-item>
-  </ion-list>
-
-
+    <div *ngFor="let ingredient of ingredients; let ingredientIndex=index">
+      <ion-item>
+        <ion-label><h2>{{ingredient.name}}</h2></ion-label>
+      </ion-item>
+        <ion-list *ngFor="let recipeIngredient of ingredient.recipeList; let recipeIngredientIndex=index" >
+          <ion-item>
+            <ion-label text-wrap *ngIf="recipeIngredient.checked" style="text-decoration: line-through; opacity: 0.5">
+              {{recipeIngredient.recipeName}} : {{recipeIngredient.quantity}} {{recipeIngredient.unity}}</ion-label>
+            <ion-label text-wrap *ngIf="!recipeIngredient.checked" style="text-decoration: none; opacity: 1">
+              {{recipeIngredient.recipeName}} : {{recipeIngredient.quantity}} {{recipeIngredient.unity}}</ion-label>
+            <ion-checkbox *ngIf="recipeIngredient.checked" checked="true"
+                          style="text-decoration: line-through; opacity: 0.5" color="primary" type="checkbox"
+                          (click)="checkUncheckIngredient($event, recipeIngredient, ingredient)" ></ion-checkbox>
+            <ion-checkbox *ngIf="!recipeIngredient.checked" checked="false"
+                          style="text-decoration: none; opacity: 1" color="primary" type="checkbox"
+                          (click)="checkUncheckIngredient($event, recipeIngredient, ingredient)" ></ion-checkbox>
+          </ion-item>
+        </ion-list>
+    </div>
 </ion-content>

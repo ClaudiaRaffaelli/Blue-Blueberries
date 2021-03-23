@@ -22,8 +22,8 @@
             </ion-card-content>
           </ion-card>
         </ion-item>
-        <ion-item-options side="end" (click)="deleteCollection(collectionItem, collectionIndex)">
-          <ion-item-option color="danger">
+        <ion-item-options side="end">
+          <ion-item-option color="danger" (click)="deleteCollection(collectionItem, collectionIndex)">
             <ion-icon slot="top" name="trash">Delete collection</ion-icon>
           </ion-item-option>
         </ion-item-options>

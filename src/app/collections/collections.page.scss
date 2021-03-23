@@ -40,7 +40,7 @@ ion-slide ion-card {
   width: 100%;
   height: 160px;
   box-shadow: none;
-  margin: -20px !important;
+  margin: 8px !important;
 
   img {
     object-fit: cover;
@@ -48,4 +48,8 @@ ion-slide ion-card {
     transform: scale(1.1, 1.1) rotate(1deg);
     transition: 600ms all ease-in-out;
   }
+}
+
+ion-card{
+  margin: 8px !important;
 }
