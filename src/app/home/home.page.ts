@@ -6,6 +6,7 @@ import 'firebase/storage'; // in order to use images stored in the firebase data
 import {Router, NavigationExtras, ActivatedRoute} from '@angular/router'; // pass data between two pages
 import {PopoverController} from '@ionic/angular';
 import {PopoverCollectionsComponent} from '../popover-collections/popover-collections.component';
+import {CollectionItemService} from "../shared/collection-item.service";
 
 @Component({
   selector: 'app-home',
@@ -23,17 +24,18 @@ export class HomePage implements OnInit {
   dataFetched: boolean; // flag that indicates when all recipes data have been downloaded from the database
   collection: any; // collection got from custom collection page
   titlePage = '';
+  isInAnyCollection =[];
 
   constructor(
     private aptService: RecipeItemService,
     private route: ActivatedRoute,
     private router: Router,
+    private localDBService: CollectionItemService,
     public popoverController: PopoverController
   ) {
     this.route.queryParams.subscribe(async params => {
     if (this.router.getCurrentNavigation().extras.state) {
       this.query = this.router.getCurrentNavigation().extras.state.query;
-      console.log(this.query);
       this.lastPage = this.router.getCurrentNavigation().extras.state.lastPage;
 
       // If we are navigating from the page where there are listed all the collection.
@@ -68,7 +70,6 @@ export class HomePage implements OnInit {
             myRecipeItem.title_image = this.imgs;
           });
           this.recipes.push(myRecipeItem as RecipeItem);
-          // console.log(this.recipes)
         }
         this.dataFetched = true;
       } else{
@@ -199,11 +200,29 @@ export class HomePage implements OnInit {
   }
 
 
+
+  ionViewWillEnter(){
+    // updating isInAnyCollection to display a different heart icon (full or empty) if the recipe is in any collection
+    // or not
+    this.reloadIsInCollection();
+    }
+
+
+  async reloadIsInCollection(){
+    this.isInAnyCollection = [];
+    for(let recipe of this.recipes){
+      await this.localDBService.isRecipeInAnyCollection(recipe.$key).then(res =>{
+        this.isInAnyCollection.push(res);
+      })
+    }
+  }
+
+
   ngOnInit() {
   }
 
 
-  async presentPopover(eve: any, recipeKey: string) {
+  async presentPopover(eve: any, recipeKey: string, recipeIndex) {
     const popover = await this.popoverController.create({
       component: PopoverCollectionsComponent,
       cssClass: 'popOver',
@@ -219,8 +238,9 @@ export class HomePage implements OnInit {
     popover.onWillDismiss().then(() => {
           // alert("before dismissing the popover")
     });
-    popover.onDidDismiss().then(() => {
-          // alert("popover dismissed")
+    popover.onDidDismiss().then(async () => {
+      // when the popover is dismissed we see if we have to change the status of the heart icon
+      this.isInAnyCollection[recipeIndex] = await this.localDBService.isRecipeInAnyCollection(recipeKey);
     });
     return await popover.present();
   }

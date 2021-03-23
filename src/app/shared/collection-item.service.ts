@@ -8,11 +8,6 @@ import firebase from 'firebase';
 })
 
 export class CollectionItemService {
-  savedCollectionsListRef: [];
-  pathReference: any;
-  imgs: []; // Title images downloaded from the firebase storage
-  currentCoverImage: any;
-  collections: [];
 
   constructor(private storage: Storage) {}
 
@@ -112,17 +107,26 @@ export class CollectionItemService {
     return urlSrc;
   }
 
-  deleteRecipeFromCollectionItem(collectionName, recipeKey){
+  async deleteRecipeFromCollectionItem(collectionName, recipeKey){
     // Get the entire data
-    this.storage.get(collectionName).then( valueStr => {
+    this.storage.get(collectionName).then( async valueStr => {
       let value = valueStr ? JSON.parse(valueStr) : {};
 
-      // checking that there is an item to delete
+      // checking if the recipe we are deleting is the first of the list. In that case it means that the cover image
+      // needs to be updated
+      let changePhoto = false;
+      if(value.recipeList[0] === recipeKey){
+        changePhoto = true;
+      }
+
+      // deleting the item from the list
       value.recipeList = value.recipeList.filter($key => $key.toString() !== recipeKey);
       value.recipeNumber = value.recipeList.length
       // if there are no more recipe in the collection we delete the cover image
       if (value.recipeNumber === 0){
         value.coverPhoto = null;
+      }else if (changePhoto === true){
+        value.coverPhoto = await this.getCoverImage(value.recipeList[0])
       }
 
       // Save the entire data again
@@ -130,7 +134,7 @@ export class CollectionItemService {
     });
   }
 
-  isRecipeInCollection(collectionName, recipeKey){
+  async isRecipeInCollection(collectionName, recipeKey){
     // Get the entire data
     return this.storage.get(collectionName).then(valueStr => {
       let value = valueStr ? JSON.parse(valueStr) : {};
@@ -138,5 +142,19 @@ export class CollectionItemService {
       // if recipeList includes the key returns true, otherwise false
       return !!value.recipeList.includes(recipeKey);
     });
+  }
+
+  async isRecipeInAnyCollection(recipeKey){
+    // Get the collection list
+    let collectionList = await this.getCollectionList();
+    // iterate through the collections to see if the recipe is in any of the collection.
+    // as soon as we find it we return true, otherwise we return false when we have finished checking all the collections
+    for (let collectionName of collectionList){
+      let isIn = await this.isRecipeInCollection(collectionName, recipeKey);
+      if (isIn === true){
+        return true;
+      }
+    }
+    return false;
   }
 }

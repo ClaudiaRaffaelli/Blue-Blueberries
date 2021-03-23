@@ -49,8 +49,7 @@ export class GroceriesPage implements OnInit {
     this.database = firebase.database().ref();
   }
 
-  // todo gestione dei q.b.
-  // todo funzione di conversione per unità di misura diverse
+  // todo gestione dei q.b. come concordato
 
   async ngOnInit() {
 

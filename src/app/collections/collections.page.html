@@ -22,10 +22,9 @@
             </ion-card-content>
           </ion-card>
         </ion-item>
-        <ion-item-options side="end">
+        <ion-item-options side="end" (click)="deleteCollection(collectionItem, collectionIndex)">
           <ion-item-option color="danger">
-<!--            TODO: in order to delete the collection it is needed to press exactly on the trash icon, not good-->
-            <ion-icon slot="top" name="trash" (click)="deleteCollection(collectionItem, collectionIndex)">Delete collection</ion-icon>
+            <ion-icon slot="top" name="trash">Delete collection</ion-icon>
           </ion-item-option>
         </ion-item-options>
       </ion-item-sliding>
