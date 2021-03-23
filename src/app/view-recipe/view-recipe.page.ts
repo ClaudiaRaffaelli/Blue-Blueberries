@@ -177,8 +177,8 @@ export class ViewRecipePage implements OnInit {
           }
         }
       }
-      //let recipeList = await this.groceriesService.getGroceryList();
-      //this.recipeNumberInCart=recipeList.length;
+      // let recipeList = await this.groceriesService.getGroceryList();
+      // this.recipeNumberInCart=recipeList.length;
     });
   }
 
@@ -189,8 +189,12 @@ export class ViewRecipePage implements OnInit {
   }
 
   async ionViewWillEnter(){
-    let recipeList = await this.groceriesService.getGroceryList();
-    this.recipeNumberInCart=recipeList.length;
+    const recipeList = await this.groceriesService.getGroceryList();
+    this.recipeNumberInCart = recipeList.length;
+  }
+
+  ionViewDidLeave(){
+    this.insomnia.allowSleepAgain();
   }
 
   async getNextImage() {

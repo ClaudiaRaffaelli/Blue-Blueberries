@@ -43,7 +43,23 @@ ion-card{
   background: #cca92c;
   display: block;
   box-shadow: 0 0 0 rgb(199, 0, 255);
-  animation: pulse 1s;
+  animation: pulse 2s;
+}
+
+#available_animated {
+  display: block;
+  border-radius: 50%;
+  box-shadow: 0 0 0 rgb(255, 0, 0);
+  animation: pulse_red 1s;
+  animation-fill-mode: forwards;
+}
+
+#undesired_animated {
+  display: block;
+  border-radius: 50%;
+  box-shadow: 0 0 0 rgb(255, 0, 0);
+  animation: pulse_red 1s;
+  animation-fill-mode: forwards;
 }
 
 #summary_animated {
@@ -67,6 +83,21 @@ ion-card{
   0% {
     -moz-box-shadow: 0 0 0 0 rgb(30, 39, 210);
     box-shadow: 0 0 0 0 rgba(30, 39, 210, 0.4);
+  }
+  70% {
+    -moz-box-shadow: 0 0 0 10px rgba(204,169,44, 0);
+    box-shadow: 0 0 0 10px rgba(204,169,44, 0);
+  }
+  100% {
+    -moz-box-shadow: 0 0 0 0 rgba(204,169,44, 0);
+    box-shadow: 0 0 0 0 rgba(204,169,44, 0);
+  }
+}
+
+@keyframes pulse_red {
+  0% {
+    -moz-box-shadow: 0 0 0 0 rgb(255, 0, 0);
+    box-shadow: 0 0 0 0 rgb(255, 0, 0);
   }
   70% {
     -moz-box-shadow: 0 0 0 10px rgba(204,169,44, 0);

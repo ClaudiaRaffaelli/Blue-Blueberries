@@ -6,7 +6,6 @@ import 'firebase/storage'; // in order to use images stored in the firebase data
 import {Router, NavigationExtras, ActivatedRoute} from '@angular/router'; // pass data between two pages
 import {PopoverController} from '@ionic/angular';
 import {PopoverCollectionsComponent} from '../popover-collections/popover-collections.component';
-import {Insomnia} from '@ionic-native/insomnia/ngx';
 
 @Component({
   selector: 'app-home',
@@ -29,13 +28,12 @@ export class HomePage implements OnInit {
     private aptService: RecipeItemService,
     private route: ActivatedRoute,
     private router: Router,
-    public popoverController: PopoverController,
-    private insomnia: Insomnia
+    public popoverController: PopoverController
   ) {
-    this.insomnia.allowSleepAgain();
     this.route.queryParams.subscribe(async params => {
     if (this.router.getCurrentNavigation().extras.state) {
       this.query = this.router.getCurrentNavigation().extras.state.query;
+      console.log(this.query);
       this.lastPage = this.router.getCurrentNavigation().extras.state.lastPage;
 
       // If we are navigating from the page where there are listed all the collection.
@@ -142,6 +140,24 @@ export class HomePage implements OnInit {
                   if (myRecipeItem.ingredients[ingredient].selected && !this.query.availableIngredients[ingredient].selected){
                     filterOk = false;
                     filtersSatisfied = false;
+                    break;
+                  }
+                }
+                if (filterOk){
+                  if (--numberOfFilters === 0) {
+                    this.recipes.push(myRecipeItem as RecipeItem);
+                  }
+                }else{
+                  filtersSatisfied = false;
+                }
+              }
+              // @ts-ignore
+              if (this.query.mainIngredients && (filtersSatisfied === true)){
+                let filterOk = false;
+                for (const ingredient in myRecipeItem.ingredients){
+                  // @ts-ignore
+                  if (myRecipeItem.ingredients[ingredient].selected && this.query.mainIngredients[ingredient].selected){
+                    filterOk = true;
                     break;
                   }
                 }

@@ -5,7 +5,6 @@ import {NavigationExtras, Router} from '@angular/router';
 import {Platform} from '@ionic/angular';
 import {SpeechRecognition} from '@ionic-native/speech-recognition/ngx';
 import levenshtein from 'fast-levenshtein';
-import {Insomnia} from '@ionic-native/insomnia/ngx';
 import {TextToSpeech} from '@ionic-native/text-to-speech/ngx';
 
 
@@ -22,18 +21,28 @@ declare const annyang: any;
 })
 export class SearchRecipePage implements OnInit {
   @ViewChild(IonContent, { static: false }) content: IonContent;
+  availablePulseToggleId = 'available_animated_disabled';
+  undesiredPulseToggleId = 'undesired_animated_disabled';
   queryRecipeName: string;
+  desiredIngredientsFilter: string;
   showAvailableSearchBarResults: boolean;
   showAvailableIngredients: boolean;
+  showMainSearchBarResults: boolean;
+  showMainIngredients: boolean;
   showUndesiredSearchBarResults: boolean;
   showUndesiredIngredients: boolean;
   ing: IngredientsDic;
   ingUndesired: IngredientsDic;
+  ingMain: IngredientsDic;
   availableIngredientsKeys: {};
+  mainIngredientsKeys: {};
   undesiredIngredientsKeys: {};
   availableIngredients: {};
+  mainIngredients: {};
   undesiredIngredients: {};
+  searchAllIngredients: boolean;
   searchAvailableIngredients: boolean;
+  searchMainIngredients: boolean;
   searchUndesiredIngredients: boolean;
   searchDifficulty: boolean;
   difficulty: string;
@@ -59,21 +68,25 @@ export class SearchRecipePage implements OnInit {
 
 
   constructor(private router: Router, public platform: Platform, private speechRecognition: SpeechRecognition,
-              public ngZone: NgZone, private insomnia: Insomnia, private tts: TextToSpeech) {
+              public ngZone: NgZone, private tts: TextToSpeech) {
     this.queryRecipeName = '';
     this.difficulty = 'easy';
     this.showAvailableSearchBarResults = false;
+    this.showMainSearchBarResults = false;
     this.showUndesiredSearchBarResults = false;
     this.ing = new IngredientsDic();
+    this.ingMain = new IngredientsDic();
     this.ingUndesired = new IngredientsDic();
     this.availableIngredientsKeys = Object.keys(this.ing.ingredients);
+    this.mainIngredientsKeys = Object.keys(this.ingMain.ingredients);
     this.undesiredIngredientsKeys = Object.keys(this.ingUndesired.ingredients);
-    this.searchAvailableIngredients = false;
+    this.searchAllIngredients = false;
+    this.searchAvailableIngredients = true;
+    this.showMainIngredients = false;
     this.searchUndesiredIngredients = false;
     this.searchDifficulty = false;
     this.searchRequiredTime = false;
     this.maxRequiredTime = 30;
-    this.insomnia.allowSleepAgain();
 
     // Check feature available
     this.speechRecognition.isRecognitionAvailable()
@@ -148,7 +161,12 @@ export class SearchRecipePage implements OnInit {
 
 
   ngOnInit() {
+  }
 
+
+  ionViewDidLeave(){
+    this.availablePulseToggleId = 'available_animated_disabled';
+    this.undesiredPulseToggleId = 'undesired_animated_disabled';
   }
 
   reset_pulse_animation(element: string) {
@@ -163,6 +181,15 @@ export class SearchRecipePage implements OnInit {
     this.queryRecipeName = event.target.value;
   }
 
+  allIngredientsChanged(event){
+    if (event.target.value === 'availableIngredients'){
+      this.searchAvailableIngredients = true;
+      this.searchMainIngredients = false;
+    }else{
+      this.searchAvailableIngredients = false;
+      this.searchMainIngredients = true;
+    }
+  }
 
   // search bar for available ingredients
   _ionChangeAvailable(event){
@@ -177,6 +204,24 @@ export class SearchRecipePage implements OnInit {
 
     if (val && val.trim() !== ''){ // show only the ingredients that satisfies the query
       this.availableIngredients = Object.keys(this.availableIngredients).filter((item: any) => {
+        return (item.toLowerCase().indexOf(val.toLowerCase()) > -1);
+      });
+    }
+  }
+
+  // search bar for main ingredients
+  _ionChangeMain(event){
+    const val = event.target.value; // get the value in the search bar
+    if (val.trim() !== ''){ // If the user has typed something
+      this.showMainSearchBarResults = true;
+    }else {
+      this.showMainSearchBarResults = false;
+    }
+
+    this.mainIngredients = this.ingMain.ingredients;
+
+    if (val && val.trim() !== ''){ // show only the ingredients that satisfies the query
+      this.mainIngredients = Object.keys(this.mainIngredients).filter((item: any) => {
         return (item.toLowerCase().indexOf(val.toLowerCase()) > -1);
       });
     }
@@ -207,6 +252,13 @@ export class SearchRecipePage implements OnInit {
     this.ing.ingredients[ingredient].selected = !this.ing.ingredients[ingredient].selected;
   }
 
+  // check / uncheck available ingredients when clicked by user
+  toggleMainIngredient(ingredient: unknown){
+    // Change ingredient's state
+    // @ts-ignore
+    this.ingMain.ingredients[ingredient].selected = !this.ingMain.ingredients[ingredient].selected;
+  }
+
   // check / uncheck undesired ingredients when clicked by user
   toggleUndesiredIngredient(ingredient: unknown){
     // Change ingredient's state
@@ -214,13 +266,23 @@ export class SearchRecipePage implements OnInit {
     this.ingUndesired.ingredients[ingredient].selected = !this.ingUndesired.ingredients[ingredient].selected;
   }
 
-  // show search results only when these variables are tue
+  // show available/main ingredients panel
+  toggleSearchAllIngredients(){
+    this.searchAllIngredients = !this.searchAllIngredients;
+  }
+
+  // show search results only when these variables are true
   toggleSearchAvailableIngredients(){
     this.searchAvailableIngredients = !this.searchAvailableIngredients;
     this.showAvailableIngredients = !this.showAvailableIngredients;
     if (this.searchAvailableIngredients){
       this.reset_pulse_animation('mic_animated');
     }
+  }
+
+  toggleSearchMainIngredients(){
+    this.searchMainIngredients = !this.searchMainIngredients;
+    this.showMainIngredients = !this.showMainIngredients;
   }
 
   toggleSearchUndesiredIngredients(){
@@ -260,8 +322,11 @@ export class SearchRecipePage implements OnInit {
     if (this.queryRecipeName !== ''){
       query.recipeName = this.queryRecipeName;
     }
-    if (this.searchAvailableIngredients){
+    if (this.searchAvailableIngredients && this.searchAllIngredients){
       query.availableIngredients = this.ing.ingredients;
+    }
+    if (this.searchMainIngredients && this.searchAllIngredients){
+      query.mainIngredients = this.ingMain.ingredients;
     }
     if (this.showUndesiredIngredients){
       query.undesiredIngredients = this.ingUndesired.ingredients;
@@ -361,36 +426,35 @@ export class SearchRecipePage implements OnInit {
     }
   }
 
+
   performIntent(){
-    if (this.voiceText.toLowerCase().includes('i have')){
-      const ingredients = Object.keys(this.ing.ingredients);
-      for (let i = 0; i < ingredients.length; i++) {
-        const queryIngredients = this.voiceText.toLowerCase().split('i have')[1].split(' ');
-        for (let j = 0; j < queryIngredients.length; j++) {
-          if (levenshtein.get(queryIngredients[j], ingredients[i].toLowerCase()) <= 1) {
-            this.ing.ingredients[ingredients[i]].selected = true;
-          }
-        }
-      }
-      this.voiceText = 'We should find something with these';
-      this.speak(this.voiceText);
-      this.ScrollToPoint('summary_animated');
-      this.reset_pulse_animation('summary_animated');
+    const availableSeparator = 'i have';
+    const mainSeparator = 'i like';
+    const undesiredSeparator = 'i don\'t want';
+    // if user says he want something but he hasn't triggered the toggle give a visual feedback with pulse animation
+    // on the toggle
+    if (this.voiceText.toLowerCase().includes(availableSeparator) && !(this.searchAvailableIngredients && this.searchAllIngredients)
+      || (this.voiceText.toLowerCase().includes(mainSeparator) && !(this.searchMainIngredients && this.searchAllIngredients))){
+      this.availablePulseToggleId = 'available_animated';
+      this.reset_pulse_animation('available_animated');
     }
-    else if (this.voiceText.toLowerCase().includes('i don\'t want')){
-      const ingredients = Object.keys(this.ingUndesired.ingredients);
-      for (let i = 0; i < ingredients.length; i++) {
-        const queryIngredients = this.voiceText.toLowerCase().split('i don\'t want')[1].split(' ');
-        for (let j = 0; j < queryIngredients.length; j++) {
-          if (levenshtein.get(queryIngredients[j], ingredients[i].toLowerCase()) <= 1) {
-            this.ingUndesired.ingredients[ingredients[i]].selected = true;
-          }
-        }
-      }
-      this.voiceText = 'Undesired ingredients set';
-      this.speak(this.voiceText);
-      this.ScrollToPoint('summary_animated');
-      this.reset_pulse_animation('summary_animated');
+    if (this.voiceText.toLowerCase().includes(undesiredSeparator) && !this.searchUndesiredIngredients){
+      this.undesiredPulseToggleId = 'undesired_animated';
+      this.reset_pulse_animation('undesired_animated');
+    }
+    if (this.combinedRequest(availableSeparator, undesiredSeparator)){
+      return;
+    }else if (this.combinedRequest(mainSeparator, undesiredSeparator)){
+      return;
+    }
+    else if (this.voiceText.toLowerCase().includes(availableSeparator) && this.searchAvailableIngredients && this.searchAllIngredients){
+      this.singleRequest(availableSeparator, this.ing, 'Available ingredients set');
+    }
+    else if (this.voiceText.toLowerCase().includes(mainSeparator) && this.searchMainIngredients && this.searchAllIngredients){
+      this.singleRequest(mainSeparator, this.ingMain, 'Main ingredients set');
+    }
+    else if (this.voiceText.toLowerCase().includes(undesiredSeparator) && this.searchUndesiredIngredients){
+      this.singleRequest(undesiredSeparator, this.ingUndesired, 'Undesired ingredients set');
     }else if (this.voiceText.toLowerCase().includes('search') ||
               this.voiceText.toLowerCase().includes('go')){
       this.closeVoiceRecognition();
@@ -401,6 +465,55 @@ export class SearchRecipePage implements OnInit {
     else{
       this.voiceText = 'Sorry, I didn\'t understand';
       this.speak(this.voiceText);
+    }
+  }
+
+  combinedRequest(firstSeparator: string, undesiredSeparator: string){
+    if (this.voiceText.toLowerCase().includes(firstSeparator) && this.voiceText.toLowerCase().includes(undesiredSeparator)
+        && this.searchAvailableIngredients && this.searchAllIngredients && this.searchUndesiredIngredients){
+      const ingredients = Object.keys(this.ing.ingredients);
+      // check where are user's available and undesired ingredients in the string
+      const availableIngredientsS = this.voiceText.toLowerCase().split(firstSeparator);
+      let dontWantIngredients = '';
+      let availableIngredients = '';
+      if (availableIngredientsS[1].includes(undesiredSeparator)){
+        dontWantIngredients = availableIngredientsS[1].split(undesiredSeparator)[1];
+        availableIngredients = availableIngredientsS[1].split(undesiredSeparator)[0];
+      }else{
+        availableIngredients = availableIngredientsS[1];
+        dontWantIngredients = availableIngredientsS[0].split(undesiredSeparator)[1];
+      }
+
+      this.selectIngredients(this.ing, ingredients, firstSeparator + ' ' + availableIngredients, firstSeparator);
+      this.selectIngredients(this.ingUndesired, ingredients, undesiredSeparator + ' ' + dontWantIngredients, undesiredSeparator);
+      this.voiceText = 'Ingredients set';
+      this.speak(this.voiceText);
+      this.ScrollToPoint('summary_animated');
+      this.reset_pulse_animation('summary_animated');
+
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  singleRequest(separator, ingredientsDic, speechText){
+      const ingredients = Object.keys(ingredientsDic.ingredients);
+      this.selectIngredients(ingredientsDic, ingredients, this.voiceText, separator);
+      this.voiceText = speechText;
+      this.speak(this.voiceText);
+      this.ScrollToPoint('summary_animated');
+      this.reset_pulse_animation('summary_animated');
+  }
+
+  selectIngredients(ingredientsDictionary, ingredients, textAnalysed: string, separator: string){
+    for (let i = 0; i < ingredients.length; i++) {
+      const queryIngredients = textAnalysed.toLowerCase().split(separator)[1].split(' ');
+      for (let j = 0; j < queryIngredients.length; j++) {
+        if (levenshtein.get(queryIngredients[j], ingredients[i].toLowerCase()) <= 1) {
+          ingredientsDictionary.ingredients[ingredients[i]].selected = true;
+        }
+      }
     }
   }
 
