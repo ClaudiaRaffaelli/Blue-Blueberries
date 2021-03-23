@@ -7,6 +7,7 @@ import {Router, NavigationExtras, ActivatedRoute} from '@angular/router'; // pas
 import {PopoverController} from '@ionic/angular';
 import {PopoverCollectionsComponent} from '../popover-collections/popover-collections.component';
 import {Insomnia} from '@ionic-native/insomnia/ngx';
+import {CollectionItemService} from "../shared/collection-item.service";
 
 @Component({
   selector: 'app-home',
@@ -24,13 +25,15 @@ export class HomePage implements OnInit {
   dataFetched: boolean; // flag that indicates when all recipes data have been downloaded from the database
   collection: any; // collection got from custom collection page
   titlePage = '';
+  isInAnyCollection =[];
 
   constructor(
     private aptService: RecipeItemService,
     private route: ActivatedRoute,
     private router: Router,
     public popoverController: PopoverController,
-    private insomnia: Insomnia
+    private insomnia: Insomnia,
+    private localDBService: CollectionItemService,
   ) {
     this.insomnia.allowSleepAgain();
     this.route.queryParams.subscribe(async params => {
@@ -70,7 +73,6 @@ export class HomePage implements OnInit {
             myRecipeItem.title_image = this.imgs;
           });
           this.recipes.push(myRecipeItem as RecipeItem);
-          // console.log(this.recipes)
         }
         this.dataFetched = true;
       } else{
@@ -183,11 +185,29 @@ export class HomePage implements OnInit {
   }
 
 
+
+  ionViewWillEnter(){
+    // updating isInAnyCollection to display a different heart icon (full or empty) if the recipe is in any collection
+    // or not
+    this.reloadIsInCollection();
+    }
+
+
+  async reloadIsInCollection(){
+    this.isInAnyCollection = [];
+    for(let recipe of this.recipes){
+      await this.localDBService.isRecipeInAnyCollection(recipe.$key).then(res =>{
+        this.isInAnyCollection.push(res);
+      })
+    }
+  }
+
+
   ngOnInit() {
   }
 
 
-  async presentPopover(eve: any, recipeKey: string) {
+  async presentPopover(eve: any, recipeKey: string, recipeIndex) {
     const popover = await this.popoverController.create({
       component: PopoverCollectionsComponent,
       cssClass: 'popOver',
@@ -203,8 +223,9 @@ export class HomePage implements OnInit {
     popover.onWillDismiss().then(() => {
           // alert("before dismissing the popover")
     });
-    popover.onDidDismiss().then(() => {
-          // alert("popover dismissed")
+    popover.onDidDismiss().then(async () => {
+      // when the popover is dismissed we see if we have to change the status of the heart icon
+      this.isInAnyCollection[recipeIndex] = await this.localDBService.isRecipeInAnyCollection(recipeKey);
     });
     return await popover.present();
   }

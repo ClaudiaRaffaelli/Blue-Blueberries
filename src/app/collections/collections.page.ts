@@ -1,5 +1,4 @@
 import {Component, Injectable, OnInit} from '@angular/core';
-import {RecipeItemService} from '../shared/recipe-item.service';
 import {CollectionItemService} from '../shared/collection-item.service';
 import 'firebase/storage'; // in order to use images stored in the firebase database
 import {NavigationExtras, Router} from '@angular/router'; // pass data between two pages
@@ -11,8 +10,6 @@ import {Storage} from '@ionic/storage';
   styleUrls: ['./collections.page.scss'],
 })
 
-// TODO cuore nella pagina della ricetta nella parte di fianco al timer
-// TODO card collezioni della stessa grandezza anche se senza immagine dentro
 
 @Injectable({ providedIn: 'root' })
 
@@ -27,7 +24,6 @@ export class CollectionsPage implements OnInit {
 
   constructor(
       private localDBService: CollectionItemService,
-      private aptService: RecipeItemService,
       private router: Router,
       private storage: Storage,
   ) {
@@ -37,10 +33,8 @@ export class CollectionsPage implements OnInit {
 
   }
 
-  // TODO sistema pulsante per aggiunta alle collezioni: vuoto quando non è in nessuna collezione, pieno quando in almeno una
-  // TODO sistema il routing all'interno delle collezioni personali: mancano i pulsanti per tornare indietro
-  // TODO magari non un'immagine singola mostrata da fuori una collezione ma un collage
-  // TODO controlla che quando elimino una ricetta l'immagine di copertina non sia l'immagine della ricetta rimossa
+  // TODO magari fare le collezioni più larghe, a causa dello slider sono molto compresse in width
+
   ngOnInit() {
 
   }
@@ -50,7 +44,6 @@ export class CollectionsPage implements OnInit {
     this.localDBService.getCollectionList().then(res => {
       this.savedCollectionsListRef = res;
 
-      //console.log("lista collezioni: ", this.savedCollectionsListRef)
       this.collections = [];
       // looping through all collections fetched
       for (let coll of res){
@@ -69,11 +62,6 @@ export class CollectionsPage implements OnInit {
       }
     };
     this.router.navigate(['home'], navigationExtras);
-  }
-
-  fetchRecipeItems() {
-    this.aptService.getRecipesList().valueChanges().subscribe(res => {
-    });
   }
 
   async deleteCollection(collectionItem, collectionIndex){

@@ -9,6 +9,7 @@ import {TextToSpeech} from '@ionic-native/text-to-speech/ngx';
 import {PopoverCollectionsComponent} from '../popover-collections/popover-collections.component';
 import { Insomnia } from '@ionic-native/insomnia/ngx';
 import {GroceriesService} from '../shared/groceries.service';
+import {CollectionItemService} from "../shared/collection-item.service";
 
 declare const annyang: any;
 
@@ -38,6 +39,8 @@ export class ViewRecipePage implements OnInit {
   isInGroceryList: boolean;
   recipeNumberInCart : number; // holds the number of recipes currently inside the cart for the grocery list
 
+  isInAnyCollection: boolean = false; // it holds the boolean that says if the heart icon has to be full or empty
+
   lastPage: string;
   textSteps: {[id: string]: string};
 
@@ -64,7 +67,8 @@ export class ViewRecipePage implements OnInit {
               public popoverController: PopoverController,
               private insomnia: Insomnia,
               private groceriesService: GroceriesService,
-              public ngZone: NgZone) {
+              public ngZone: NgZone,
+              private localDBService: CollectionItemService,) {
     this.insomnia.keepAwake();
     this.timerToggle = false;
     this.route.queryParams.subscribe(async params => {
@@ -191,6 +195,9 @@ export class ViewRecipePage implements OnInit {
   async ionViewWillEnter(){
     let recipeList = await this.groceriesService.getGroceryList();
     this.recipeNumberInCart=recipeList.length;
+
+    // when the popover is dismissed we see if we have to change the status of the heart icon
+    this.isInAnyCollection = await this.localDBService.isRecipeInAnyCollection(this.data.$key);
   }
 
   async getNextImage() {
@@ -299,8 +306,9 @@ export class ViewRecipePage implements OnInit {
     popover.onWillDismiss().then(() => {
       // alert("before dismissing the popover")
     });
-    popover.onDidDismiss().then(() => {
-      // alert("popover dismissed")
+    popover.onDidDismiss().then(async () => {
+      // when the popover is dismissed we see if we have to change the status of the heart icon
+      this.isInAnyCollection = await this.localDBService.isRecipeInAnyCollection(recipeKey);
     });
     return await popover.present();
   }

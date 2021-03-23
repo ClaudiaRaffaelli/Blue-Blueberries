@@ -14,7 +14,7 @@
             <ion-badge id="groceryBadge" color="danger" style="position: absolute; right: -5px; top: 0px; font-size: 0.8em; --padding-start: 5px;--padding-end: 5px; --padding-top: 2px; --padding-bottom: 2px">{{ recipeNumberInCart }}</ion-badge>
           </ion-button>
 
-          <ion-icon id="presentPopover" size = "large" name="heart" (click)="presentPopover($event, data.$key)" color="danger"></ion-icon>
+          <ion-icon id="presentPopover" size = "large" [name] = "isInAnyCollection ? 'heart' : 'heart-outline'" (click)="presentPopover($event, data.$key)" color="danger"></ion-icon>
           <ion-icon id="timer" (click)="toggleTimer()" name="stopwatch-outline" size="large" [color]="timerState === 'start' ? 'success' : 'tertiary'"></ion-icon>
         </ion-buttons>
       </ion-row>
