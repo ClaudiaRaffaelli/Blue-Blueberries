@@ -3,6 +3,7 @@ import {CollectionItemService} from '../shared/collection-item.service';
 import 'firebase/storage'; // in order to use images stored in the firebase database
 import {NavigationExtras, Router} from '@angular/router'; // pass data between two pages
 import {Storage} from '@ionic/storage';
+import {CollectionItem} from "../shared/collectionItem";
 
 @Component({
   selector: 'app-collections',
@@ -19,8 +20,7 @@ export class CollectionsPage implements OnInit {
   collections = []; // Here will be saved all the collections stored from local Ionic Storage
   pathReference: any;
   imgs: []; // Title images downloaded from the firebase storage
-
-  savedCollectionsListRef = [];
+  favoriteCollection: CollectionItem;
 
   constructor(
       private localDBService: CollectionItemService,
@@ -31,29 +31,44 @@ export class CollectionsPage implements OnInit {
     storage.ready().then(() => {
     });
 
+    this.favoriteCollection = new CollectionItem();
+
   }
 
   // TODO magari fare le collezioni più larghe, a causa dello slider sono molto compresse in width
-  // TODO immagine piatto vuoto quando la collezione è vuota
-  // todo collezione privata dei favorites fissa
 
-  ngOnInit() {
+  async ngOnInit() {
+    // getting the Favorites collection
+    await this.localDBService.getCollectionItem("Favorites").then(async res => {
+      // if there is no Favorites collection, we create it
+      if (res === null){
+        this.favoriteCollection = await this.localDBService.createFavoritesCollection()
+      }else{
+        this.favoriteCollection = await res;
+      }
+    });
 
   }
 
-  ionViewWillEnter(){
-    console.log("Re-loading collection each time I enter")
-    this.localDBService.getCollectionList().then(res => {
-      this.savedCollectionsListRef = res;
+  async ionViewWillEnter(){
+    // console.log("Re-loading collection each time I enter")
+    // making sure that local storage is ready
+    await this.storage.ready().then(async () => {
 
-      this.collections = [];
-      // looping through all collections fetched
-      for (let coll of res){
-        this.localDBService.getCollectionItem(coll).then(item => {
-          this.collections.push(item)
-        })
-      }
-    })
+      await this.localDBService.getCollectionList().then(async res => {
+        this.collections = [];
+        // looping through all collections fetched
+        for (let coll of res){
+          await this.localDBService.getCollectionItem(coll).then(async item => {
+            this.collections.push(await item)
+          })
+        }
+      });
+    });
+    // getting the Favorites collection
+    await this.localDBService.getCollectionItem("Favorites").then(async res => {
+      this.favoriteCollection = await res;
+    });
   }
 
   openCollection(collectionP: any){

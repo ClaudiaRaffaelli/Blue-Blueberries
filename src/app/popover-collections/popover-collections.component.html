@@ -1,5 +1,12 @@
 
 <ion-content >
+
+  <ion-item (click)="addDeleteFromFavorites()">
+    <ion-icon slot="end" name="add" *ngIf="!recipeInFavorites"></ion-icon>
+    <ion-icon slot="end" name="remove" *ngIf="recipeInFavorites"></ion-icon>
+    <ion-label>Favorites</ion-label>
+  </ion-item>
+
   <ion-list *ngFor="let collectionItem of collectionsItems; let collectionIndex=index;" class="user-list">
     <ion-item-sliding>
       <ion-item (click)="addRemoveToFromCollection(collectionItem, collectionIndex)">

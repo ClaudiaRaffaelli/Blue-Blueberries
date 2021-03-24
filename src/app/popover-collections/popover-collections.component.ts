@@ -1,6 +1,8 @@
 import {Component, Injectable, OnInit} from '@angular/core';
 import {CollectionItemService} from '../shared/collection-item.service';
 import {NavParams} from "@ionic/angular";
+import {CollectionItem} from "../shared/collectionItem";
+import {Storage} from "@ionic/storage";
 
 
 @Component({
@@ -14,6 +16,8 @@ export class PopoverCollectionsComponent implements OnInit {
 
   collectionsNames = [];
   collectionsItems = [];
+  favoritesCollection: CollectionItem;
+  recipeInFavorites: boolean = false;
   recipeKey: string;
   public navParams = new NavParams();
   collectionNameFromInput: string;
@@ -26,6 +30,18 @@ export class PopoverCollectionsComponent implements OnInit {
     // retrieving data from the popover componentProps (recipe key from the recipe the popover is opened on)
     this.recipeKey = this.navParams.get("recipeKey")
     this.collectionNameFromInput = ""
+
+    // getting the Favorites collection
+    this.localDBService.getCollectionItem("Favorites").then(async res => {
+      // if there is no Favorites collection, we create it
+      if (res === null){
+        this.favoritesCollection = await this.localDBService.createFavoritesCollection()
+      }else{
+        this.favoritesCollection = await res;
+      }
+      // set a boolean to know if the recipe is in the favorites this is used to show a different icon in the popup
+      this.recipeInFavorites = await this.localDBService.isRecipeInCollection(this.favoritesCollection.name, this.recipeKey)
+    });
   }
 
   // TODO ridimensiona la grandezza del popup
@@ -46,7 +62,14 @@ export class PopoverCollectionsComponent implements OnInit {
         this.recipeInCollection.push(await this.localDBService.isRecipeInCollection(coll, this.recipeKey))
 
       }
-    })
+    });
+
+    // getting the Favorites collection
+    this.localDBService.getCollectionItem("Favorites").then(async res => {
+      this.favoritesCollection = await res;
+      // set a boolean to know if the recipe is in the favorites this is used to show a different icon in the popup
+      this.recipeInFavorites = await this.localDBService.isRecipeInCollection(res.name, this.recipeKey)
+    });
   }
 
   async addRemoveToFromCollection(collectionItem, collectionIndex){
@@ -93,6 +116,27 @@ export class PopoverCollectionsComponent implements OnInit {
       this.collectionsNames = this.collectionsNames.filter(v => v !== collectionItem.name);
       this.collectionsItems.splice(collectionIndex, 1);
     });
+  }
+
+  async addDeleteFromFavorites(){
+    // the recipeKey has already been set by opening the popover and is ready to be inserted or deleted from
+    // the clicked collection (the entire collectionItem at input)
+
+    if (this.recipeInFavorites === false){
+      // adding the recipe to the collection
+      await this.localDBService.addRecipeToCollectionItem("Favorites", this.recipeKey)
+      // updating the icon by setting the recipe as added to the collection
+      this.recipeInFavorites = true;
+    }else{
+      // removing the recipe from the collection
+      await this.localDBService.deleteRecipeFromCollectionItem("Favorites", this.recipeKey)
+      this.recipeInFavorites = false;
+    }
+
+/*    this.localDBService.getCollectionItem("Favorites").then(
+      (item) => console.log("Favorites", ': ', item)
+    );*/
+
   }
 
 }
