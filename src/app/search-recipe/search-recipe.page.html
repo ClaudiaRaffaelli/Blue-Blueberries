@@ -133,11 +133,21 @@
         <ion-list *ngIf="searchRequiredTime" lines="none">
           <ion-item>
             <ion-label>Time</ion-label>
-            <ion-datetime *ngIf="this.platform.is('desktop')" mode="ios" (ionChange)="timeRequiredChange($event)" minuteValues="0,5,10,15,30,45,50" displayFormat="HH:mm" pickerFormat="HH mm" value="00:30"></ion-datetime>
-            <ion-datetime *ngIf="this.platform.is('android')" mode="md" (ionChange)="timeRequiredChange($event)" minuteValues="0,5,10,15,30,45,50" displayFormat="HH:mm" pickerFormat="HH mm" value="00:30"></ion-datetime>
-          </ion-item>
+            <ion-datetime mode="ios" (ionChange)="timeRequiredChange($event)" minuteValues="0,5,10,15,30,45,50" displayFormat="HH:mm" pickerFormat="HH mm" value="00:00"></ion-datetime>
+            </ion-item>
           <ion-row><ion-col size="12"></ion-col></ion-row>
         </ion-list>
+        <!-- SPEECH TO TEXT -->
+        <ion-grid *ngIf="searchRequiredTime" style="height: 100%">
+          <ion-row class="ion-align-items-center">
+            <ion-col size="1"></ion-col>
+            <ion-col size="10" class="ion-text-center" style="font-size: 12px;">
+              <ion-icon name="mic-outline" color="primary"></ion-icon> "<b>Set timer</b> to 40 <b>minutes</b>" <br>
+            </ion-col>
+            <ion-col size="1"></ion-col>
+          </ion-row>
+          <ion-row><ion-col size="12"></ion-col></ion-row>
+        </ion-grid>
       </ion-card>
 
       <!-- UNDESIRED INGREDIENTS -->
@@ -351,8 +361,8 @@
       </ion-row>
     </ion-grid>
 
-    <ion-fab id="mic_animated" *ngIf="(searchAllIngredients && (searchAvailableIngredients|| searchMainIngredients)) || searchUndesiredIngredients" vertical="bottom" horizontal="end" slot="fixed">
-      <ion-fab-button *ngIf="voiceActiveSectionDisabled && !speaking" color="secondary" (click)="startVoiceRecognition()" mode="ios">
+    <ion-fab id="mic_animated" vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button *ngIf="voiceActiveSectionDisabled && !speaking" color="tertiary" (click)="startVoiceRecognition()" mode="ios">
         <ion-icon name="mic-outline" mode="ios" style="font-size: 2em;"></ion-icon>
       </ion-fab-button>
       <ion-fab-button *ngIf="!voiceActiveSectionDisabled && !speaking" color="danger" (click)="closeVoiceRecognition()" mode="ios">

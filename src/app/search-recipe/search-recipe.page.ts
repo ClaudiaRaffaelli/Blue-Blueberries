@@ -10,6 +10,7 @@ import * as Bounce from 'bounce.js';
 import firebase from 'firebase';
 import {FixedCollectionItem} from '../presentation/presentation.page';
 import {RecipeItemService} from '../shared/recipe-item.service';
+import wordsToNumbers from 'words-to-numbers';
 
 
 // import { Plugins } from '@capacitor/core';
@@ -98,6 +99,7 @@ export class SearchRecipePage implements OnInit {
     this.maxRequiredTime = 30;
 
     this.getCollections();
+    console.log(wordsToNumbers('set timer to 35 minutes and thirty minutes'));
 
     // Check feature available
     this.speechRecognition.isRecognitionAvailable()
@@ -280,6 +282,9 @@ export class SearchRecipePage implements OnInit {
   // show available/main ingredients panel
   toggleSearchAllIngredients(){
     this.searchAllIngredients = !this.searchAllIngredients;
+    if (this.searchAllIngredients){
+      this.reset_pulse_animation('mic_animated');
+    }
     this.bounce('desiredIcon');
   }
 
@@ -300,12 +305,18 @@ export class SearchRecipePage implements OnInit {
   toggleSearchUndesiredIngredients(){
     this.searchUndesiredIngredients = !this.searchUndesiredIngredients;
     this.showUndesiredIngredients = !this.showUndesiredIngredients;
+    if (this.searchUndesiredIngredients){
+      this.reset_pulse_animation('mic_animated');
+    }
     this.bounce('undesiredIcon');
   }
 
   // show difficulty settings when searchDifficulty is true
   toggleSearchDifficulty(){
     this.searchDifficulty = !this.searchDifficulty;
+    if (this.searchDifficulty){
+      this.reset_pulse_animation('mic_animated');
+    }
     this.bounce('difficultyIcon');
   }
   // set difficulty (easy, medium or hard)
@@ -326,6 +337,9 @@ export class SearchRecipePage implements OnInit {
   // show required time option
   toggleRequiredTime(){
     this.searchRequiredTime = !this.searchRequiredTime;
+    if (this.searchRequiredTime){
+      this.reset_pulse_animation('mic_animated');
+    }
     this.bounce('maxTimeIcon');
   }
 
@@ -463,35 +477,61 @@ export class SearchRecipePage implements OnInit {
     }
   }
 
-
   performIntent(){
     const availableSeparator = 'i have';
     const mainSeparator = 'i like';
     const undesiredSeparator = 'i don\'t want';
-    // if user says he want something but he hasn't triggered the toggle give a visual feedback with pulse animation
-    // on the toggle
-    if (this.voiceText.toLowerCase().includes(availableSeparator) && !(this.searchAvailableIngredients && this.searchAllIngredients)
-      || (this.voiceText.toLowerCase().includes(mainSeparator) && !(this.searchMainIngredients && this.searchAllIngredients))){
-      this.availablePulseToggleId = 'available_animated';
-      this.reset_pulse_animation('available_animated');
-    }
-    if (this.voiceText.toLowerCase().includes(undesiredSeparator) && !this.searchUndesiredIngredients){
-      this.undesiredPulseToggleId = 'undesired_animated';
-      this.reset_pulse_animation('undesired_animated');
-    }
-    if (this.combinedRequest(availableSeparator, undesiredSeparator)){
+    if (this.combinedRequest(availableSeparator, undesiredSeparator, this.ing)){ // "I have milk, [...] and I don't want rice,[...]"
       return;
-    }else if (this.combinedRequest(mainSeparator, undesiredSeparator)){
+    }else if (this.combinedRequest(mainSeparator, undesiredSeparator, this.ingMain)){ // "I like milk, [...] and I don't want rice, [...]"
       return;
     }
-    else if (this.voiceText.toLowerCase().includes(availableSeparator) && this.searchAvailableIngredients && this.searchAllIngredients){
+    else if (this.voiceText.toLowerCase().includes(availableSeparator)){
+      // "I have milk, [...]
       this.singleRequest(availableSeparator, this.ing, 'Available ingredients set');
     }
-    else if (this.voiceText.toLowerCase().includes(mainSeparator) && this.searchMainIngredients && this.searchAllIngredients){
+    else if (this.voiceText.toLowerCase().includes(mainSeparator)){
+      // I like rice, [...]
       this.singleRequest(mainSeparator, this.ingMain, 'Main ingredients set');
     }
-    else if (this.voiceText.toLowerCase().includes(undesiredSeparator) && this.searchUndesiredIngredients){
+    else if (this.voiceText.toLowerCase().includes(undesiredSeparator)){
+      // I don't want rice, [...]
       this.singleRequest(undesiredSeparator, this.ingUndesired, 'Undesired ingredients set');
+    }else if (this.voiceText.toLowerCase().includes('set timer')){
+      // Set timer to 30 minutes
+      const elements = String(wordsToNumbers(this.voiceText)).split('minutes')[0].split(' ');
+      const minutes = elements[elements.length - 2];
+      if (!isNaN(parseInt(minutes, 10)) && parseInt(minutes, 10) > 0){
+        this.maxRequiredTime = parseInt(minutes, 10);
+        this.searchRequiredTime = true;
+        this.voiceText = 'Timer set';
+        this.speak(this.voiceText);
+        this.ScrollToPoint('summary_animated');
+      }else{
+        this.voiceText = 'Sorry, I didn\'t understand how many minutes';
+        this.speak(this.voiceText);
+      }
+    }else if (this.voiceText.toLowerCase().includes('difficulty')) {
+      // Set difficulty to easy
+      if (this.voiceText.toLowerCase().includes('easy')) {
+        this.searchDifficulty = true;
+        this.difficulty = 'easy';
+        this.voiceText = 'Difficulty set to easy';
+        this.speak(this.voiceText);
+        this.ScrollToPoint('summary_animated');
+      } else if (this.voiceText.toLowerCase().includes('medium')) {
+        this.searchDifficulty = true;
+        this.difficulty = 'medium';
+        this.voiceText = 'Difficulty set to medium';
+        this.speak(this.voiceText);
+        this.ScrollToPoint('summary_animated');
+      } else if (this.voiceText.toLowerCase().includes('hard')) {
+        this.searchDifficulty = true;
+        this.difficulty = 'hard';
+        this.voiceText = 'Difficulty set to hard';
+        this.speak(this.voiceText);
+        this.ScrollToPoint('summary_animated');
+      }
     }else if (this.voiceText.toLowerCase().includes('search') ||
               this.voiceText.toLowerCase().includes('go')){
       this.closeVoiceRecognition();
@@ -505,9 +545,31 @@ export class SearchRecipePage implements OnInit {
     }
   }
 
-  combinedRequest(firstSeparator: string, undesiredSeparator: string){
-    if (this.voiceText.toLowerCase().includes(firstSeparator) && this.voiceText.toLowerCase().includes(undesiredSeparator)
-        && this.searchAvailableIngredients && this.searchAllIngredients && this.searchUndesiredIngredients){
+  combinedRequest(firstSeparator: string, undesiredSeparator: string, firstDic){
+    if (this.voiceText.toLowerCase().includes(firstSeparator) && this.voiceText.toLowerCase().includes(undesiredSeparator)){
+      this.ngZone.run(() => this.searchAllIngredients = true);
+      if (firstSeparator === 'i have'){
+        this.ngZone.run(() => {
+          this.searchAvailableIngredients = true;
+          this.showAvailableIngredients = true;
+          this.searchMainIngredients = false;
+          this.showMainIngredients = false;
+          // this.bounce('availableIcon');
+        });
+      }else{
+        this.ngZone.run(() => {
+          this.searchAvailableIngredients = false;
+          this.showAvailableIngredients = false;
+          this.searchMainIngredients = true;
+          this.showMainIngredients = true;
+          // this.bounce('mainIcon');
+        });
+      }
+      this.ngZone.run(() => {
+        this.searchUndesiredIngredients = true;
+        this.showUndesiredIngredients = true;
+        // this.bounce('undesiredIcon');
+      });
       const ingredients = Object.keys(this.ing.ingredients);
       // check where are user's available and undesired ingredients in the string
       const availableIngredientsS = this.voiceText.toLowerCase().split(firstSeparator);
@@ -521,13 +583,12 @@ export class SearchRecipePage implements OnInit {
         dontWantIngredients = availableIngredientsS[0].split(undesiredSeparator)[1];
       }
 
-      this.selectIngredients(this.ing, ingredients, firstSeparator + ' ' + availableIngredients, firstSeparator);
+      this.selectIngredients(firstDic, ingredients, firstSeparator + ' ' + availableIngredients, firstSeparator);
       this.selectIngredients(this.ingUndesired, ingredients, undesiredSeparator + ' ' + dontWantIngredients, undesiredSeparator);
+
       this.voiceText = 'Ingredients set';
       this.speak(this.voiceText);
-      this.ScrollToPoint('summary_animated');
-      this.reset_pulse_animation('summary_animated');
-
+      this.ngZone.run(() => this.ScrollToPoint('summary_animated'));
       return true;
     }else{
       return false;
@@ -537,10 +598,34 @@ export class SearchRecipePage implements OnInit {
   singleRequest(separator, ingredientsDic, speechText){
       const ingredients = Object.keys(ingredientsDic.ingredients);
       this.selectIngredients(ingredientsDic, ingredients, this.voiceText, separator);
+      if (separator === 'i have'){
+        this.ngZone.run(() => {
+          this.searchAllIngredients = true;
+          this.searchAvailableIngredients = true;
+          this.showAvailableIngredients = true;
+          this.searchMainIngredients = false;
+          this.showMainIngredients = false;
+          // this.bounce('availableIcon');
+        });
+    }else if (separator === 'i like'){
+        this.ngZone.run(() => {
+          this.searchAllIngredients = true;
+          this.searchAvailableIngredients = false;
+          this.showAvailableIngredients = false;
+          this.searchMainIngredients = true;
+          this.showMainIngredients = true;
+          // this.bounce('mainIcon');
+        });
+    }else{
+        this.ngZone.run(() => {
+          this.searchUndesiredIngredients = true;
+          this.showUndesiredIngredients = true;
+          // this.bounce('undesiredIcon');
+        });
+    }
       this.voiceText = speechText;
       this.speak(this.voiceText);
-      this.ScrollToPoint('summary_animated');
-      this.reset_pulse_animation('summary_animated');
+      this.ngZone.run(() => this.ScrollToPoint('summary_animated'));
   }
 
   selectIngredients(ingredientsDictionary, ingredients, textAnalysed: string, separator: string){
