@@ -24,3 +24,22 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+/* Works - pass "my-custom-class" in cssClass to increase specificity */
+
+.popOver {
+  max-height: 50%;
+  ion-backdrop {
+
+  }
+  .popover-wrapper{
+    .popover-arrow::after{
+
+    }
+    .popover-content{
+      app-popover{
+
+      }
+    }
+  }
+}
