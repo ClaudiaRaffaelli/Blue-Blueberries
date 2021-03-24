@@ -68,7 +68,7 @@ export class CollectionItemService {
 
       // removing the item from the list
       value = value.filter(v => v !== collectionName);
-      console.log("value:", value)
+      //console.log("value deleted:", value)
 
       // Save the entire data again
       this.storage.set("CollectionsList", JSON.stringify(value));
@@ -124,7 +124,7 @@ export class CollectionItemService {
       value.recipeNumber = value.recipeList.length
       // if there are no more recipe in the collection we delete the cover image
       if (value.recipeNumber === 0){
-        value.coverPhoto = null;
+        value.coverPhoto = "./assets/img/empty_dish.png";
       }else if (changePhoto === true){
         value.coverPhoto = await this.getCoverImage(value.recipeList[0])
       }
@@ -156,5 +156,20 @@ export class CollectionItemService {
       }
     }
     return false;
+  }
+
+  createFavoritesCollection(){
+    // creating the favorites collection and pushing it to the database: this is a fixed, private collection
+    let collectionItem = new CollectionItem()
+    collectionItem.recipeList = [];
+    collectionItem.recipeNumber = 0;
+    collectionItem.name = "Favorites";
+
+    // key: collectionName (string), value: the collectionItem object
+    // the collectionItem is empty and with no recipe, and it is first converted into a string
+    let json = JSON.stringify(collectionItem);
+    this.storage.set("Favorites", json);
+    return collectionItem;
+
   }
 }

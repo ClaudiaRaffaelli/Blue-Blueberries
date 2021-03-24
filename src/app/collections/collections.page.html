@@ -1,6 +1,23 @@
 <ion-content>
   <br>
   <ion-list class="ios list-ios hydrated">
+    <ion-item>
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>{{favoriteCollection.name}}</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content (click)="openCollection(favoriteCollection)">
+          <div class="card">
+            <img src="{{favoriteCollection.coverPhoto}}"/>
+          </div>
+          <br>
+          <div>
+            <ion-icon name="archive"></ion-icon> {{favoriteCollection.recipeNumber}} recipes
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </ion-item>
 
     <ion-item *ngFor="let collectionItem of collections; let collectionIndex=index;" class="user-list">
 
