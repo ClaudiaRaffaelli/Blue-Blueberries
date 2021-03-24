@@ -6,6 +6,10 @@ import {Platform} from '@ionic/angular';
 import {SpeechRecognition} from '@ionic-native/speech-recognition/ngx';
 import levenshtein from 'fast-levenshtein';
 import {TextToSpeech} from '@ionic-native/text-to-speech/ngx';
+import * as Bounce from 'bounce.js';
+import firebase from 'firebase';
+import {FixedCollectionItem} from '../presentation/presentation.page';
+import {RecipeItemService} from '../shared/recipe-item.service';
 
 
 // import { Plugins } from '@capacitor/core';
@@ -21,6 +25,7 @@ declare const annyang: any;
 })
 export class SearchRecipePage implements OnInit {
   @ViewChild(IonContent, { static: false }) content: IonContent;
+  collectionsFetched = [];
   availablePulseToggleId = 'available_animated_disabled';
   undesiredPulseToggleId = 'undesired_animated_disabled';
   queryRecipeName: string;
@@ -45,7 +50,9 @@ export class SearchRecipePage implements OnInit {
   searchMainIngredients: boolean;
   searchUndesiredIngredients: boolean;
   searchDifficulty: boolean;
+  searchCollections: boolean;
   difficulty: string;
+  collections = [];
   searchRequiredTime: boolean;
   maxRequiredTime: number;
   availableSTT = '';
@@ -68,7 +75,8 @@ export class SearchRecipePage implements OnInit {
 
 
   constructor(private router: Router, public platform: Platform, private speechRecognition: SpeechRecognition,
-              public ngZone: NgZone, private tts: TextToSpeech) {
+              public ngZone: NgZone, private tts: TextToSpeech,
+              private aptService: RecipeItemService) {
     this.queryRecipeName = '';
     this.difficulty = 'easy';
     this.showAvailableSearchBarResults = false;
@@ -85,8 +93,11 @@ export class SearchRecipePage implements OnInit {
     this.showMainIngredients = false;
     this.searchUndesiredIngredients = false;
     this.searchDifficulty = false;
+    this.searchCollections = false;
     this.searchRequiredTime = false;
     this.maxRequiredTime = 30;
+
+    this.getCollections();
 
     // Check feature available
     this.speechRecognition.isRecognitionAvailable()
@@ -269,6 +280,7 @@ export class SearchRecipePage implements OnInit {
   // show available/main ingredients panel
   toggleSearchAllIngredients(){
     this.searchAllIngredients = !this.searchAllIngredients;
+    this.bounce('desiredIcon');
   }
 
   // show search results only when these variables are true
@@ -288,23 +300,33 @@ export class SearchRecipePage implements OnInit {
   toggleSearchUndesiredIngredients(){
     this.searchUndesiredIngredients = !this.searchUndesiredIngredients;
     this.showUndesiredIngredients = !this.showUndesiredIngredients;
-    if (this.searchUndesiredIngredients){
-      this.reset_pulse_animation('mic_animated');
-    }
+    this.bounce('undesiredIcon');
   }
 
   // show difficulty settings when searchDifficulty is true
   toggleSearchDifficulty(){
     this.searchDifficulty = !this.searchDifficulty;
+    this.bounce('difficultyIcon');
   }
   // set difficulty (easy, medium or hard)
   toggleDifficulty(event){
     this.difficulty = event.target.value;
   }
 
+  toggleSearchCollections(){
+    this.searchCollections = !this.searchCollections;
+    this.bounce('collectionIcon');
+  }
+
+  toggleCollections(event){
+    this.collections = event.target.value;
+    console.log(this.collections);
+  }
+
   // show required time option
   toggleRequiredTime(){
     this.searchRequiredTime = !this.searchRequiredTime;
+    this.bounce('maxTimeIcon');
   }
 
   // save the max time required
@@ -312,6 +334,18 @@ export class SearchRecipePage implements OnInit {
     const hoursInMinutes = parseInt(String(event.target.value.split(':')[0] * 60) , 10);
     const minutes = parseInt(event.target.value.split(':')[1], 10);
     this.maxRequiredTime = hoursInMinutes + minutes;
+  }
+
+  async getCollections() {
+    // importing the collections
+    const collectionsRes = this.aptService.getCollectionsList();
+    await collectionsRes.snapshotChanges().subscribe(col => {
+      col.forEach(async collection => {
+        const collectionItem = new FixedCollectionItem();
+        collectionItem.name = collection.key;
+        this.collectionsFetched.push(collectionItem);
+      });
+    });
   }
 
 
@@ -336,6 +370,9 @@ export class SearchRecipePage implements OnInit {
     }
     if (this.searchRequiredTime){
       query.requiredTime = this.maxRequiredTime;
+    }
+    if (this.searchCollections && this.collections.length > 0){
+      query.collections = this.collections;
     }
 
     const navigationExtras: NavigationExtras = {
@@ -520,6 +557,19 @@ export class SearchRecipePage implements OnInit {
   ScrollToPoint(element: string) {
     const yOffset = document.getElementById(element).offsetTop;
     this.content.scrollToPoint(0, yOffset, 1500);
+  }
+
+  bounce(id: string) {
+    const bounce = new Bounce();
+    bounce
+        .scale({
+          from: {x: 1, y: 1},
+          to: {x: 1.1, y: 1.1},
+          easing: 'sway',
+          duration: 300,
+          delay: 50,
+        })
+        .applyTo(document.getElementsByClassName(id));
   }
 }
 

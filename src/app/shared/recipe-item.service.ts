@@ -23,7 +23,8 @@ export class RecipeItemService {
       recipeTime: apt.recipeTime,
       ingredients: apt.ingredientsForm.ingredients,
       imgsCount: apt.imgsCount,
-      videoUrl: apt.videoUrl
+      videoUrl: apt.videoUrl,
+      collections: apt.collections
     });
   }
 

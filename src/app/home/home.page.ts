@@ -101,6 +101,17 @@ export class HomePage implements OnInit {
               let filtersSatisfied = true;
               // Check queries one by one
               // @ts-ignore
+              if (this.query.collections && (filtersSatisfied === true)){
+                // @ts-ignore
+                if (this.query.collections.includes(myRecipeItem.collections as RecipeItem)){
+                  if (--numberOfFilters === 0) {
+                    this.recipes.push(myRecipeItem as RecipeItem);
+                  }
+                }else{
+                  filtersSatisfied = false;
+                }
+              }
+              // @ts-ignore
               if (this.query.recipeName && (filtersSatisfied === true)){
                 // @ts-ignore
                 if (myRecipeItem.name.toLowerCase().indexOf(this.query.recipeName.toLowerCase()) !== -1){

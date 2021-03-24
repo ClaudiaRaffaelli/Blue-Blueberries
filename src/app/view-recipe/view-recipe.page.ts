@@ -9,7 +9,7 @@ import {TextToSpeech} from '@ionic-native/text-to-speech/ngx';
 import {PopoverCollectionsComponent} from '../popover-collections/popover-collections.component';
 import { Insomnia } from '@ionic-native/insomnia/ngx';
 import {GroceriesService} from '../shared/groceries.service';
-import {CollectionItemService} from "../shared/collection-item.service";
+import {CollectionItemService} from '../shared/collection-item.service';
 
 declare const annyang: any;
 

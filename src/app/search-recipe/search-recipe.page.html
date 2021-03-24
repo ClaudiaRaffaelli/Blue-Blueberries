@@ -2,18 +2,24 @@
 <br>
   <ion-content mode="ios" forceOverscroll="true">
       <!-- SEARCH BY NAME -->
-      <ion-card-content>
+      <ion-card>
+        <ion-item lines="none" color="tertiary">
+          <ion-icon class="desiredIcon" [color]="queryRecipeName !== '' ? 'light' : 'tertiary'" mode="md" slot="start" [name]="searchAllIngredients ? '' : 'checkbox'"></ion-icon>
+          Keyword
+          </ion-item>
         <ion-searchbar (ionChange)="onChangeName($event)" debounce="250" animated placeholder="Cake, pasta, ...">
         </ion-searchbar>
-      </ion-card-content>
+      </ion-card>
 
     <h1><ion-item lines="none"><b>Advanced filters</b></ion-item></h1>
-    <ion-card>
-      <ion-item lines="none">
-        Desired ingredients <ion-toggle [id]="availablePulseToggleId" [checked]="searchAllIngredients" (ionChange)="toggleSearchAllIngredients()" color="secondary" slot="end"></ion-toggle>
+    <ion-card class="desiredIcon">
+      <ion-item class="desiredIcon" lines="none" color="tertiary" (click)="toggleSearchAllIngredients()">
+        <ion-icon class="desiredIcon" [color]="searchAllIngredients ? 'light' : 'light'" mode="md" slot="start" [name]="searchAllIngredients ? 'checkbox' : 'square-outline'"></ion-icon>
+        Desired ingredients
+        <ion-icon class="desiredIcon" slot="end" [color]="searchAllIngredients ? 'light' : 'tertiary'" [name]="searchAllIngredients ? 'thumbs-up' : ''"></ion-icon>
       </ion-item>
       <ion-toolbar *ngIf="searchAllIngredients">
-        <ion-segment (ionChange)="allIngredientsChanged($event)" value="availableIngredients">
+        <ion-segment (ionChange)="allIngredientsChanged($event)" value="availableIngredients" color="secondary">
           <ion-segment-button value="availableIngredients">
             <ion-icon name="color-wand-outline"></ion-icon>
           </ion-segment-button>
@@ -118,9 +124,11 @@
     </ion-card>
 
       <!-- MAX TIME REQUIRED -->
-      <ion-card>
-        <ion-item lines="none">
-          Max time required<ion-toggle [checked]="searchRequiredTime" (ionChange)="toggleRequiredTime()" color="secondary" slot="end"></ion-toggle>
+      <ion-card class="maxTimeIcon">
+        <ion-item class="maxTimeIcon" lines="none" color="tertiary" (click)="toggleRequiredTime()">
+          <ion-icon class="maxTimeIcon" color="light" slot="start" [name]="searchRequiredTime ? 'checkbox' : 'square-outline'"></ion-icon>
+          Max time required
+          <ion-icon class="maxTimeIcon" slot="end" [color]="searchRequiredTime ? 'light' : 'tertiary'" name="stopwatch"></ion-icon>
         </ion-item>
         <ion-list *ngIf="searchRequiredTime" lines="none">
           <ion-item>
@@ -133,11 +141,13 @@
       </ion-card>
 
       <!-- UNDESIRED INGREDIENTS -->
-      <ion-card>
+      <ion-card class="undesiredIcon">
+        <ion-item class="undesiredIcon" lines="none" color="tertiary" (click)="toggleSearchUndesiredIngredients()">
+          <ion-icon class="undesiredIcon" color="light" slot="start" [name]="searchUndesiredIngredients ? 'checkbox' : 'square-outline'"></ion-icon>
+          Undesired ingredients
+          <ion-icon class="undesiredIcon" slot="end" [color]="searchUndesiredIngredients ? 'light' : 'tertiary'" name="thumbs-down"></ion-icon>
+          </ion-item>
         <!-- SEARCH BAR -->
-        <ion-item lines="none">
-          Undesired ingredients <ion-toggle [id]="undesiredPulseToggleId" [checked]="searchUndesiredIngredients" (ionChange)="toggleSearchUndesiredIngredients()" color="secondary" slot="end"></ion-toggle>
-        </ion-item>
         <ion-searchbar *ngIf="searchUndesiredIngredients" (ionChange)="_ionChangeUndesired($event)" debounce="250" animated placeholder="Type milk, mushrooms, ...">
         </ion-searchbar>
         <!-- SPEECH TO TEXT -->
@@ -179,9 +189,11 @@
         </ion-card-content>
       </ion-card>
           <!-- DIFFICULTY -->
-      <ion-card>
-        <ion-item lines="none">
-          Difficulty <ion-toggle [checked]="searchDifficulty" (ionChange)="toggleSearchDifficulty()" color="secondary" slot="end"></ion-toggle>
+      <ion-card class="difficultyIcon">
+        <ion-item class="difficultyIcon" lines="none" color="tertiary" (click)="toggleSearchDifficulty()">
+          <ion-icon class="difficultyIcon" color="light" slot="start" [name]="searchDifficulty ? 'checkbox' : 'square-outline'"></ion-icon>
+          Difficulty
+          <ion-icon class="difficultyIcon" slot="end" [color]="searchDifficulty ? 'light' : 'tertiary'" name="flame"></ion-icon>
         </ion-item>
           <ion-segment *ngIf="searchDifficulty" (ionChange)="toggleDifficulty($event)" color="dark" [value]="difficulty">
             <ion-segment-button value="easy">
@@ -206,8 +218,29 @@
           <ion-row><ion-col size="12"></ion-col></ion-row>
         </ion-grid>
       </ion-card>
+
+    <!-- COLLECTIONS -->
+    <ion-card class="collectionIcon">
+      <ion-item class="collectionIcon" lines="none" color="tertiary" (click)="toggleSearchCollections()">
+        <ion-icon class="collectionIcon" color="light" slot="start" [name]="searchCollections ? 'checkbox' : 'square-outline'"></ion-icon>
+        Collections
+        <ion-icon class="collectionIcon" slot="end" [color]="searchCollections ? 'light' : 'tertiary'" name="nutrition"></ion-icon>
+      </ion-item>
+      <ion-item lines="none" *ngIf="searchCollections">
+        <ion-label>Collections</ion-label>
+        <ion-select multiple="true" placeholder="Choose"  (ionChange)="toggleCollections($event)">
+        <span *ngFor="let collectionItem of collectionsFetched">
+        <ion-select-option value="{{collectionItem.name}}">{{collectionItem.name}}</ion-select-option>
+        </span>
+        </ion-select>
+      </ion-item>
+    </ion-card>
+
+
+
+
 <br><br>
-      <ion-card id="summary_animated" style="margin: 16px !important;" *ngIf="queryRecipeName !== '' || searchAllIngredients && (searchAvailableIngredients || searchMainIngredients) || searchUndesiredIngredients || searchDifficulty || searchRequiredTime">
+      <ion-card id="summary_animated" style="margin: 16px !important;" *ngIf="queryRecipeName !== '' || searchCollections || searchAllIngredients && (searchAvailableIngredients || searchMainIngredients) || searchUndesiredIngredients || searchDifficulty || searchRequiredTime">
         <ion-card-header>
           <ion-item lines="none"><ion-icon slot="start" size="large" color="tertiary" name="reader-outline"></ion-icon><h1>Summary</h1></ion-item>
         </ion-card-header>
@@ -219,23 +252,36 @@
               <b>{{queryRecipeName}}</b>
             </ion-col>
           </ion-row>
-          <ion-row *ngIf="searchRequiredTime">
-            <ion-col size="1"><ion-icon color="warning" name="hourglass-outline"></ion-icon></ion-col>
-            <ion-col size="5">Ready in</ion-col>
+          <ion-row *ngIf="searchRequiredTime" style="background-color: rgba(255, 196, 9, 0.05); border-radius: 15px;">
+            <ion-col size="1"><ion-icon color="danger" name="close" (click)="toggleRequiredTime()"></ion-icon></ion-col>
+            <ion-col size="1"><ion-icon color="warning" name="stopwatch"></ion-icon></ion-col>
+            <ion-col size="4">Ready in</ion-col>
             <ion-col size="6">
               <b>{{maxRequiredTime}} minutes </b>
             </ion-col>
           </ion-row>
-          <ion-row *ngIf="searchDifficulty">
-            <ion-col size="1"><ion-icon color="secondary" name="flame-outline"></ion-icon></ion-col>
-            <ion-col size="5">Difficulty</ion-col>
+          <ion-row *ngIf="searchDifficulty" style="background-color: rgba(61, 194, 255, 0.05); border-radius: 15px;">
+            <ion-col size="1"><ion-icon color="danger" name="close" (click)="toggleSearchDifficulty()"></ion-icon></ion-col>
+            <ion-col size="1"><ion-icon color="secondary" name="flame"></ion-icon></ion-col>
+            <ion-col size="4">Difficulty</ion-col>
             <ion-col size="6">
               <b>{{difficulty}} </b>
             </ion-col>
           </ion-row>
-          <ion-row *ngIf="searchAvailableIngredients && searchAllIngredients">
-            <ion-col size="1"><ion-icon color="success" name="thumbs-up-outline"></ion-icon></ion-col>
-            <ion-col size="5">I have</ion-col>
+          <ion-row *ngIf="searchCollections" style="background-color: rgba(82, 96, 255, 0.05); border-radius: 15px;">
+            <ion-col size="1"><ion-icon color="danger" name="close" (click)="toggleSearchCollections()"></ion-icon></ion-col>
+            <ion-col size="1"><ion-icon color="tertiary" name="nutrition"></ion-icon></ion-col>
+            <ion-col size="4">Search in</ion-col>
+            <ion-col size="6">
+              <span *ngFor="let item of this.collections">
+                <li>{{item}}</li>
+              </span>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="searchAvailableIngredients && searchAllIngredients" style="background-color: rgba(45, 211, 11, 0.05); border-radius: 15px;">
+            <ion-col size="1"><ion-icon color="danger" name="close" (click)="toggleSearchAllIngredients()"></ion-icon></ion-col>
+            <ion-col size="1"><ion-icon color="success" name="thumbs-up"></ion-icon></ion-col>
+            <ion-col size="4">I have</ion-col>
             <ion-col size="6">
               <span *ngFor="let ingredient of this.availableIngredientsKeys">
                 <span *ngIf="this.ing.ingredients[ingredient].selected">
@@ -247,9 +293,10 @@
               </span>
             </ion-col>
           </ion-row>
-          <ion-row *ngIf="searchMainIngredients && searchAllIngredients">
-            <ion-col size="1"><ion-icon color="success" name="thumbs-up-outline"></ion-icon></ion-col>
-            <ion-col size="5">Something with</ion-col>
+          <ion-row *ngIf="searchMainIngredients && searchAllIngredients" style="background-color: rgba(45, 211, 11, 0.05); border-radius: 15px;">
+            <ion-col size="1"><ion-icon color="danger" name="close" (click)="toggleSearchAllIngredients()"></ion-icon></ion-col>
+            <ion-col size="1"><ion-icon color="success" name="thumbs-up"></ion-icon></ion-col>
+            <ion-col size="4">Something with</ion-col>
             <ion-col size="6">
               <span *ngFor="let ingredient of this.mainIngredientsKeys">
                 <span *ngIf="this.ingMain.ingredients[ingredient].selected">
@@ -261,9 +308,10 @@
               </span>
             </ion-col>
           </ion-row>
-          <ion-row *ngIf="searchUndesiredIngredients">
-            <ion-col size="1"><ion-icon color="danger" name="thumbs-down-outline"></ion-icon></ion-col>
-            <ion-col size="5">
+          <ion-row *ngIf="searchUndesiredIngredients" style="background-color: rgba(235, 68, 90, 0.05); border-radius: 15px;">
+            <ion-col size="1"><ion-icon color="danger" name="close" (click)="toggleSearchUndesiredIngredients()"></ion-icon></ion-col>
+            <ion-col size="1"><ion-icon color="danger" name="thumbs-down"></ion-icon></ion-col>
+            <ion-col size="4">
             I don't want
             </ion-col>
             <ion-col size="6">
@@ -280,22 +328,31 @@
         </ion-grid>
       </ion-card>
 
+    <ion-card style="margin: 16px !important;" *ngIf="!(queryRecipeName !== '' || searchCollections || searchAllIngredients && (searchAvailableIngredients || searchMainIngredients) || searchUndesiredIngredients || searchDifficulty || searchRequiredTime)">
+      <ion-card-header>
+        <ion-item lines="none"><ion-icon slot="start" size="large" color="tertiary" name="reader-outline"></ion-icon><h1>Summary</h1></ion-item>
+      </ion-card-header>
+      <ion-grid>
+        <ion-row>
+          <div style="width: 100%; text-align: center;"><b>No filter selected</b></div>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
 
-    <ion-grid>
+    <ion-grid *ngIf="(queryRecipeName !== '' || searchCollections || searchAllIngredients && (searchAvailableIngredients || searchMainIngredients) || searchUndesiredIngredients || searchDifficulty || searchRequiredTime)">
       <ion-row>
         <ion-col size="3"></ion-col>
       <ion-col size="6" class="ion-text-center">
-      <ion-button (click)="submit()" shape="round" color="primary">
-        Search
-        <ion-ripple-effect></ion-ripple-effect>
-      </ion-button>
+        <ion-item color="tertiary" (click)="submit()" style="border-radius: 15px">
+          <ion-icon slot="start" color="light" name="search-sharp"></ion-icon>Search
+        </ion-item>
       </ion-col>
         <ion-col size="3"></ion-col>
       </ion-row>
     </ion-grid>
 
     <ion-fab id="mic_animated" *ngIf="(searchAllIngredients && (searchAvailableIngredients|| searchMainIngredients)) || searchUndesiredIngredients" vertical="bottom" horizontal="end" slot="fixed">
-      <ion-fab-button *ngIf="voiceActiveSectionDisabled && !speaking" color="primary" (click)="startVoiceRecognition()" mode="ios">
+      <ion-fab-button *ngIf="voiceActiveSectionDisabled && !speaking" color="secondary" (click)="startVoiceRecognition()" mode="ios">
         <ion-icon name="mic-outline" mode="ios" style="font-size: 2em;"></ion-icon>
       </ion-fab-button>
       <ion-fab-button *ngIf="!voiceActiveSectionDisabled && !speaking" color="danger" (click)="closeVoiceRecognition()" mode="ios">

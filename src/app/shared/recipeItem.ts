@@ -8,6 +8,7 @@ export class RecipeItem {
   ingredientsForm: IngredientsDic;
   imgsCount: number;
   videoUrl: string;
+  collections: string;
 }
 
 export class IngredientsDic{
