@@ -1,15 +1,17 @@
-import {Component, OnInit, NgZone} from '@angular/core';
+import {Component, OnInit, NgZone, ViewChild} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import firebase from 'firebase';
 import {RecipeItemService} from '../shared/recipe-item.service';
 import {BehaviorSubject} from 'rxjs';
 import * as Bounce from 'bounce.js';
-import {Platform, PopoverController} from '@ionic/angular';
+import {IonContent, Platform, PopoverController} from '@ionic/angular';
 import {TextToSpeech} from '@ionic-native/text-to-speech/ngx';
 import {PopoverCollectionsComponent} from '../popover-collections/popover-collections.component';
 import { Insomnia } from '@ionic-native/insomnia/ngx';
 import {GroceriesService} from '../shared/groceries.service';
 import {CollectionItemService} from '../shared/collection-item.service';
+import {SpeechRecognition} from '@ionic-native/speech-recognition/ngx';
+import wordsToNumbers from 'words-to-numbers';
 
 declare const annyang: any;
 
@@ -19,6 +21,8 @@ declare const annyang: any;
   styleUrls: ['./view-recipe.page.scss'],
 })
 export class ViewRecipePage implements OnInit {
+  @ViewChild(IonContent, { static: false }) content: IonContent;
+  recipeInFavorites: boolean;
   data: any;
   recipeImages: { [id: string]: string };
   recipe: any;
@@ -27,6 +31,7 @@ export class ViewRecipePage implements OnInit {
   currentImg: number;
   recipeTextSteps: [];
   difficultyColor: string;
+  stepsNumber: number;
   // timer parameters
   time: BehaviorSubject<string> = new BehaviorSubject('00:00');
   timer: number; // in seconds
@@ -37,9 +42,9 @@ export class ViewRecipePage implements OnInit {
   timerToggle: boolean;
 
   isInGroceryList: boolean;
-  recipeNumberInCart : number; // holds the number of recipes currently inside the cart for the grocery list
+  recipeNumberInCart: number; // holds the number of recipes currently inside the cart for the grocery list
 
-  isInAnyCollection: boolean = false; // it holds the boolean that says if the heart icon has to be full or empty
+  isInAnyCollection = false; // it holds the boolean that says if the heart icon has to be full or empty
 
   lastPage: string;
   textSteps: {[id: string]: string};
@@ -58,6 +63,9 @@ export class ViewRecipePage implements OnInit {
   voiceActiveSectionSuccess = false;
   voiceActiveSectionListening = false;
   voiceText: any;
+  assistantButtonColor: string;
+  voiceTextUser = '';
+  speaking: boolean;
 
   constructor(private aptService: RecipeItemService,
               private route: ActivatedRoute,
@@ -68,7 +76,24 @@ export class ViewRecipePage implements OnInit {
               private insomnia: Insomnia,
               private groceriesService: GroceriesService,
               public ngZone: NgZone,
-              private localDBService: CollectionItemService,) {
+              private localDBService: CollectionItemService,
+              private speechRecognition: SpeechRecognition) {
+
+    // Check if speech recognition is available
+    this.speechRecognition.isRecognitionAvailable()
+        .then((available: boolean) => {
+          if (available){
+            this.speechRecognition.hasPermission()
+                .then((hasPermission: boolean) => {
+                  if (!hasPermission){
+                    // Request permissions
+                    this.speechRecognition.requestPermission();
+                  }
+                });
+          }
+        });
+
+
     this.insomnia.keepAwake();
     this.timerToggle = false;
     this.route.queryParams.subscribe(async params => {
@@ -83,6 +108,18 @@ export class ViewRecipePage implements OnInit {
         // find out if the recipe is in the grocery list and display a different icon accordingly
         groceriesService.getGroceryList().then(groceryList => {
           this.isInGroceryList = !!groceryList.includes(this.data.$key);
+        });
+
+        // getting the Favorites collection
+        this.localDBService.getCollectionItem('Favorites').then(async res => {
+          // if there is no Favorites collection, we create it
+          if (res === null){
+            await this.localDBService.createFavoritesCollection();
+          }else{
+            await res;
+          }
+          // set a boolean to know if the recipe is in the favorites this is used to show a different icon in the popup
+          this.recipeInFavorites = await this.localDBService.isRecipeInCollection('Favorites', this.data.$key);
         });
 
         document.getElementById('recipeText').textContent = ' '; // clear previous recipe
@@ -111,14 +148,16 @@ export class ViewRecipePage implements OnInit {
         this.textSteps = {};
         // Get all recipe's steps (they are separated with <endStep> keywords)
         const recipeBlocks = this.data.recipeText.split('<endStep>');
+        this.stepsNumber = recipeBlocks.length;
         // tslint:disable-next-line:forin
-        for (let j = 0; j < recipeBlocks.length; j++) { // for each step
+        for (let j = 0; j < this.stepsNumber; j++) { // for each step
           const innerBlocks = recipeBlocks[j].split('<endText>');   // separate the text from the images => text <endText> <img> <img> ...
           this.textSteps[j] = innerBlocks[0]; // get the text in the current step (block)
 
           const recipeText = document.getElementById('recipeText');
           const ionCard = document.createElement('ion-card');
           ionCard.setAttribute('style', 'border-radius: 15px; margin-top: 1px !important;');
+          ionCard.setAttribute('id', 'step ' + (j + 1));
           const ionCardHeader = document.createElement('ion-card-header');
           const ionCardHeaderLabel = document.createElement('ion-label');
           const ionCardHeaderLabelH1 = document.createElement('h1');
@@ -198,10 +237,25 @@ export class ViewRecipePage implements OnInit {
 
     // when the popover is dismissed we see if we have to change the status of the heart icon
     this.isInAnyCollection = await this.localDBService.isRecipeInAnyCollection(this.data.$key);
+
+
+    // Annyang
+    this.voiceActiveSectionDisabled = true;
+    this.voiceActiveSectionError = false;
+    this.voiceActiveSectionSuccess = false;
+    this.voiceText = undefined;
+    this.speaking = false;
+    if (annyang) {
+      annyang.removeCallback();
+      this.initializeVoiceRecognitionCallback();
+      annyang.setLanguage('en-GB');
+    }
   }
 
   ionViewDidLeave(){
     this.insomnia.allowSleepAgain();
+    // Remove this page annyang's callbacks
+    this.closeVoiceRecognition();
   }
 
   async getNextImage() {
@@ -276,15 +330,19 @@ export class ViewRecipePage implements OnInit {
 
   }
 
-  async speak(stepNumber){
-    this.closeVoiceRecognition();
+  async speak(text){
+    this.assistantButtonColor = 'warning';
+    annyang.abort();
+    this.speaking = true;
     await this.tts.speak({
-      text: 'Step ' + (stepNumber) + '. ' + this.textSteps[stepNumber - 1],
+      text,
       rate: 0.9
     })
-        .then(() => console.log('Success'))
+        .then(() => {
+          this.startVoiceRecognition();
+          this.speaking = false;
+        })
         .catch((reason: any) => console.log(reason));
-    this.startVoiceRecognition();
   }
 
   stopSpeaking(){
@@ -322,7 +380,7 @@ export class ViewRecipePage implements OnInit {
     // toggle the recipe inside the cart and change the icon accordingly
     await this.groceriesService.addRemoveRecipeFromGrocery(recipeKey);
     this.isInGroceryList = ! this.isInGroceryList;
-    if(this.isInGroceryList === true){
+    if (this.isInGroceryList === true){
       // the recipe has been added, so there is one more recipe inside the cart
       this.recipeNumberInCart ++;
     }else{
@@ -336,11 +394,14 @@ export class ViewRecipePage implements OnInit {
     annyang.addCallback('error', (err) => {
       if (err.error === 'network'){
         this.voiceText = 'Internet is require';
-        annyang.abort();
+        this.ngZone.run(() => this.closeVoiceRecognition());
         this.ngZone.run(() => this.voiceActiveSectionSuccess = true);
-      } else if (this.voiceText === undefined) {
-        this.ngZone.run(() => this.voiceActiveSectionError = true);
-        annyang.abort();
+      } else if (this.voiceText === undefined) { // didn't catch that
+        this.ngZone.run(() => {
+          this.voiceActiveSectionError = true;
+          this.closeVoiceRecognition();
+          this.startVoiceRecognition();
+        });
       }
     });
     annyang.addCallback('soundstart', (res) => {
@@ -349,43 +410,25 @@ export class ViewRecipePage implements OnInit {
     annyang.addCallback('end', () => {
       if (this.voiceText === undefined) {
         this.ngZone.run(() => this.voiceActiveSectionError = true);
-        annyang.abort();
       }
+      this.ngZone.run( () => this.closeVoiceRecognition());
     });
     annyang.addCallback('result', (userSaid) => {
       this.ngZone.run(() => this.voiceActiveSectionError = false);
-      const queryText: any = userSaid[0];
       // annyang.abort();
-      this.voiceText = queryText;
-      if (this.voiceText.includes('step one')) {
-        this.speak(0);
-      }
+      this.ngZone.run(() => this.voiceText = userSaid[0]);
+      this.ngZone.run(() => this.voiceTextUser = userSaid[0]);
+      this.ngZone.run(() => this.performIntent());
       this.ngZone.run(() => this.voiceActiveSectionListening = false);
       this.ngZone.run(() => this.voiceActiveSectionSuccess = true);
     });
   }
 
   startVoiceRecognition(): void {
-    this.voiceActiveSectionDisabled = false;
-    this.voiceActiveSectionError = false;
-    this.voiceActiveSectionSuccess = false;
-    this.voiceText = undefined;
     if (annyang) {
-      const difficultyCommand = {
-        'step 1': () => {
-          this.ngZone.run( () => {this.speak(0); });
-        }
-      };
-      const timerCommand = {
-        '() step 2 ()': () => {
-          this.ngZone.run( () => {this.speak(1); });
-        }
-      };
-      annyang.addCommands(difficultyCommand);
-      annyang.addCommands(timerCommand);
-
-      this.initializeVoiceRecognitionCallback();
-      annyang.start({ autoRestart: true });
+      this.voiceActiveSectionDisabled = false;
+      annyang.start({ autoRestart: false });
+      this.assistantButtonColor = 'danger';
     }
   }
 
@@ -394,10 +437,84 @@ export class ViewRecipePage implements OnInit {
     this.voiceActiveSectionError = false;
     this.voiceActiveSectionSuccess = false;
     this.voiceActiveSectionListening = false;
-    this.voiceText = undefined;
     if (annyang){
       annyang.abort();
     }
   }
 
+  performIntent(){
+    if (this.voiceText.toLowerCase().includes('step')){
+      const step = String(wordsToNumbers(this.voiceText.toLowerCase())).split('step')[1].split(' ')[1];
+      if (parseInt(step, 10) <= this.stepsNumber){
+        this.ScrollToPoint('step ' + step);
+        this.speak('Step ' + step + '.');
+      }else{
+        this.speak('Sorry, there isn\'t a step ' + step + '.');
+      }
+    }else if (this.voiceText.toLowerCase().includes('set timer')){
+      // Set timer to 30 minutes
+      const elements = String(wordsToNumbers(this.voiceText.toLowerCase())).split('minutes')[0].split(' ');
+      const minutes = elements[elements.length - 2];
+      if (!isNaN(parseInt(minutes, 10)) && parseInt(minutes, 10) > 0){
+        this.duration = parseInt(minutes, 10);
+        this.timerToggle = true;
+        this.bounceTimer('timer');
+        this.startTimer();
+        this.speak('Timer set');
+      }else{
+        this.speak('Sorry, I didn\'t understand how many minutes');
+      }
+    }else if (this.voiceText.toLowerCase().includes('add') && (this.voiceText.toLowerCase().includes('favorites'))){
+      this.addDeleteFromFavorites('add');
+    }else if (this.voiceText.toLowerCase().includes('remove') && (this.voiceText.toLowerCase().includes('favorites'))){
+      this.addDeleteFromFavorites('remove');
+    }else if (this.voiceText.toLowerCase().includes('add') && this.voiceText.toLowerCase().includes('grocery list')) {
+      if (!this.isInGroceryList) {
+        this.addRemoveCart(this.data.$key);
+        this.speak('Added to your grocery list');
+      } else {
+        this.speak('Already in grocery list');
+      }
+    }else if (this.voiceText.toLowerCase().includes('remove') && this.voiceText.toLowerCase().includes('grocery list')) {
+      if (this.isInGroceryList) {
+        this.addRemoveCart(this.data.$key);
+        this.speak('Removed from your grocery list');
+      } else {
+        this.speak('Sorry, it isn\'t in grocery list');
+      }
+    }
+    else{
+      this.speak('Sorry, I didn\'t understand');
+    }
+  }
+
+  ScrollToPoint(element: string) {
+    console.log(element);
+    const yOffset = document.getElementById(element).offsetTop;
+    console.log(yOffset);
+    this.content.scrollToPoint(0, yOffset, 2000);
+  }
+
+  async addDeleteFromFavorites(action: string){
+    if (action === 'add'){
+      if (!this.recipeInFavorites){
+        // adding the recipe to the collection
+        await this.localDBService.addRecipeToCollectionItem('Favorites', this.data.$key);
+        // updating the icon by setting the recipe as added to the collection
+        this.recipeInFavorites = true;
+        this.speak('added to favorites');
+      }else{
+        this.speak('Sorry, already in favorites');
+      }
+    }else if (action === 'remove'){
+      if (this.recipeInFavorites){
+        // removing the recipe from the collection
+        await this.localDBService.deleteRecipeFromCollectionItem('Favorites', this.data.$key);
+        this.recipeInFavorites = false;
+        this.speak('removed from favorites');
+      }else{
+        this.speak('Sorry, this recipe is not in your favorites');
+      }
+    }
+  }
 }

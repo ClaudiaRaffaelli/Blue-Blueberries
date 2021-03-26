@@ -4,10 +4,10 @@
       <!-- SEARCH BY NAME -->
       <ion-card>
         <ion-item lines="none" color="tertiary">
-          <ion-icon class="desiredIcon" [color]="queryRecipeName !== '' ? 'light' : 'tertiary'" mode="md" slot="start" [name]="searchAllIngredients ? '' : 'checkbox'"></ion-icon>
+          <ion-icon class="desiredIcon" [color]="queryRecipeName !== '' ? 'light' : 'tertiary'" mode="md" slot="end" [name]="searchAllIngredients ? '' : 'search'"></ion-icon>
           Keyword
           </ion-item>
-        <ion-searchbar (ionChange)="onChangeName($event)" debounce="250" animated placeholder="Cake, pasta, ...">
+        <ion-searchbar (ionChange)="onChangeName($event)" debounce="250" animated placeholder="Cake, pasta, ..." [value]="queryRecipeName">
         </ion-searchbar>
       </ion-card>
 
@@ -256,8 +256,9 @@
         </ion-card-header>
         <ion-grid>
           <ion-row *ngIf="queryRecipeName !== ''" class="ion-align-items-stretch">
+            <ion-col size="1"><ion-icon color="danger" name="close" (click)="clearKeyword()"></ion-icon></ion-col>
             <ion-col size="1"><ion-icon color="tertiary" name="key-outline"></ion-icon></ion-col>
-            <ion-col size="5">Keywords</ion-col>
+            <ion-col size="4">Keywords</ion-col>
             <ion-col>
               <b>{{queryRecipeName}}</b>
             </ion-col>

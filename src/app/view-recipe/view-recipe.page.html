@@ -1,3 +1,4 @@
+<ion-button (click)="addDeleteFromFavorites()"></ion-button>
 <!-- Default back button -->
 <ion-header>
   <ion-toolbar color="light">
@@ -74,17 +75,17 @@
   <div id="recipeText">
   </div>
 
-
-
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button *ngIf="voiceActiveSectionDisabled" color="success" (click)="startVoiceRecognition()" mode="ios">
+  <ion-fab id="mic_animated" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button *ngIf="voiceActiveSectionDisabled && !speaking" color="tertiary" (click)="startVoiceRecognition()" mode="ios">
       <ion-icon name="mic-outline" mode="ios" style="font-size: 2em;"></ion-icon>
     </ion-fab-button>
-    <ion-fab-button *ngIf="!voiceActiveSectionDisabled" color="danger" (click)="closeVoiceRecognition()" mode="ios">
+    <ion-fab-button *ngIf="!voiceActiveSectionDisabled && !speaking" color="danger" (click)="closeVoiceRecognition()" mode="ios">
+      <ion-icon name="mic-outline" mode="ios" style="font-size: 2em;"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button *ngIf="speaking" color="warning" mode="ios">
       <ion-icon name="mic-outline" mode="ios" style="font-size: 2em;"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-
 
   <div *ngIf="voiceActiveSectionDisabled; else voicesection;">
     <button type=”button” (click)="startVoiceRecognition()">Record</button>

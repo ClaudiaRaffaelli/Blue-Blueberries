@@ -78,6 +78,7 @@ export class SearchRecipePage implements OnInit {
   constructor(private router: Router, public platform: Platform, private speechRecognition: SpeechRecognition,
               public ngZone: NgZone, private tts: TextToSpeech,
               private aptService: RecipeItemService) {
+
     this.queryRecipeName = '';
     this.difficulty = 'easy';
     this.showAvailableSearchBarResults = false;
@@ -99,7 +100,6 @@ export class SearchRecipePage implements OnInit {
     this.maxRequiredTime = 30;
 
     this.getCollections();
-    console.log(wordsToNumbers('set timer to 35 minutes and thirty minutes'));
 
     // Check feature available
     this.speechRecognition.isRecognitionAvailable()
@@ -114,28 +114,6 @@ export class SearchRecipePage implements OnInit {
                 });
           }
         });
-
-    this.voiceActiveSectionDisabled = true;
-    this.voiceActiveSectionError = false;
-    this.voiceActiveSectionSuccess = false;
-    this.voiceText = undefined;
-    this.voiceTextUser = '';
-    if (annyang) {
-      // const difficultyCommand = {
-      //   'set difficulty': () => {
-      //     this.ngZone.run( () => {this.toggleSearchDifficulty(); });
-      //   }
-      // };
-      // const timerCommand = {
-      //   'set timer': () => {
-      //     this.ngZone.run( () => {this.toggleRequiredTime(); });
-      //   }
-      // };
-      // annyang.addCommands(difficultyCommand);
-      // annyang.addCommands(timerCommand);
-
-      this.initializeVoiceRecognitionCallback();
-    }
   }
 
   speakIngredients(type: string) {
@@ -176,10 +154,38 @@ export class SearchRecipePage implements OnInit {
   ngOnInit() {
   }
 
+  ionViewWillEnter(){
+    this.voiceActiveSectionDisabled = true;
+    this.voiceActiveSectionError = false;
+    this.voiceActiveSectionSuccess = false;
+    this.voiceText = undefined;
+    this.voiceTextUser = '';
+    this.speaking = false;
+    if (annyang) {
+      // const difficultyCommand = {
+      //   'set difficulty': () => {
+      //     this.ngZone.run( () => {this.toggleSearchDifficulty(); });
+      //   }
+      // };
+      // const timerCommand = {
+      //   'set timer': () => {
+      //     this.ngZone.run( () => {this.toggleRequiredTime(); });
+      //   }
+      // };
+      // annyang.addCommands(difficultyCommand);
+      // annyang.addCommands(timerCommand);
+      annyang.removeCallback();
+      this.initializeVoiceRecognitionCallback();
+      annyang.setLanguage('en-GB');
+    }
+  }
+
 
   ionViewDidLeave(){
     this.availablePulseToggleId = 'available_animated_disabled';
     this.undesiredPulseToggleId = 'undesired_animated_disabled';
+    // remove this page annyang's callbacks
+    this.closeVoiceRecognition();
   }
 
   reset_pulse_animation(element: string) {
@@ -256,6 +262,10 @@ export class SearchRecipePage implements OnInit {
         return (item.toLowerCase().indexOf(val.toLowerCase()) > -1);
       });
     }
+  }
+
+  clearKeyword(){
+    this.queryRecipeName = '';
   }
 
   // check / uncheck available ingredients when clicked by user
@@ -499,7 +509,7 @@ export class SearchRecipePage implements OnInit {
       this.singleRequest(undesiredSeparator, this.ingUndesired, 'Undesired ingredients set');
     }else if (this.voiceText.toLowerCase().includes('set timer')){
       // Set timer to 30 minutes
-      const elements = String(wordsToNumbers(this.voiceText)).split('minutes')[0].split(' ');
+      const elements = String(wordsToNumbers(this.voiceText.toLowerCase())).split('minutes')[0].split(' ');
       const minutes = elements[elements.length - 2];
       if (!isNaN(parseInt(minutes, 10)) && parseInt(minutes, 10) > 0){
         this.maxRequiredTime = parseInt(minutes, 10);
@@ -641,7 +651,7 @@ export class SearchRecipePage implements OnInit {
 
   ScrollToPoint(element: string) {
     const yOffset = document.getElementById(element).offsetTop;
-    this.content.scrollToPoint(0, yOffset, 1500);
+    this.content.scrollToPoint(0, yOffset, 2000);
   }
 
   bounce(id: string) {
@@ -651,7 +661,7 @@ export class SearchRecipePage implements OnInit {
           from: {x: 1, y: 1},
           to: {x: 1.1, y: 1.1},
           easing: 'sway',
-          duration: 300,
+          duration: 1000,
           delay: 50,
         })
         .applyTo(document.getElementsByClassName(id));
