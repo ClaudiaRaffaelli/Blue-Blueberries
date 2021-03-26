@@ -147,6 +147,11 @@ export class CollectionItemService {
   async isRecipeInAnyCollection(recipeKey){
     // Get the collection list
     let collectionList = await this.getCollectionList();
+    // checking if the recipe is in the Favorites collection
+    let isIn = await this.isRecipeInCollection("Favorites", recipeKey);
+    if (isIn === true){
+      return true;
+    }
     // iterate through the collections to see if the recipe is in any of the collection.
     // as soon as we find it we return true, otherwise we return false when we have finished checking all the collections
     for (let collectionName of collectionList){
