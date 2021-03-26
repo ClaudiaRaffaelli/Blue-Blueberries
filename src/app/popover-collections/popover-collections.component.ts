@@ -44,8 +44,6 @@ export class PopoverCollectionsComponent implements OnInit {
     });
   }
 
-  // TODO ridimensiona la grandezza del popup
-
   ngOnInit() {
     this.collectionNameFromInput = ""
     this.localDBService.getCollectionList().then(async res => {
@@ -100,7 +98,6 @@ export class PopoverCollectionsComponent implements OnInit {
     if (checkString.replace(/\s/g, '').length) {
       // removed all the whitespaces in the string and the length is still >0
 
-      // TODO magari un'animazione per quando l'elemento è aggiunto in lista mostrata dal popup?
       // adding the collection to the database and getting back the new item once inserted to be displayed
       // immediately on the opened popup
       this.collectionsItems.push(await this.localDBService.addCollectionItem(this.collectionNameFromInput))

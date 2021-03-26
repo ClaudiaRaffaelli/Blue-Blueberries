@@ -183,7 +183,11 @@ export class GroceriesPage implements OnInit {
           let newIngredient = new Ingredient();
           newIngredient.name = ingredient;
           let ingredientInRecipe = new IngredientInRecipe()
-          ingredientInRecipe.quantity = recipe.ingredients[ingredient]["dose"];
+          if(recipe.ingredients[ingredient]["dose"] !== 0){
+            ingredientInRecipe.quantity = recipe.ingredients[ingredient]["dose"];
+          }else{
+            ingredientInRecipe.quantity = "";
+          }
           ingredientInRecipe.recipeName = recipe.name;
           ingredientInRecipe.unity = recipe.ingredients[ingredient]["unit"];
           newIngredient.recipeList.push(ingredientInRecipe);
@@ -192,7 +196,11 @@ export class GroceriesPage implements OnInit {
           // if already present, we only increment the quantity summing the new (assuming we are using the same unity)
           let myIngredient = this.ingredients.find(a=>a.name === ingredient);
           let ingredientInRecipe = new IngredientInRecipe()
-          ingredientInRecipe.quantity = recipe.ingredients[ingredient]["dose"];
+          if(recipe.ingredients[ingredient]["dose"] !== 0){
+            ingredientInRecipe.quantity = recipe.ingredients[ingredient]["dose"];
+          }else{
+            ingredientInRecipe.quantity = "";
+          }
           ingredientInRecipe.recipeName = recipe.name;
           ingredientInRecipe.unity = recipe.ingredients[ingredient]["unit"];
           myIngredient.recipeList.push(ingredientInRecipe);
@@ -296,7 +304,7 @@ export class Ingredient{
 
 export class IngredientInRecipe{
   recipeName: string;
-  quantity: number;
+  quantity: string;
   unity: string;
   checked: boolean = false;
 }
