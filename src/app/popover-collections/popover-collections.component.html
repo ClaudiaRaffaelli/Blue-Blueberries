@@ -2,16 +2,16 @@
 <ion-content >
 
   <ion-item (click)="addDeleteFromFavorites()">
-    <ion-icon slot="end" name="add" *ngIf="!recipeInFavorites"></ion-icon>
-    <ion-icon slot="end" name="remove" *ngIf="recipeInFavorites"></ion-icon>
+    <ion-icon slot="end" color="tertiary" name="heart-outline" *ngIf="!recipeInFavorites"></ion-icon>
+    <ion-icon slot="end" color="tertiary" name="heart" *ngIf="recipeInFavorites"></ion-icon>
     <ion-label>Favorites</ion-label>
   </ion-item>
 
   <ion-list *ngFor="let collectionItem of collectionsItems; let collectionIndex=index;" class="user-list">
     <ion-item-sliding>
       <ion-item (click)="addRemoveToFromCollection(collectionItem, collectionIndex)">
-        <ion-icon slot="end" name="add" *ngIf="!recipeInCollection[collectionIndex]"></ion-icon>
-        <ion-icon slot="end" name="remove" *ngIf="recipeInCollection[collectionIndex]"></ion-icon>
+        <ion-icon slot="end" color="tertiary" name="heart-outline" *ngIf="!recipeInCollection[collectionIndex]"></ion-icon>
+        <ion-icon slot="end" color="tertiary" name="heart" *ngIf="recipeInCollection[collectionIndex]"></ion-icon>
         <ion-label>{{collectionItem.name}}</ion-label>
       </ion-item>
       <ion-item-options side="end">
