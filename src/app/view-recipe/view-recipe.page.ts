@@ -162,10 +162,16 @@ export class ViewRecipePage implements OnInit {
           const ionCardHeaderLabel = document.createElement('ion-label');
           const ionCardHeaderLabelH1 = document.createElement('h1');
 
-          const ionMicIconButton = document.createElement('ion-icon');
-          ionMicIconButton.setAttribute('name', 'mic-outline');
-          ionMicIconButton.setAttribute('size', 'large');
-          ionMicIconButton.addEventListener('click', () => { this.speak(j + 1); });
+          const ionDownIconButton = document.createElement('ion-icon');
+          ionDownIconButton.setAttribute('name', 'chevron-down-circle-sharp');
+          ionDownIconButton.setAttribute('size', 'large');
+          ionDownIconButton.setAttribute('color', 'tertiary');
+          ionDownIconButton.addEventListener('click', () => { this.ScrollToPoint('step ' + (j + 2)); });
+          const ionUpIconButton = document.createElement('ion-icon');
+          ionUpIconButton.setAttribute('name', 'chevron-up-circle-sharp');
+          ionUpIconButton.setAttribute('size', 'large');
+          ionUpIconButton.setAttribute('color', 'tertiary');
+          ionUpIconButton.addEventListener('click', () => { this.ScrollToPoint('step ' + j); });
 
           const ionGrid = document.createElement('ion-grid');
           const ionRow = document.createElement('ion-row');
@@ -173,17 +179,21 @@ export class ViewRecipePage implements OnInit {
           const ionColStep = document.createElement('ion-col');
           ionColStep.setAttribute('size', '5');
           const ionColBlank = document.createElement('ion-col');
-          ionColBlank.setAttribute('size', '5');
-          const ionColMic = document.createElement('ion-col');
-          ionColMic.setAttribute('size', '2');
+          ionColBlank.setAttribute('size', '3');
+          const ionColDown = document.createElement('ion-col');
+          ionColDown.setAttribute('size', '2');
+          const ionColUp = document.createElement('ion-col');
+          ionColUp.setAttribute('size', '2');
 
           ionCardHeaderLabel.textContent = 'Step ' + (j + 1);
           ionCardHeaderLabelH1.appendChild(ionCardHeaderLabel);
           ionColStep.appendChild(ionCardHeaderLabelH1);
-          ionColMic.appendChild(ionMicIconButton);
+          ionColDown.appendChild(ionDownIconButton);
+          ionColUp.appendChild(ionUpIconButton);
           ionRow.appendChild(ionColStep);
           ionRow.appendChild(ionColBlank);
-          ionRow.appendChild(ionColMic);
+          ionRow.appendChild(ionColDown);
+          ionRow.appendChild(ionColUp);
           ionGrid.appendChild(ionRow);
           ionCardHeader.appendChild(ionGrid);
           ionCardHeader.setAttribute('color', 'light');
@@ -324,7 +334,7 @@ export class ViewRecipePage implements OnInit {
           to: {x: 2, y: 2},
           easing: 'sway',
           duration: 300,
-          delay: 50,
+          delay: 0,
         })
         .applyTo(document.getElementById(id));
 
@@ -336,6 +346,21 @@ export class ViewRecipePage implements OnInit {
     this.speaking = true;
     await this.tts.speak({
       text,
+      rate: 0.9
+    })
+        .then(() => {
+          this.startVoiceRecognition();
+          this.speaking = false;
+        })
+        .catch((reason: any) => console.log(reason));
+  }
+
+  async speakStep(stepNumber){
+    this.assistantButtonColor = 'warning';
+    annyang.abort();
+    this.speaking = true;
+    await this.tts.speak({
+      text: 'Step ' + stepNumber + '.' + this.textSteps[stepNumber - 1],
       rate: 0.9
     })
         .then(() => {
@@ -447,7 +472,7 @@ export class ViewRecipePage implements OnInit {
       const step = String(wordsToNumbers(this.voiceText.toLowerCase())).split('step')[1].split(' ')[1];
       if (parseInt(step, 10) <= this.stepsNumber){
         this.ScrollToPoint('step ' + step);
-        this.speak('Step ' + step + '.');
+        this.speakStep(step);
       }else{
         this.speak('Sorry, there isn\'t a step ' + step + '.');
       }

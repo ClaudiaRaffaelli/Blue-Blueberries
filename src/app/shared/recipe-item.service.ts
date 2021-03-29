@@ -24,7 +24,10 @@ export class RecipeItemService {
       ingredients: apt.ingredientsForm.ingredients,
       imgsCount: apt.imgsCount,
       videoUrl: apt.videoUrl,
-      collections: apt.collections
+      collections: apt.collections,
+      allergies: apt.allergies,
+      desiredFood: apt.desiredFood,
+      undesiredFood: apt.undesiredFood,
     });
   }
 

@@ -9,6 +9,9 @@ export class RecipeItem {
   imgsCount: number;
   videoUrl: string;
   collections: string;
+  allergies: string[];
+  desiredFood: string[];
+  undesiredFood: string[];
 }
 
 export class IngredientsDic{
@@ -40,5 +43,9 @@ export class IngredientsDic{
     Tahini: {selected: false, dose: 0, unit: ''},
     Chickpeas: {selected: false, dose: 0, unit: ''}
   };
+
+  allergiesList = ['Crustaceans', 'Eggs', 'Dairy products', 'Peanuts', 'Soy', 'Wheat', 'Fish'];
+  undesiredFoodList = ['Celiac'];
+  desiredFoodList = ['Vegetarian', 'Kosher'];
 }
 

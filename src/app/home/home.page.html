@@ -16,7 +16,8 @@
     <ion-item *ngFor="let recipeItem of recipes; let recipeIndex=index" class="user-list" color="light">
       <ion-card style="border-radius: 15px; margin: 10px !important;">
           <div class="card" disabled="true">
-            <img src="{{recipeItem.title_image}}" (click)="openRecipe(recipeItem)"/>
+              <img *ngIf="dataFetched" src="{{recipeItem.title_image}}" (click)="openRecipe(recipeItem)"/>
+              <img *ngIf="!dataFetched" src="../../assets/img/empty_dish.png" (click)="openRecipe(recipeItem)"/>
               <ion-icon *ngIf="isInAnyCollection[recipeIndex]" color="danger" (click)="presentPopover($event, recipeItem.$key, recipeIndex)" style="position: absolute; right: +25px; top: +13px;" size = "large" name="heart"></ion-icon>
               <ion-icon *ngIf="!isInAnyCollection[recipeIndex]" color="danger" (click)="presentPopover($event, recipeItem.$key, recipeIndex)" style="position: absolute; right: +25px; top: +13px;" size = "large" name="heart-outline"></ion-icon>
           </div>

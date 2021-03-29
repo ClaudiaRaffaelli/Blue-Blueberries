@@ -1,4 +1,3 @@
-<ion-button (click)="addDeleteFromFavorites()"></ion-button>
 <!-- Default back button -->
 <ion-header>
   <ion-toolbar color="light">
@@ -21,7 +20,7 @@
       </ion-row>
 
       <ion-row class="ion-justify-content-center" *ngIf="timerToggle && timerState === 'start'">
-        <ion-item lines="none">
+        <ion-item lines="none" color="light">
           <ion-chip color="success">
             <ion-icon id="timerPlay" (click)="startTimer()" *ngIf="timerState === 'stop'" size="large" color="success" name="play-circle-outline"></ion-icon>
             <ion-icon id="timerStop" (click)="stopTimer()" *ngIf="timerState === 'start'" size="large" color="danger" name="stop-outline"></ion-icon>

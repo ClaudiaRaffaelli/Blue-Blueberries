@@ -39,6 +39,10 @@ const routes: Routes = [
     path: 'groceries',
     loadChildren: () => import('./groceries/groceries.module').then( m => m.GroceriesPageModule)
   },
+  {
+    path: 'preferences',
+    loadChildren: () => import('./preferences/preferences.module').then( m => m.PreferencesPageModule)
+  },
 ];
 
 @NgModule({

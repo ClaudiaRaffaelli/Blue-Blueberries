@@ -6,7 +6,8 @@ import 'firebase/storage'; // in order to use images stored in the firebase data
 import {Router, NavigationExtras, ActivatedRoute} from '@angular/router'; // pass data between two pages
 import {PopoverController} from '@ionic/angular';
 import {PopoverCollectionsComponent} from '../popover-collections/popover-collections.component';
-import {CollectionItemService} from "../shared/collection-item.service";
+import {CollectionItemService} from '../shared/collection-item.service';
+import {Storage} from '@ionic/storage';
 
 @Component({
   selector: 'app-home',
@@ -24,14 +25,18 @@ export class HomePage implements OnInit {
   dataFetched: boolean; // flag that indicates when all recipes data have been downloaded from the database
   collection: any; // collection got from custom collection page
   titlePage = '';
-  isInAnyCollection =[];
+  isInAnyCollection = [];
+  allergies: [];
+  desiredFood: [];
+  undesiredFood: [];
 
   constructor(
     private aptService: RecipeItemService,
     private route: ActivatedRoute,
     private router: Router,
     private localDBService: CollectionItemService,
-    public popoverController: PopoverController
+    public popoverController: PopoverController,
+    public storage: Storage
   ) {
     this.route.queryParams.subscribe(async params => {
     if (this.router.getCurrentNavigation().extras.state) {
@@ -74,6 +79,9 @@ export class HomePage implements OnInit {
         this.dataFetched = true;
       } else{
         // navigating here from the search page
+        this.allergies = await this.storage.get(`allergies`);
+        this.undesiredFood = await this.storage.get(`undesiredFood`);
+        this.desiredFood = await this.storage.get(`desiredFood`);
         this.titlePage = '';
         this.recipesRes = this.aptService.getRecipesList();
         this.recipesRes.snapshotChanges().subscribe(res => {
@@ -93,6 +101,9 @@ export class HomePage implements OnInit {
 
             // *** Check query ***
             let numberOfFilters = Object.keys(this.query).length; // get the number of queries
+            if (this.allergies.length > 0) numberOfFilters++;
+            if (this.desiredFood.length > 0) numberOfFilters++;
+            if (this.undesiredFood.length > 0) numberOfFilters++;
             if (numberOfFilters === 0){ // no filters applied
               this.recipes.push(myRecipeItem as RecipeItem);
             }else{
@@ -105,6 +116,7 @@ export class HomePage implements OnInit {
                 // @ts-ignore
                 if (this.query.collections.includes(myRecipeItem.collections as RecipeItem)){
                   if (--numberOfFilters === 0) {
+                    console.log('collezioni');
                     this.recipes.push(myRecipeItem as RecipeItem);
                   }
                 }else{
@@ -116,6 +128,7 @@ export class HomePage implements OnInit {
                 // @ts-ignore
                 if (myRecipeItem.name.toLowerCase().indexOf(this.query.recipeName.toLowerCase()) !== -1){
                   if (--numberOfFilters === 0) {
+                    console.log('nome');
                     this.recipes.push(myRecipeItem as RecipeItem);
                   }
                 }else{
@@ -127,6 +140,7 @@ export class HomePage implements OnInit {
                 // @ts-ignore
                 if ((myRecipeItem.recipeDifficulty as RecipeItem) === this.query.difficulty) {
                   if (--numberOfFilters === 0) {
+                    console.log('difficolta');
                     this.recipes.push(myRecipeItem as RecipeItem);
                   }
                 }else{
@@ -138,6 +152,74 @@ export class HomePage implements OnInit {
                 // @ts-ignore
                 if ((myRecipeItem.recipeTime as RecipeItem) <= this.query.requiredTime) {
                   if (--numberOfFilters === 0) {
+                    console.log('tempo');
+                    this.recipes.push(myRecipeItem as RecipeItem);
+                  }
+                }else{
+                  filtersSatisfied = false;
+                }
+              }
+              if (this.allergies.length > 0 && (filtersSatisfied === true)){
+                let filterOk = true;
+                for (const recipeAllergy in myRecipeItem.allergies){
+                  for (let i = 0; i < this.allergies.length; i++){
+                    // @ts-ignore
+                    if (this.allergies[i] === myRecipeItem.allergies[recipeAllergy]){
+                      filterOk = false;
+                      filtersSatisfied = false;
+                      break;
+                    }
+                  }
+                }
+                if (filterOk){
+                  if (--numberOfFilters === 0) {
+                    console.log('allergies');
+                    this.recipes.push(myRecipeItem as RecipeItem);
+                  }
+                }else{
+                  filtersSatisfied = false;
+                }
+              }
+              // @ts-ignore
+              if (this.desiredFood.length > 0 && (filtersSatisfied === true)) {
+                let filterOk = false;
+                try{ // old recipes does not have user preferences
+                  for (const recipeDesiredFood in myRecipeItem.desiredFood) {
+                    for (let i = 0; i < this.desiredFood.length; i++) {
+                      // @ts-ignore
+                      if (this.desiredFood[i] === myRecipeItem.desiredFood[recipeDesiredFood]) {
+                        filterOk = true;
+                        break;
+                      }
+                    }
+                  }
+                }catch (e){}
+                finally {
+                  if (filterOk){
+                    if (--numberOfFilters === 0) {
+                      console.log('desiredFood');
+                      this.recipes.push(myRecipeItem as RecipeItem);
+                    }
+                  }else{
+                    filtersSatisfied = false;
+                  }
+                }
+              }
+              // @ts-ignore
+              if (this.undesiredFood.length > 0 && (filtersSatisfied === true)) {
+                let filterOk = true;
+                for (const recipeUndesiredFood in myRecipeItem.undesiredFood) {
+                  for (let i = 0; i < this.undesiredFood.length; i++) {
+                    // @ts-ignore
+                    if (this.undesiredFood[i] === myRecipeItem.undesiredFood[recipeUndesiredFood]) {
+                      filterOk = false;
+                      break;
+                    }
+                  }
+                }
+                if (filterOk){
+                  if (--numberOfFilters === 0) {
+                    console.log('undesiredFood');
                     this.recipes.push(myRecipeItem as RecipeItem);
                   }
                 }else{
@@ -157,6 +239,7 @@ export class HomePage implements OnInit {
                 }
                 if (filterOk){
                   if (--numberOfFilters === 0) {
+                    console.log('available');
                     this.recipes.push(myRecipeItem as RecipeItem);
                   }
                 }else{
@@ -175,6 +258,7 @@ export class HomePage implements OnInit {
                 }
                 if (filterOk){
                   if (--numberOfFilters === 0) {
+                    console.log('main');
                     this.recipes.push(myRecipeItem as RecipeItem);
                   }
                 }else{
@@ -194,6 +278,7 @@ export class HomePage implements OnInit {
                 }
                 if (filterOk){
                   if (--numberOfFilters === 0) {
+                    console.log('undesiredIngredient');
                     this.recipes.push(myRecipeItem as RecipeItem);
                   }
                 }else{

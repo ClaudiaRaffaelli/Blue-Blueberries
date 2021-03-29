@@ -55,6 +55,8 @@ export class AddRecipePage implements OnInit {
   private imgsCount: number;
   private imagesUploaded: string[];
 
+  ingredientsDic: IngredientsDic;
+
 
   constructor(
     private aptService: RecipeItemService,
@@ -69,6 +71,8 @@ export class AddRecipePage implements OnInit {
     this.images = this.imageCollection.valueChanges();
     this.ingredientSelectedIcon = false;
 
+    this.ingredientsDic = new IngredientsDic();
+
   }
 
   // Reset some variables before the user can interact with this tab
@@ -82,7 +86,10 @@ export class AddRecipePage implements OnInit {
       ingredientsForm: new IngredientsDic(),
       imgsCount: 0,
       videoUrl: '',
-      collections: ''
+      collections: '',
+      allergies: [],
+      desiredFood: [],
+      undesiredFood: []
     });
     this.imagesUploaded = [];
     // This variable is needed for the searchbar functionality
@@ -101,7 +108,10 @@ export class AddRecipePage implements OnInit {
       ingredientsForm: new IngredientsDic(),
       imgsCount: 0,
       videoUrl: '',
-      collections: ''
+      collections: '',
+      allergies: [],
+      desiredFood: [],
+      undesiredFood: []
     });
     this.imagesUploaded = [];
     this.ingredients = this.recipeForm.value.ingredientsForm.ingredients;
@@ -227,6 +237,18 @@ export class AddRecipePage implements OnInit {
   changeDoseType(event, ingredient: unknown){
     // @ts-ignore
     this.recipeForm.value.ingredientsForm.ingredients[ingredient].unit = event.detail.value;
+  }
+
+  toggleAllergies(e){
+    this.recipeForm.value.allergies = e.target.value;
+  }
+
+  toggleUndesiredFood(e){
+    this.recipeForm.value.undesiredFood = e.target.value;
+  }
+
+  toggleDesiredFood(e){
+    this.recipeForm.value.desiredFood = e.target.value;
   }
 
 

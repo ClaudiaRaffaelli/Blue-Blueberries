@@ -46,6 +46,7 @@
     "ionic-rating-component": "^1.1.6",
     "ionic-select-searchable": "^2.10.0",
     "ionic4-star-rating": "^1.1.1",
+    "lodash": "^4.17.21",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "words-to-num": "^0.2.0",

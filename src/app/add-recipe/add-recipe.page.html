@@ -43,6 +43,42 @@
         </ion-input>
       </ion-item>
 
+      <!-- DESIRED PREFERENCES -->
+      <ion-card>
+        <ion-item lines="none" color="tertiary">
+          <ion-icon slot="start" name="nutrition"></ion-icon>
+          <ion-label>Desired food</ion-label>
+          <ion-select multiple="true" placeholder="Choose" (ionChange)="toggleDesiredFood($event)">
+        <span *ngFor="let desiredFood of ingredientsDic.desiredFoodList">
+        <ion-select-option value="{{desiredFood}}">{{desiredFood}}</ion-select-option>
+        </span>
+          </ion-select>
+        </ion-item>
+
+      <!-- ALLERGIES -->
+        <ion-item lines="none" color="tertiary">
+          <ion-icon slot="start" name="egg"></ion-icon>
+          <ion-label>Allergies</ion-label>
+          <ion-select multiple="true" placeholder="Choose" (ionChange)="toggleAllergies($event)">
+        <span *ngFor="let allergy of ingredientsDic.allergiesList">
+        <ion-select-option value="{{allergy}}">{{allergy}}</ion-select-option>
+        </span>
+          </ion-select>
+        </ion-item>
+
+      <!-- UNDESIRED PREFERENCES -->
+        <ion-item lines="none" color="tertiary">
+          <ion-icon slot="start" name="fish"></ion-icon>
+          <ion-label>Undesired food</ion-label>
+          <ion-select multiple="true" placeholder="Choose" (ionChange)="toggleUndesiredFood($event)">
+        <span *ngFor="let undesiredFood of ingredientsDic.undesiredFoodList">
+        <ion-select-option value="{{undesiredFood}}">{{undesiredFood}}</ion-select-option>
+        </span>
+          </ion-select>
+        </ion-item>
+      </ion-card>
+
+
       <!-- Images selector -->
       <ion-card class="ion-text-center">
         <ion-card-header>

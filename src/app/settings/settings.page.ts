@@ -21,6 +21,15 @@ export class SettingsPage implements OnInit {
     };
     this.router.navigate(['groceries'], navigationExtras);
   }
+
+  openPreferences(){
+    const navigationExtras: NavigationExtras = {
+      state: {
+        lastPage: 'settings'
+      }
+    };
+    this.router.navigate(['preferences'], navigationExtras);
+  }
 }
 
 

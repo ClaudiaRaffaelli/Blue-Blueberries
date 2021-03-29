@@ -341,7 +341,6 @@ export class SearchRecipePage implements OnInit {
 
   toggleCollections(event){
     this.collections = event.target.value;
-    console.log(this.collections);
   }
 
   // show required time option
@@ -470,6 +469,7 @@ export class SearchRecipePage implements OnInit {
   }
 
   startVoiceRecognition(): void {
+    this.bounce('mic_animated');
     if (annyang) {
       this.voiceActiveSectionDisabled = false;
       annyang.start({ autoRestart: false });
@@ -659,10 +659,10 @@ export class SearchRecipePage implements OnInit {
     bounce
         .scale({
           from: {x: 1, y: 1},
-          to: {x: 1.1, y: 1.1},
+          to: {x: 0.8, y: 0.8},
           easing: 'sway',
           duration: 1000,
-          delay: 50,
+          delay: 0,
         })
         .applyTo(document.getElementsByClassName(id));
   }
