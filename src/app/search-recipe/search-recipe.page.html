@@ -52,7 +52,7 @@
         <ion-col size="12">
           <span *ngFor="let ingredient of this.availableIngredients | keyvalue">
             <ion-chip [color]="this.ing.ingredients[ingredient.value].selected ? 'light' : 'dark'">
-              <ion-label [color]="this.ing.ingredients[ingredient.value].selected ? 'success' : 'dark'" (click)="toggleAvailableIngredient(ingredient.value)">{{ingredient.value}}</ion-label>
+              <ion-label [color]="this.ing.ingredients[ingredient.value].selected ? 'success' : 'dark'" (click)="toggleAvailableIngredient(ingredient.value)">{{(ingredient.value).split('_').join(' ')}}</ion-label>
               <ion-icon (click)="toggleAvailableIngredient(ingredient.value)"
                         [name]="this.ing.ingredients[ingredient.value].selected ? 'checkmark-sharp' : 'add-outline'"
                         [color]="this.ing.ingredients[ingredient.value].selected ? 'success' : 'dark'"></ion-icon>
@@ -60,13 +60,14 @@
           </span>
         </ion-col>
         </ion-card-content>
+        <hr class="solid" *ngIf="searchAvailableIngredients">
         <!-- AVAILABLE INGREDIENTS SELECTED -->
         <ion-card-content *ngIf="searchAvailableIngredients">
         <ion-col size="12">
               <span *ngFor="let ingredient of this.availableIngredientsKeys">
                 <span *ngIf="this.ing.ingredients[ingredient].selected">
                   <ion-chip *ngIf="this.ing.ingredients[ingredient].selected" color="success">
-                    <ion-label color="success">{{ingredient}}</ion-label>
+                    <ion-label color="success">{{(ingredient).split('_').join(' ')}}</ion-label>
                     <ion-icon (click)="toggleAvailableIngredient(ingredient)" name="close"></ion-icon>
                   </ion-chip>
                 </span>
@@ -99,7 +100,7 @@
         <ion-col size="12">
           <span *ngFor="let ingredient of this.mainIngredients | keyvalue">
             <ion-chip [color]="this.ingMain.ingredients[ingredient.value].selected ? 'light' : 'dark'">
-              <ion-label [color]="this.ingMain.ingredients[ingredient.value].selected ? 'success' : 'dark'" (click)="toggleMainIngredient(ingredient.value)">{{ingredient.value}}</ion-label>
+              <ion-label [color]="this.ingMain.ingredients[ingredient.value].selected ? 'success' : 'dark'" (click)="toggleMainIngredient(ingredient.value)">{{(ingredient.value).split('_').join(' ')}}</ion-label>
               <ion-icon (click)="toggleMainIngredient(ingredient.value)"
                         [name]="this.ingMain.ingredients[ingredient.value].selected ? 'checkmark-sharp' : 'add-outline'"
                         [color]="this.ingMain.ingredients[ingredient.value].selected ? 'success' : 'dark'"></ion-icon>
@@ -107,13 +108,14 @@
           </span>
         </ion-col>
       </ion-card-content>
+        <hr class="solid" *ngIf="searchMainIngredients">
       <!-- MAIN INGREDIENTS SELECTED -->
         <ion-card-content *ngIf="searchMainIngredients">
           <ion-col size="12">
                 <span *ngFor="let ingredient of this.mainIngredientsKeys">
                   <span *ngIf="this.ingMain.ingredients[ingredient].selected">
                     <ion-chip *ngIf="this.ingMain.ingredients[ingredient].selected" color="success">
-                      <ion-label color="success">{{ingredient}}</ion-label>
+                      <ion-label color="success">{{(ingredient).split('_').join(' ')}}</ion-label>
                       <ion-icon (click)="toggleMainIngredient(ingredient)" name="close"></ion-icon>
                     </ion-chip>
                   </span>
@@ -176,7 +178,7 @@
         <ion-col size="12">
           <span *ngFor="let ingredient of this.undesiredIngredients | keyvalue">
             <ion-chip [color]="this.ingUndesired.ingredients[ingredient.value].selected ? 'light' : 'dark'">
-                <ion-label [color]="this.ingUndesired.ingredients[ingredient.value].selected ? 'danger' : 'dark'" (click)="toggleUndesiredIngredient(ingredient.value)">{{ingredient.value}}</ion-label>
+                <ion-label [color]="this.ingUndesired.ingredients[ingredient.value].selected ? 'danger' : 'dark'" (click)="toggleUndesiredIngredient(ingredient.value)">{{(ingredient.value).split('_').join(' ')}}</ion-label>
                 <ion-icon (click)="toggleUndesiredIngredient(ingredient.value)"
                           [name]="this.ingUndesired.ingredients[ingredient.value].selected ? 'checkmark-outline' : 'add-outline'"
                           [color]="this.ingUndesired.ingredients[ingredient.value].selected ? 'danger' : 'dark'"></ion-icon>
@@ -184,13 +186,14 @@
           </span>
         </ion-col>
         </ion-card-content>
+        <hr class="solid" *ngIf="searchUndesiredIngredients">
         <!-- UNDESIRED INGREDIENTS SELECTED -->
-        <ion-card-content *ngIf="searchUndesiredIngredients" >
+        <ion-card-content *ngIf="searchUndesiredIngredients">
         <ion-col size="12">
           <span *ngFor="let ingredient of this.undesiredIngredientsKeys">
             <span *ngIf="this.ingUndesired.ingredients[ingredient].selected">
               <ion-chip *ngIf="showUndesiredIngredients && this.ingUndesired.ingredients[ingredient].selected " color="danger">
-                <ion-label color="danger">{{ingredient}}</ion-label>
+                <ion-label text-wrap color="danger">{{(ingredient).split('_').join(' ')}}</ion-label>
                 <ion-icon (click)="toggleUndesiredIngredient(ingredient)" name="close"></ion-icon>
               </ion-chip>
             </span>
@@ -297,7 +300,7 @@
               <span *ngFor="let ingredient of this.availableIngredientsKeys">
                 <span *ngIf="this.ing.ingredients[ingredient].selected">
                   <ion-chip *ngIf="this.ing.ingredients[ingredient].selected " color="success">
-                    <ion-label color="success">{{ingredient}}</ion-label>
+                    <ion-label text-wrap color="success">{{(ingredient).split('_').join(' ')}}</ion-label>
                     <ion-icon (click)="toggleAvailableIngredient(ingredient)" name="close"></ion-icon>
                   </ion-chip>
                 </span>
@@ -312,7 +315,7 @@
               <span *ngFor="let ingredient of this.mainIngredientsKeys">
                 <span *ngIf="this.ingMain.ingredients[ingredient].selected">
                   <ion-chip *ngIf="this.ingMain.ingredients[ingredient].selected " color="success">
-                    <ion-label color="success">{{ingredient}}</ion-label>
+                    <ion-label text-wrap color="success">{{(ingredient).split('_').join(' ')}}</ion-label>
                     <ion-icon (click)="toggleMainIngredient(ingredient)" name="close"></ion-icon>
                   </ion-chip>
                 </span>
@@ -329,7 +332,7 @@
               <span *ngFor="let ingredient of this.undesiredIngredientsKeys">
                 <span *ngIf="this.ingUndesired.ingredients[ingredient].selected">
                   <ion-chip *ngIf="showUndesiredIngredients && this.ingUndesired.ingredients[ingredient].selected " color="danger">
-                    <ion-label color="danger">{{ingredient}}</ion-label>
+                    <ion-label text-wrap color="danger">{{(ingredient).split('_').join(' ')}}</ion-label>
                     <ion-icon (click)="toggleUndesiredIngredient(ingredient)" name="close"></ion-icon>
                   </ion-chip>
                 </span>
@@ -362,7 +365,7 @@
       </ion-row>
     </ion-grid>
 
-    <ion-fab id="mic_animated" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab id="mic_animated" class="mic_animated" vertical="bottom" horizontal="end" slot="fixed">
       <ion-fab-button *ngIf="voiceActiveSectionDisabled && !speaking" color="tertiary" (click)="startVoiceRecognition()" mode="ios">
         <ion-icon name="mic-outline" mode="ios" style="font-size: 2em;"></ion-icon>
       </ion-fab-button>
@@ -375,7 +378,7 @@
     </ion-fab>
 
     <div class="assistant-overlay" *ngIf="speaking || !voiceActiveSectionDisabled">
-      <p style="color: #ffffff"><span slot="start" class="ion-text-end">{{voiceTextUser}}Testo qualcunque che ha detto l'utente</span></p>
+      <p style="color: #000000"><span slot="start" class="ion-text-end">{{voiceTextUser}}</span></p>
     </div>
 
     <!--

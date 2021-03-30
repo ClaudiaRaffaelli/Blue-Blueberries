@@ -64,8 +64,8 @@
     </ion-card-header>
     <ion-card-content>
       <ul *ngFor="let ingredient of data.ingredients | keyvalue">
-        <li *ngIf="ingredient.value.selected && ingredient.value.dose!=0">{{ingredient.value.dose}} {{ingredient.value.unit}} {{ingredient.key.toLowerCase()}}</li>
-        <li *ngIf="ingredient.value.selected && ingredient.value.dose==0">{{ingredient.value.unit}} {{ingredient.key.toLowerCase()}}</li>
+        <li *ngIf="ingredient.value.selected && ingredient.value.dose!=0">{{ingredient.value.dose}} {{ingredient.value.unit}} {{ingredient.key.split("_").join(" ").toLowerCase()}}</li>
+        <li *ngIf="ingredient.value.selected && ingredient.value.dose==0">{{ingredient.value.unit}} {{ingredient.key.split("_").join(" ").toLowerCase()}}</li>
       </ul>
     </ion-card-content>
   </ion-card>

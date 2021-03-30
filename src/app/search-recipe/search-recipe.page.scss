@@ -23,12 +23,17 @@ ion-card{
   margin: 15px !important;
 }
 
+/* Solid border */
+hr.solid {
+  border-top: 1px solid rgb(17, 42, 205);
+  width: 70%;
+}
 
 .assistant-overlay {
   position: fixed;
   width: 65%;
   height: 12%;
-  background: rgb(117, 119, 121, 0.3);
+  background: rgb(255, 255, 255);
   z-index: 20;
   bottom: 10px;
   right: 21%;

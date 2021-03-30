@@ -41,7 +41,13 @@ export class IngredientsDic{
     Oranges: {selected: false, dose: 0, unit: ''},
     Pistachios: {selected: false, dose: 0, unit: ''},
     Tahini: {selected: false, dose: 0, unit: ''},
-    Chickpeas: {selected: false, dose: 0, unit: ''}
+    Chickpeas: {selected: false, dose: 0, unit: ''},
+    White_potatoes: {selected: false, dose: 0, unit: ''},
+    Dried_herbs: {selected: false, dose: 0, unit: ''},
+    Golden_caster_sugar: {selected: false, dose: 0, unit: ''},
+    Vanilla_Extract: {selected: false, dose: 0, unit: ''},
+    Plain_flour: {selected: false, dose: 0, unit: ''},
+    Strawberry_jam: {selected: false, dose: 0, unit: ''}
   };
 
   allergiesList = ['Crustaceans', 'Eggs', 'Dairy products', 'Peanuts', 'Soy', 'Wheat', 'Fish'];

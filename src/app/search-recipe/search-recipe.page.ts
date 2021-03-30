@@ -203,10 +203,18 @@ export class SearchRecipePage implements OnInit {
   allIngredientsChanged(event){
     if (event.target.value === 'availableIngredients'){
       this.searchAvailableIngredients = true;
+      this.showAvailableIngredients = true;
       this.searchMainIngredients = false;
+      this.showMainIngredients = false;
+      this.showAvailableSearchBarResults = true;
+      this.showMainSearchBarResults = false;
     }else{
       this.searchAvailableIngredients = false;
+      this.showAvailableIngredients = false;
       this.searchMainIngredients = true;
+      this.showMainIngredients = true;
+      this.showAvailableSearchBarResults = false;
+      this.showMainSearchBarResults = true;
     }
   }
 
@@ -223,7 +231,7 @@ export class SearchRecipePage implements OnInit {
 
     if (val && val.trim() !== ''){ // show only the ingredients that satisfies the query
       this.availableIngredients = Object.keys(this.availableIngredients).filter((item: any) => {
-        return (item.toLowerCase().indexOf(val.toLowerCase()) > -1);
+        return (item.toLowerCase().indexOf((val).split(' ').join('_').toLowerCase()) > -1);
       });
     }
   }
@@ -241,7 +249,7 @@ export class SearchRecipePage implements OnInit {
 
     if (val && val.trim() !== ''){ // show only the ingredients that satisfies the query
       this.mainIngredients = Object.keys(this.mainIngredients).filter((item: any) => {
-        return (item.toLowerCase().indexOf(val.toLowerCase()) > -1);
+        return (item.toLowerCase().indexOf((val).split(' ').join('_').toLowerCase()) > -1);
       });
     }
   }
@@ -259,7 +267,7 @@ export class SearchRecipePage implements OnInit {
 
     if (val && val.trim() !== ''){ // show only the ingredients that satisfies the query
       this.undesiredIngredients = Object.keys(this.undesiredIngredients).filter((item: any) => {
-        return (item.toLowerCase().indexOf(val.toLowerCase()) > -1);
+        return (item.toLowerCase().indexOf((val).split(' ').join('_').toLowerCase()) > -1);
       });
     }
   }
@@ -640,10 +648,18 @@ export class SearchRecipePage implements OnInit {
 
   selectIngredients(ingredientsDictionary, ingredients, textAnalysed: string, separator: string){
     for (let i = 0; i < ingredients.length; i++) {
-      const queryIngredients = textAnalysed.toLowerCase().split(separator)[1].split(' ');
-      for (let j = 0; j < queryIngredients.length; j++) {
-        if (levenshtein.get(queryIngredients[j], ingredients[i].toLowerCase()) <= 1) {
+      if (ingredients[i].includes('_')){
+        const currentIngredient = ingredients[i].split('_').join(' ').toLowerCase();
+        if (textAnalysed.includes(currentIngredient)){
           ingredientsDictionary.ingredients[ingredients[i]].selected = true;
+        }
+      }
+      else{
+        const queryIngredients = textAnalysed.toLowerCase().split(separator)[1].split(' ');
+        for (let j = 0; j < queryIngredients.length; j++) {
+          if (levenshtein.get(queryIngredients[j], ingredients[i].toLowerCase()) <= 1) {
+            ingredientsDictionary.ingredients[ingredients[i]].selected = true;
+          }
         }
       }
     }

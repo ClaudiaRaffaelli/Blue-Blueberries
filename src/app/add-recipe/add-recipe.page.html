@@ -93,7 +93,7 @@
 
         <ion-list *ngIf="showSearchBarResults">
           <ion-item *ngFor="let ingredient of this.ingredients | keyvalue">
-            <ion-label color="dark" (click)="toggleIngredient(ingredient.value)">{{ingredient.value}}</ion-label>
+            <ion-label color="dark" (click)="toggleIngredient(ingredient.value)">{{(ingredient.value).split("_").join(" ")}}</ion-label>
             <ion-icon (click)="toggleIngredient(ingredient.value)"
                       [name]="this.recipeForm.value.ingredientsForm.ingredients[ingredient.value].selected ? 'checkmark-sharp' : 'add-outline'" item-end ></ion-icon>
           </ion-item>
@@ -104,7 +104,7 @@
 
         <ion-list lines="full" *ngFor="let ingredient of recipeForm.value.ingredientsForm.ingredients | keyvalue">
           <ion-item *ngIf="ingredient.value.selected">
-            <p slot="start" position="floating">{{ingredient.key}}</p>
+            <p slot="start" position="floating">{{(ingredient.key).split("_").join(" ")}}</p>
             <ion-item>
               <ion-input class="ingredientsInput" (ionChange)="changeDose($event, ingredient.key)" debounce="500" type="number" placeholder="dose" clearInput required></ion-input>
               <ion-input class="ingredientsInput" (ionChange)="changeDoseType($event, ingredient.key)" debounce="500" type="text" placeholder="unit" clearInput required></ion-input>
