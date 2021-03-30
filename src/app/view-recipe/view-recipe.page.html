@@ -1,3 +1,27 @@
+<!-- First time in app instructions -->
+<ion-slides pager=True [options]="slideOpts" class="instruction-overlay" padding [hidden]="overlayHidden">
+  <ion-slide>
+    <ion-label color="light">Add recipe to the grocery list,</ion-label>
+  </ion-slide>
+  <ion-slide>
+    <ion-label color="light">Menage collections,</ion-label>
+  </ion-slide>
+  <ion-slide>
+    <ion-label color="light">Set a timer</ion-label>
+  </ion-slide>
+  <ion-slide>
+    <ion-label id="list" color="light" style="margin:5px 5px">
+      Ask something to the assistant:
+      <ul>
+        <li>Read step 1,</li>
+        <li>Add recipe to grocery list,</li>
+        <li>Set timer to 40 min</li>
+      </ul>
+      <ion-button full (click)="hideOverlay()">Got it!</ion-button>
+    </ion-label>
+  </ion-slide>
+</ion-slides>
+
 <!-- Default back button -->
 <ion-header>
   <ion-toolbar color="light">

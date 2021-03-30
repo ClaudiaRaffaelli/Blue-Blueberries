@@ -67,6 +67,13 @@ export class ViewRecipePage implements OnInit {
   voiceTextUser = '';
   speaking: boolean;
 
+  overlayHidden: boolean = false;
+
+  slideOpts = {
+    initialSlide: 1,
+    speed: 400
+  };
+
   constructor(private aptService: RecipeItemService,
               private route: ActivatedRoute,
               private router: Router,
@@ -239,6 +246,11 @@ export class ViewRecipePage implements OnInit {
     if (this.data === undefined) {
       this.router.navigate(['home']);
     }
+  }
+
+
+  public hideOverlay() {
+    this.overlayHidden = true;
   }
 
   async ionViewWillEnter(){
