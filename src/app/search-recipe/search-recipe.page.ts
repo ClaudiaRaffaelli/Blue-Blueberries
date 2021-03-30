@@ -46,6 +46,7 @@ export class SearchRecipePage implements OnInit {
   availableIngredients: {};
   mainIngredients: {};
   undesiredIngredients: {};
+  searchKeyword: boolean;
   searchAllIngredients: boolean;
   searchAvailableIngredients: boolean;
   searchMainIngredients: boolean;
@@ -90,7 +91,8 @@ export class SearchRecipePage implements OnInit {
     this.availableIngredientsKeys = Object.keys(this.ing.ingredients);
     this.mainIngredientsKeys = Object.keys(this.ingMain.ingredients);
     this.undesiredIngredientsKeys = Object.keys(this.ingUndesired.ingredients);
-    this.searchAllIngredients = false;
+    this.searchKeyword = false;
+    this.searchAllIngredients = true;
     this.searchAvailableIngredients = true;
     this.showMainIngredients = false;
     this.searchUndesiredIngredients = false;
@@ -206,7 +208,6 @@ export class SearchRecipePage implements OnInit {
       this.showAvailableIngredients = true;
       this.searchMainIngredients = false;
       this.showMainIngredients = false;
-      this.showAvailableSearchBarResults = true;
       this.showMainSearchBarResults = false;
     }else{
       this.searchAvailableIngredients = false;
@@ -214,8 +215,9 @@ export class SearchRecipePage implements OnInit {
       this.searchMainIngredients = true;
       this.showMainIngredients = true;
       this.showAvailableSearchBarResults = false;
-      this.showMainSearchBarResults = true;
     }
+    this.showUndesiredSearchBarResults = false;
+    this.reset_pulse_animation('mic_animated');
   }
 
   // search bar for available ingredients
@@ -276,6 +278,22 @@ export class SearchRecipePage implements OnInit {
     this.queryRecipeName = '';
   }
 
+  toggleSearchKeyword(){
+    this.searchKeyword = !this.searchKeyword;
+    if (this.searchKeyword){
+      this.bounce('keywordIcon', 1.1);
+    }else{
+      this.bounce('keywordIcon', 0.9);
+    }
+    this.resetSearchBars();
+  }
+
+  resetSearchBars(){
+    this.showAvailableSearchBarResults = false;
+    this.showMainSearchBarResults = false;
+    this.showUndesiredSearchBarResults = false;
+  }
+
   // check / uncheck available ingredients when clicked by user
   toggleAvailableIngredient(ingredient: unknown){
     // Change ingredient's state
@@ -303,16 +321,18 @@ export class SearchRecipePage implements OnInit {
     if (this.searchAllIngredients){
       this.reset_pulse_animation('mic_animated');
     }
-    this.bounce('desiredIcon');
+    if (this.searchAllIngredients){
+      this.bounce('desiredIcon', 1.1);
+    }else{
+      this.bounce('desiredIcon', 0.9);
+    }
+    this.resetSearchBars();
   }
 
   // show search results only when these variables are true
   toggleSearchAvailableIngredients(){
     this.searchAvailableIngredients = !this.searchAvailableIngredients;
     this.showAvailableIngredients = !this.showAvailableIngredients;
-    if (this.searchAvailableIngredients){
-      this.reset_pulse_animation('mic_animated');
-    }
   }
 
   toggleSearchMainIngredients(){
@@ -326,7 +346,12 @@ export class SearchRecipePage implements OnInit {
     if (this.searchUndesiredIngredients){
       this.reset_pulse_animation('mic_animated');
     }
-    this.bounce('undesiredIcon');
+    if (this.searchUndesiredIngredients){
+      this.bounce('undesiredIcon', 1.1);
+    }else{
+      this.bounce('undesiredIcon', 0.9);
+    }
+    this.resetSearchBars();
   }
 
   // show difficulty settings when searchDifficulty is true
@@ -335,7 +360,12 @@ export class SearchRecipePage implements OnInit {
     if (this.searchDifficulty){
       this.reset_pulse_animation('mic_animated');
     }
-    this.bounce('difficultyIcon');
+    if (this.searchDifficulty){
+      this.bounce('difficultyIcon', 1.1);
+    }else{
+      this.bounce('difficultyIcon', 0.9);
+    }
+    this.resetSearchBars();
   }
   // set difficulty (easy, medium or hard)
   toggleDifficulty(event){
@@ -344,7 +374,12 @@ export class SearchRecipePage implements OnInit {
 
   toggleSearchCollections(){
     this.searchCollections = !this.searchCollections;
-    this.bounce('collectionIcon');
+    if (this.searchCollections){
+      this.bounce('collectionIcon', 1.1);
+    }else{
+      this.bounce('collectionIcon', 0.9);
+    }
+    this.resetSearchBars();
   }
 
   toggleCollections(event){
@@ -354,10 +389,14 @@ export class SearchRecipePage implements OnInit {
   // show required time option
   toggleRequiredTime(){
     this.searchRequiredTime = !this.searchRequiredTime;
-    if (this.searchRequiredTime){
+    if (this.searchAllIngredients){
       this.reset_pulse_animation('mic_animated');
     }
-    this.bounce('maxTimeIcon');
+    if (this.searchRequiredTime){
+      this.bounce('maxTimeIcon', 1.1);
+    }else{
+      this.bounce('maxTimeIcon', 0.9);
+    }
   }
 
   // save the max time required
@@ -477,7 +516,7 @@ export class SearchRecipePage implements OnInit {
   }
 
   startVoiceRecognition(): void {
-    this.bounce('mic_animated');
+    this.bounce('mic_animated', 1.1);
     if (annyang) {
       this.voiceActiveSectionDisabled = false;
       annyang.start({ autoRestart: false });
@@ -670,12 +709,12 @@ export class SearchRecipePage implements OnInit {
     this.content.scrollToPoint(0, yOffset, 2000);
   }
 
-  bounce(id: string) {
+  bounce(id: string, end: number) {
     const bounce = new Bounce();
     bounce
         .scale({
           from: {x: 1, y: 1},
-          to: {x: 0.8, y: 0.8},
+          to: {x: end, y: end},
           easing: 'sway',
           duration: 1000,
           delay: 0,
