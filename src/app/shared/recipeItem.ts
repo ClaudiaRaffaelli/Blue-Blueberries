@@ -45,7 +45,6 @@ export class IngredientsDic{
   };
 
   allergiesList = ['Crustaceans', 'Eggs', 'Dairy products', 'Peanuts', 'Soy', 'Wheat', 'Fish'];
-  undesiredFoodList = ['Celiac'];
-  desiredFoodList = ['Vegetarian', 'Kosher'];
+  desiredFoodList = ['Vegetarian', 'Vegan', 'Kosher', 'Celiac', 'Lactose free', 'Gluten free'];
 }
 

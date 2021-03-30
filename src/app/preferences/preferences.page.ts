@@ -10,6 +10,7 @@ import {IngredientsDic} from '../shared/recipeItem';
 })
 export class PreferencesPage implements OnInit {
   ingredientsDic: IngredientsDic;
+  undesiredDic;
   allergies: [];
   undesiredFood = [];
   desiredFood = [];
@@ -17,6 +18,7 @@ export class PreferencesPage implements OnInit {
 
   constructor(private router: Router, public storage: Storage) {
     this.ingredientsDic = new IngredientsDic();
+    this.undesiredDic = new IngredientsDic().ingredients;
   }
 
 

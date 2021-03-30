@@ -27,7 +27,6 @@ export class RecipeItemService {
       collections: apt.collections,
       allergies: apt.allergies,
       desiredFood: apt.desiredFood,
-      undesiredFood: apt.undesiredFood,
     });
   }
 

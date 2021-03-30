@@ -88,8 +88,7 @@ export class AddRecipePage implements OnInit {
       videoUrl: '',
       collections: '',
       allergies: [],
-      desiredFood: [],
-      undesiredFood: []
+      desiredFood: []
     });
     this.imagesUploaded = [];
     // This variable is needed for the searchbar functionality
@@ -110,8 +109,7 @@ export class AddRecipePage implements OnInit {
       videoUrl: '',
       collections: '',
       allergies: [],
-      desiredFood: [],
-      undesiredFood: []
+      desiredFood: []
     });
     this.imagesUploaded = [];
     this.ingredients = this.recipeForm.value.ingredientsForm.ingredients;

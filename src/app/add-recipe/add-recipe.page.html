@@ -65,17 +65,6 @@
         </span>
           </ion-select>
         </ion-item>
-
-      <!-- UNDESIRED PREFERENCES -->
-        <ion-item lines="none" color="tertiary">
-          <ion-icon slot="start" name="fish"></ion-icon>
-          <ion-label>Undesired food</ion-label>
-          <ion-select multiple="true" placeholder="Choose" (ionChange)="toggleUndesiredFood($event)">
-        <span *ngFor="let undesiredFood of ingredientsDic.undesiredFoodList">
-        <ion-select-option value="{{undesiredFood}}">{{undesiredFood}}</ion-select-option>
-        </span>
-          </ion-select>
-        </ion-item>
       </ion-card>
 
 

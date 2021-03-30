@@ -10,7 +10,7 @@
   <ion-card>
     <ion-item lines="none" color="tertiary">
       <ion-icon slot="start" name="nutrition"></ion-icon>
-      <ion-label>Desired food</ion-label>
+      <ion-label text-wrap>Dietary preferences</ion-label>
       <ion-select multiple="true" placeholder="Choose" (ionChange)="toggleDesiredFood($event)" [value]="this.desiredFood">
         <span *ngFor="let desiredFood of ingredientsDic.desiredFoodList">
         <ion-select-option value="{{desiredFood}}">{{desiredFood}}</ion-select-option>
@@ -23,7 +23,7 @@
   <ion-card>
     <ion-item lines="none" color="tertiary">
       <ion-icon slot="start" name="egg"></ion-icon>
-      <ion-label>Allergies</ion-label>
+      <ion-label text-wrap>Allergies</ion-label>
       <ion-select multiple="true" placeholder="Choose" (ionChange)="toggleAllergies($event)" [value]="this.allergies">
         <span *ngFor="let allergy of ingredientsDic.allergiesList">
         <ion-select-option value="{{allergy}}">{{allergy}}</ion-select-option>
@@ -36,10 +36,10 @@
   <ion-card>
     <ion-item lines="none" color="tertiary">
       <ion-icon slot="start" name="fish"></ion-icon>
-      <ion-label>Undesired food</ion-label>
+      <ion-label text-wrap>Undesired food</ion-label>
       <ion-select multiple="true" placeholder="Choose" (ionChange)="toggleUndesiredFood($event)" [value]="this.undesiredFood">
-        <span *ngFor="let undesiredFood of ingredientsDic.undesiredFoodList">
-        <ion-select-option value="{{undesiredFood}}">{{undesiredFood}}</ion-select-option>
+        <span *ngFor="let undesiredFood of undesiredDic | keyvalue">
+        <ion-select-option value="{{undesiredFood.key}}">{{undesiredFood.key}}</ion-select-option>
         </span>
       </ion-select>
     </ion-item>

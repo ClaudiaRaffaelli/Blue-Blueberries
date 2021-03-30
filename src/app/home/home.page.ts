@@ -208,15 +208,18 @@ export class HomePage implements OnInit {
               // @ts-ignore
               if (this.undesiredFood.length > 0 && (filtersSatisfied === true)) {
                 let filterOk = true;
-                for (const recipeUndesiredFood in myRecipeItem.undesiredFood) {
-                  for (let i = 0; i < this.undesiredFood.length; i++) {
-                    // @ts-ignore
-                    if (this.undesiredFood[i] === myRecipeItem.undesiredFood[recipeUndesiredFood]) {
-                      filterOk = false;
-                      break;
+                try {
+                  for (const ingredient in myRecipeItem.ingredients) {
+                    for (let i = 0; i < this.undesiredFood.length; i++) {
+                      // @ts-ignore
+                      if (myRecipeItem.ingredients[this.undesiredFood[i]].selected) {
+                        filterOk = false;
+                        filtersSatisfied = false;
+                        break;
+                      }
                     }
                   }
-                }
+                }catch (e){}
                 if (filterOk){
                   if (--numberOfFilters === 0) {
                     console.log('undesiredFood');
