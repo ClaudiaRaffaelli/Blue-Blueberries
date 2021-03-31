@@ -74,6 +74,8 @@ export class ViewRecipePage implements OnInit {
     speed: 400
   };
 
+  cartPosition: any;
+
   constructor(private aptService: RecipeItemService,
               private route: ActivatedRoute,
               private router: Router,
@@ -246,6 +248,8 @@ export class ViewRecipePage implements OnInit {
     if (this.data === undefined) {
       this.router.navigate(['home']);
     }
+
+    this.cartPosition = document.getElementById("groceryList").style.left;
   }
 
 

@@ -1,6 +1,6 @@
 <!-- First time in app instructions -->
-<ion-slides pager=True [options]="slideOpts" class="instruction-overlay" padding [hidden]="overlayHidden">
-  <ion-slide>
+<ion-slides pager=True [options]="slideOpts" id="instruction-overlay" padding [hidden]="overlayHidden">
+  <ion-slide id="Slide1">
     <ion-label color="light">Add recipe to the grocery list,</ion-label>
   </ion-slide>
   <ion-slide>
@@ -33,8 +33,7 @@
 
         <ion-buttons color="light" style="position: absolute; right: +40px; top: +13px;">
           <ion-button (click)="addRemoveCart(data.$key)">
-            <ion-icon *ngIf="isInGroceryList" id="inGroceryList" size = "large" name="cart"  color="primary"></ion-icon>
-            <ion-icon *ngIf="!isInGroceryList" id="notInGroceryList" size = "large" name="cart-outline" (click)="addRemoveCart(data.$key)" color="primary"></ion-icon>
+            <ion-icon id="groceryList" size = "large" [name] = "isInGroceryList ? 'cart' : 'cart-outline'" (click)="addRemoveCart(data.$key)" color="primary"></ion-icon>
             <ion-badge id="groceryBadge" color="danger" style="position: absolute; right: -5px; top: 0px; font-size: 0.8em; --padding-start: 5px;--padding-end: 5px; --padding-top: 2px; --padding-bottom: 2px">{{ recipeNumberInCart }}</ion-badge>
           </ion-button>
 
