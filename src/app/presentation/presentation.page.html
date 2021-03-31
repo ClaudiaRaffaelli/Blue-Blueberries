@@ -1,38 +1,38 @@
-<ion-content *ngIf="dataFetched" color="light">
-  <ion-card style="margin: 0px !important;">
-    <h1><ion-card-header>Picks for you</ion-card-header></h1>
-  <ion-slides [options]="option" class="ion-margin-top">
+<ion-content *ngIf="dataFetched" color="light" fullscreen="true">
+  <ion-card style="margin: 0px !important; padding: 10px;">
+    <ion-label color="dark"><br><br><h1><b>Picks for you</b></h1></ion-label>
+  <ion-slides [options]="option" class="" style="height: 300px; margin-top: -30px!important;">
     <ion-slide *ngFor="let recipeItem of suggestedRecipes">
       <ion-card (click)="openRecipe(recipeItem)" class="myCard pickgradient">
           <img src="{{recipeItem.title_image}}" class="pickgradient">
-        <div class="myOverlay pick">
-          <div>{{ recipeItem.name }}</div>
-        </div>
+
       </ion-card>
+      <div class="myOverlay pick">
+        {{ recipeItem.name }}
+      </div>
     </ion-slide>
   </ion-slides>
-  </ion-card>
 
   <!--  Now we display the fixed collections -->
-  <ion-list lines="none" class="ios list-ios hydrated">
-
-    <ion-item *ngFor="let collectionItem of collections" class="user-list">
-
-      <ion-card style="border-radius: 15px; margin: 10px !important;" (click)="openCollection(collectionItem)">
-        <ion-card-header (click)="openCollection(collectionItem)">
-          <ion-card-title>{{collectionItem.name}}</ion-card-title>
-        </ion-card-header>
-        <div class="card" disabled="true">
-          <img [src]="collectionItem.coverImage"/>
-        </div>
-        <ion-card-content (click)="openCollection(collectionItem)">
-          <div>
-            <ion-icon name="archive"></ion-icon> {{collectionItem.numberOfRecipes}} recipes
+    <ion-label color="dark"><br><br><h1><b>Our collections</b></h1></ion-label>
+    <ion-list lines="none" class="" style="padding-top: 15% !important;">
+      <ion-item *ngFor="let collectionItem of collections" class="user-list" style="margin: 0px!important;">
+        <ion-card style="border-radius: 15px; margin: 5px !important;" (click)="openCollection(collectionItem)">
+          <div class="card" disabled="true">
+            <img [src]="collectionItem.coverImage"/>
           </div>
-        </ion-card-content>
-      </ion-card>
-    </ion-item>
-  </ion-list>
+          <ion-card-header (click)="openCollection(collectionItem)">
+            <ion-card-title>{{collectionItem.name}}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content (click)="openCollection(collectionItem)">
+            <div>
+              <ion-icon name="archive"></ion-icon> {{collectionItem.numberOfRecipes}} recipes
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-item>
+    </ion-list>
+  </ion-card>
 </ion-content>
 
 <ion-content *ngIf="!dataFetched" color="light">
@@ -82,7 +82,7 @@
   </ion-slides>
 
 
-      <ion-card style="height: 25%!important; border-radius: 15px; margin: 10px !important;">
+      <ion-card style="height: 25%!important; border-radius: 15px; margin: 10% !important;">
         <ion-item lines="none">
           <ion-thumbnail slot="start">
             <ion-skeleton-text ></ion-skeleton-text>
@@ -100,7 +100,7 @@
           </ion-label>
         </ion-item>
       </ion-card>
-      <ion-card style="height: 25%!important; border-radius: 15px; margin: 10px !important;">
+      <ion-card style="height: 25%!important; border-radius: 15px; margin: 10% !important;">
         <ion-item lines="none">
           <ion-thumbnail slot="start">
             <ion-skeleton-text ></ion-skeleton-text>
@@ -118,7 +118,7 @@
           </ion-label>
         </ion-item>
       </ion-card>
-      <ion-card style="height: 25%!important; border-radius: 15px; margin: 10px !important;">
+      <ion-card style="height: 25%!important; border-radius: 15px; margin: 10% !important;">
         <ion-item lines="none">
           <ion-thumbnail slot="start">
             <ion-skeleton-text ></ion-skeleton-text>
