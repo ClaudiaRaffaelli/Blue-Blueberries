@@ -3,6 +3,7 @@ import firebase from 'firebase';
 import {RecipeItemService} from '../shared/recipe-item.service';
 import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {IngredientsDic, RecipeItem} from '../shared/recipeItem';
+import {Storage} from "@ionic/storage";
 
 @Component({
   selector: 'app-presentation',
@@ -30,7 +31,12 @@ export class PresentationPage implements OnInit {
   constructor(
       private aptService: RecipeItemService,
       private route: ActivatedRoute,
-      private router: Router) {
+      private router: Router,
+      public storage: Storage) {
+
+    storage.set(`allergies`, []);
+    storage.set(`desiredFood`, []);
+    storage.set(`undesiredFood`, []);
   }
 
 

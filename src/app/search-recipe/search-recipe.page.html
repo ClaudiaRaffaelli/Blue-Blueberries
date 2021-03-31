@@ -2,22 +2,22 @@
 <br>
     <ion-card class="desiredIcon">
       <ion-item class="desiredIcon" lines="none" color="" (click)="toggleSearchAllIngredients()">
-        <ion-icon class="desiredIcon" [color]="searchAllIngredients ? 'tertiary' : 'tertiary'" mode="md" slot="start" [name]="searchAllIngredients ? 'checkbox' : 'square-outline'"></ion-icon>
+        <ion-icon class="desiredIcon" [color]="searchAllIngredients ? 'tertiary2' : 'tertiary2'" mode="md" slot="start" [name]="searchAllIngredients ? 'checkbox' : 'square-outline'"></ion-icon>
         <div text-wrap><h1>Desired ingredients</h1></div>
-        <ion-icon class="desiredIcon" slot="end" [color]="searchAllIngredients ? 'tertiary' : 'light'" [name]="searchAllIngredients ? 'thumbs-up' : ''"></ion-icon>
+        <ion-icon class="desiredIcon" slot="end" [color]="searchAllIngredients ? 'tertiary2' : 'light'" [name]="searchAllIngredients ? 'thumbs-up' : ''"></ion-icon>
       </ion-item>
       <ion-toolbar *ngIf="searchAllIngredients">
         <ion-segment (ionChange)="allIngredientsChanged($event)" value="availableIngredients" color="primary">
           <ion-segment-button value="availableIngredients">
             <span text-wrap>
-              <ion-icon size="large" [color]="searchAvailableIngredients ? 'tertiary' : 'medium'" name="nutrition"></ion-icon>
+              <ion-icon size="large" [color]="searchAvailableIngredients ? 'tertiary2' : 'medium'" name="nutrition"></ion-icon>
             </span>
           </ion-segment-button>
           <ion-segment-button value="mainIngredients">
             <span text-wrap>
             <ion-icon color="medium" name="egg"></ion-icon>
-            <ion-icon size="large" [color]="searchMainIngredients ? 'tertiary' : 'medium'" name="nutrition"></ion-icon>
-            <ion-icon color="medium" name="wine"></ion-icon>
+            <ion-icon size="large" [color]="searchMainIngredients ? 'tertiary2' : 'medium'" name="nutrition"></ion-icon>
+            <ion-icon color="medium" name="fish"></ion-icon>
           </span>
           </ion-segment-button>
         </ion-segment>
@@ -123,9 +123,9 @@
       <!-- SEARCH BY NAME -->
       <div class="keywordIcon">
         <ion-item lines="none" color="" (click)="toggleSearchKeyword()">
-          <ion-icon class="desiredIcon" color="tertiary" slot="start" [name]="searchKeyword ? 'checkbox' : 'square-outline'"></ion-icon>
+          <ion-icon class="desiredIcon" color="tertiary2" slot="start" [name]="searchKeyword ? 'checkbox' : 'square-outline'"></ion-icon>
           Keyword
-          <ion-icon class="maxTimeIcon" slot="end" [color]="searchKeyword ? 'tertiary' : 'light'" name="key"></ion-icon>
+          <ion-icon class="maxTimeIcon" slot="end" [color]="searchKeyword ? 'tertiary2' : 'light'" name="key"></ion-icon>
         </ion-item>
         <ion-searchbar *ngIf="searchKeyword" (ionChange)="onChangeName($event)" debounce="250" animated placeholder="Cake, pasta, ..." [value]="queryRecipeName">
         </ion-searchbar>
@@ -133,9 +133,9 @@
       <!-- MAX TIME REQUIRED -->
       <div class="maxTimeIcon">
         <ion-item class="maxTimeIcon" lines="none" color="" (click)="toggleRequiredTime()">
-          <ion-icon class="maxTimeIcon" color="tertiary" slot="start" [name]="searchRequiredTime ? 'checkbox' : 'square-outline'"></ion-icon>
+          <ion-icon class="maxTimeIcon" color="tertiary2" slot="start" [name]="searchRequiredTime ? 'checkbox' : 'square-outline'"></ion-icon>
           Max time required
-          <ion-icon class="maxTimeIcon" slot="end" [color]="searchRequiredTime ? 'tertiary' : 'light'" name="stopwatch"></ion-icon>
+          <ion-icon class="maxTimeIcon" slot="end" [color]="searchRequiredTime ? 'tertiary2' : 'light'" name="stopwatch"></ion-icon>
         </ion-item>
         <ion-list *ngIf="searchRequiredTime" lines="none">
           <ion-item>
@@ -160,9 +160,9 @@
       <!-- UNDESIRED INGREDIENTS -->
       <div class="undesiredIcon">
         <ion-item class="undesiredIcon" lines="none" color="" (click)="toggleSearchUndesiredIngredients()">
-          <ion-icon class="undesiredIcon" color="tertiary" slot="start" [name]="searchUndesiredIngredients ? 'checkbox' : 'square-outline'"></ion-icon>
+          <ion-icon class="undesiredIcon" color="tertiary2" slot="start" [name]="searchUndesiredIngredients ? 'checkbox' : 'square-outline'"></ion-icon>
           Undesired ingredients
-          <ion-icon class="undesiredIcon" slot="end" [color]="searchUndesiredIngredients ? 'tertiary' : 'light'" name="thumbs-down"></ion-icon>
+          <ion-icon class="undesiredIcon" slot="end" [color]="searchUndesiredIngredients ? 'tertiary2' : 'light'" name="thumbs-down"></ion-icon>
           </ion-item>
         <!-- SEARCH BAR -->
         <ion-searchbar *ngIf="searchUndesiredIngredients" (ionChange)="_ionChangeUndesired($event)" debounce="250" animated placeholder="Type milk, mushrooms, ...">
@@ -209,11 +209,11 @@
           <!-- DIFFICULTY -->
       <div class="difficultyIcon">
         <ion-item class="difficultyIcon" lines="none" color="" (click)="toggleSearchDifficulty()">
-          <ion-icon class="difficultyIcon" color="tertiary" slot="start" [name]="searchDifficulty ? 'checkbox' : 'square-outline'"></ion-icon>
+          <ion-icon class="difficultyIcon" color="tertiary2" slot="start" [name]="searchDifficulty ? 'checkbox' : 'square-outline'"></ion-icon>
           Difficulty
-          <ion-icon class="difficultyIcon" slot="end" [color]="searchDifficulty ? 'tertiary' : 'light'" name="flame"></ion-icon>
+          <ion-icon class="difficultyIcon" slot="end" [color]="searchDifficulty ? 'tertiary2' : 'light'" name="flame"></ion-icon>
         </ion-item>
-          <ion-segment *ngIf="searchDifficulty" (ionChange)="toggleDifficulty($event)" color="dark" [value]="difficulty">
+          <ion-segment *ngIf="searchDifficulty" (ionChange)="toggleDifficulty($event)" color="tertiary" [value]="difficulty">
             <ion-segment-button value="easy">
               <ion-label>Easy</ion-label>
             </ion-segment-button>
@@ -240,12 +240,12 @@
     <!-- COLLECTIONS -->
     <div class="collectionIcon">
       <ion-item class="collectionIcon" lines="none" color="" (click)="toggleSearchCollections()">
-        <ion-icon class="collectionIcon" color="tertiary" slot="start" [name]="searchCollections ? 'checkbox' : 'square-outline'"></ion-icon>
+        <ion-icon class="collectionIcon" color="tertiary2" slot="start" [name]="searchCollections ? 'checkbox' : 'square-outline'"></ion-icon>
         Collections
-        <ion-icon class="collectionIcon" slot="end" [color]="searchCollections ? 'tertiary' : 'light'" name="nutrition"></ion-icon>
+        <ion-icon class="collectionIcon" slot="end" [color]="searchCollections ? 'tertiary2' : 'light'" name="nutrition"></ion-icon>
       </ion-item>
       <ion-item lines="none" *ngIf="searchCollections">
-        <ion-label>Collections</ion-label>
+        <ion-label>Search in</ion-label>
         <ion-select multiple="true" placeholder="Choose"  (ionChange)="toggleCollections($event)">
         <span *ngFor="let collectionItem of collectionsFetched">
         <ion-select-option value="{{collectionItem.name}}">{{collectionItem.name}}</ion-select-option>
@@ -351,8 +351,8 @@
       <ion-row>
         <ion-col size="3"></ion-col>
       <ion-col size="6" class="ion-text-center">
-        <ion-item color="tertiary" (click)="submit()" style="border-radius: 15px">
-          <ion-icon slot="start" color="light" name="search-sharp"></ion-icon>Search
+        <ion-item lines="none" color="tertiary2" (click)="submit()" style="border-radius: 15px">
+          <ion-icon slot="start" color="light" name="search-sharp"></ion-icon><ion-label color="light" text-wrap>Search</ion-label>
         </ion-item>
       </ion-col>
         <ion-col size="3"></ion-col>
@@ -363,8 +363,8 @@
       <ion-row>
         <ion-col size="3"></ion-col>
         <ion-col size="6" class="ion-text-center">
-          <ion-item color="light" disabled="" style="border-radius: 15px">
-            <ion-icon slot="start" color="medium" name="search-sharp"></ion-icon>Search
+          <ion-item lines="none" color="tertiary3" disabled="" style="border-radius: 15px">
+            <ion-icon slot="start" color="medium" name="search-sharp"></ion-icon><ion-label color="tertiary2" text-wrap>Search</ion-label>
           </ion-item>
         </ion-col>
         <ion-col size="3"></ion-col>
@@ -372,8 +372,8 @@
     </ion-grid>
 
     <ion-fab id="mic_animated" class="mic_animated" vertical="bottom" horizontal="end" slot="fixed">
-      <ion-fab-button *ngIf="voiceActiveSectionDisabled && !speaking" color="tertiary" (click)="startVoiceRecognition()" mode="ios">
-        <ion-icon name="mic-outline" mode="ios" style="font-size: 2em;"></ion-icon>
+      <ion-fab-button *ngIf="voiceActiveSectionDisabled && !speaking" color="tertiary2" (click)="startVoiceRecognition()" mode="ios">
+        <ion-icon name="mic-outline" mode="ios" style="font-size: 2em; color: #ffffff"></ion-icon>
       </ion-fab-button>
       <ion-fab-button *ngIf="!voiceActiveSectionDisabled && !speaking" color="danger" (click)="closeVoiceRecognition()" mode="ios">
         <ion-icon name="mic-outline" mode="ios" style="font-size: 2em;"></ion-icon>

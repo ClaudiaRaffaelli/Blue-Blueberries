@@ -16,7 +16,7 @@ export class PreferencesPage implements OnInit {
   desiredFood = [];
   unsavedChanges: boolean; // flag;
 
-  constructor(private router: Router, public storage: Storage) {
+  constructor(public storage: Storage) {
     this.ingredientsDic = new IngredientsDic();
     this.undesiredDic = new IngredientsDic().ingredients;
   }
