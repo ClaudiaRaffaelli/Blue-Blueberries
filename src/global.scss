@@ -28,7 +28,6 @@
 /* Works - pass "my-custom-class" in cssClass to increase specificity */
 
 .popOver {
-  max-height: 50%;
   ion-backdrop {
 
   }
@@ -37,8 +36,8 @@
 
     }
     .popover-content{
+      max-height: 50%;
       app-popover{
-
       }
     }
   }
