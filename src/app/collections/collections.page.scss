@@ -51,5 +51,20 @@ ion-slide ion-card {
 }
 
 ion-card{
-  margin: 8px !important;
+  margin: 16px !important;
+  border-radius: 12px;
+}
+
+.ion-color-mainDark{
+  --ion-color-base: var(--ion-color-mainDark);
+}
+.ion-color-mainMedium{
+  --ion-color-base: var(--ion-color-mainMedium);
+}
+.ion-color-mainLight{
+  --ion-color-base: var(--ion-color-mainLight);
+}
+
+*{
+  font-family: RobotoSlab;
 }

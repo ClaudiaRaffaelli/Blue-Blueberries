@@ -18,7 +18,11 @@ ion-icon{
   color: #FFFFFF;
 }
 
-ion-label, ion-select{
+ion-select{
+  color: #FFFFFF!important;
+}
+
+ion-item  ion-label{
   color: #FFFFFF!important;
 }
 

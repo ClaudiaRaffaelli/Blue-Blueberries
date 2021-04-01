@@ -1,41 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title color="mainDark" class="ion-text-center"><ion-label text-wrap><h1><b>My collections</b></h1></ion-label></ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content>
   <br>
   <ion-list class="ios list-ios hydrated">
-    <ion-item>
-      <ion-card>
+    <div>
+      <ion-card (click)="openCollection(favoriteCollection)">
+        <img src="{{favoriteCollection.coverPhoto}}"/>
         <ion-card-header>
-          <ion-card-title>{{favoriteCollection.name}}</ion-card-title>
+          <ion-label color="mainMedium"><h1><b>{{favoriteCollection.name}}</b></h1></ion-label>
         </ion-card-header>
-
-        <ion-card-content (click)="openCollection(favoriteCollection)">
-          <div class="card">
-            <img src="{{favoriteCollection.coverPhoto}}"/>
-          </div>
-          <br>
-          <div>
-            <ion-icon name="archive"></ion-icon> {{favoriteCollection.recipeNumber}} recipes
-          </div>
+        <ion-card-content>
+          <ion-label>
+            {{favoriteCollection.recipeNumber}} recipes
+          </ion-label>
         </ion-card-content>
       </ion-card>
-    </ion-item>
+    </div>
 
-    <ion-item *ngFor="let collectionItem of collections; let collectionIndex=index;" class="user-list">
-
+    <ion-list lines="none" *ngFor="let collectionItem of collections; let collectionIndex=index;"  class="user-list">
       <ion-item-sliding>
-        <ion-item>
-          <ion-card>
+        <ion-item color="">
+          <ion-card (click)="openCollection(collectionItem)" style="margin: 10px 0px 10px 0px!important;" color="">
+            <div class="card">
+              <img src="{{collectionItem.coverPhoto}}"/>
+            </div>
             <ion-card-header>
-              <ion-card-title>{{collectionItem.name}}</ion-card-title>
+              <ion-label color="mainMedium"><h1><b>{{collectionItem.name}}</b></h1></ion-label>
             </ion-card-header>
 
-            <ion-card-content (click)="openCollection(collectionItem)">
-              <div class="card">
-                <img src="{{collectionItem.coverPhoto}}"/>
-              </div>
-              <br>
-              <div>
-                <ion-icon name="archive"></ion-icon> {{collectionItem.recipeNumber}} recipes
-              </div>
+            <ion-card-content>
+              {{collectionItem.recipeNumber}} recipes
             </ion-card-content>
           </ion-card>
         </ion-item>
@@ -46,7 +44,7 @@
         </ion-item-options>
       </ion-item-sliding>
 
-    </ion-item>
+    </ion-list>
   </ion-list>
 
 

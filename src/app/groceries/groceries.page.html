@@ -1,10 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-grid color="secondary">
-      <ion-row class="ion-justify-content-between">
-        <ion-title class="ion-text-center" color="mainMedium"><h1><b>Grocery list</b></h1></ion-title>
-      </ion-row>
-    </ion-grid>
+    <ion-title class="ion-text-center" color="mainMedium"><ion-label text-wrap><h1><b>Grocery list</b></h1></ion-label></ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -25,7 +21,7 @@
 
     <div *ngFor="let ingredient of ingredients; let ingredientIndex=index">
       <ion-item lines="none">
-        <ion-label color="mainDark"><h2>{{ingredient.name.split("_").join(" ")}}</h2></ion-label>
+        <ion-label color="mainDark"><h1><b>{{ingredient.name.split("_").join(" ")}}</b></h1></ion-label>
       </ion-item>
         <ion-list lines="none" *ngFor="let recipeIngredient of ingredient.recipeList; let recipeIngredientIndex=index" >
           <ion-item>
