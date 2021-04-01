@@ -39,7 +39,7 @@
       <ion-label text-wrap>Undesired food</ion-label>
       <ion-select multiple="true" placeholder="Choose" (ionChange)="toggleUndesiredFood($event)" [value]="this.undesiredFood">
         <span *ngFor="let undesiredFood of undesiredDic | keyvalue">
-        <ion-select-option value="{{undesiredFood.key}}">{{undesiredFood.key}}</ion-select-option>
+        <ion-select-option value="{{undesiredFood.key}}">{{undesiredFood.key.split("_").join(" ")}}</ion-select-option>
         </span>
       </ion-select>
     </ion-item>
