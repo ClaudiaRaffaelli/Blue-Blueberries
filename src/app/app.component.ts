@@ -6,5 +6,17 @@ import { Component } from '@angular/core';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
+
+  overlayHidden: boolean = false;
+  slideOpts = {
+    initialSlide: 0,
+    speed: 400
+  };
+
   constructor() {}
+
+
+  public hideOverlay() {
+    this.overlayHidden = true;
+  }
 }

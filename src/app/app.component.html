@@ -1,5 +1,22 @@
 <ion-app>
   <ion-router-outlet></ion-router-outlet>
+  <!-- First time in app instructions -->
+  <div id="instruction-overlay" padding [hidden]="overlayHidden">
+    <ion-slides id="slides" pager=True [options]="slideOpts" >
+      <ion-slide>
+        <ion-label>Welcome!</ion-label>
+      </ion-slide>
+      <ion-slide>
+        <img src="assets/slides/search.gif">
+      </ion-slide>
+      <ion-slide>
+        <ion-label>
+          <ion-button full (click)="hideOverlay()">Got it!</ion-button>
+        </ion-label>
+      </ion-slide>
+    </ion-slides>
+  </div>
+
   <ion-tabs>
     <ion-tab-bar slot="bottom">
       <ion-tab-button routerLinkActive="tab-selected" routerLink="/presentation" class="ios" tab="presentation">

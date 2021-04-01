@@ -67,14 +67,6 @@ export class ViewRecipePage implements OnInit {
   voiceTextUser = '';
   speaking: boolean;
 
-  overlayHidden: boolean = false;
-
-  slideOpts = {
-    initialSlide: 1,
-    speed: 400
-  };
-
-  cartPosition: any;
 
   constructor(private aptService: RecipeItemService,
               private route: ActivatedRoute,
@@ -248,13 +240,6 @@ export class ViewRecipePage implements OnInit {
     if (this.data === undefined) {
       this.router.navigate(['home']);
     }
-
-    this.cartPosition = document.getElementById("groceryList").style.left;
-  }
-
-
-  public hideOverlay() {
-    this.overlayHidden = true;
   }
 
   async ionViewWillEnter(){
