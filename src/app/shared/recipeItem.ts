@@ -24,7 +24,7 @@ export class IngredientsDic{
     Rice: {selected: false, dose: 0, unit: 'grams'},
     Water: {selected: false, dose: 0, unit: 'liters'},
     Pasta: {selected: false, dose: 0, unit: 'grams'},
-    Garlic: {selected: false, dose: 0, unit: 'clove'},
+    Garlic: {selected: false, dose: 0, unit: 'cloves'},
     Basil: {selected: false, dose: 0, unit: 'as required'},
     Oil: {selected: false, dose: 0, unit: 'as required'},
     Salt: {selected: false, dose: 0, unit: 'as required'},
@@ -47,10 +47,27 @@ export class IngredientsDic{
     Golden_caster_sugar: {selected: false, dose: 0, unit: ''},
     Vanilla_Extract: {selected: false, dose: 0, unit: ''},
     Plain_flour: {selected: false, dose: 0, unit: ''},
-    Strawberry_jam: {selected: false, dose: 0, unit: ''}
+    Strawberry_jam: {selected: false, dose: 0, unit: ''},
+    Onion: {selected: false, dose: 0, unit: ''},
+    Vegetable_stock: {selected: false, dose: 0, unit: ''},
+    Tinned_tomato: {selected: false, dose: 0, unit: 'tins'},
+    Balsamic_vinegar: {selected: false, dose: 0, unit: ''},
+    Pepper: {selected: false, dose: 0, unit: 'as required'},
+    Avocado: {selected: false, dose: 0, unit: ''},
+    Lime: {selected: false, dose: 0, unit: ''},
+    Coriander: {selected: false, dose: 0, unit: ''},
+    Olive_oil: {selected: false, dose: 0, unit: 'tbsp'},
+    Carrot: {selected: false, dose: 0, unit: ''},
+    Red_wine: {selected: false, dose: 0, unit: 'ml'},
+    Mushroom_stock: {selected: false, dose: 0, unit: 'ml'},
+    Rosemary: {selected: false, dose: 0, unit: ''},
+    Bay_leaves: {selected: false, dose: 0, unit: ''},
+    Tomato_puree: {selected: false, dose: 0, unit: 'tbsp'},
+    Frozen_peas: {selected: false, dose: 0, unit: 'g'},
+    Soy_mince: {selected: false, dose: 0, unit: 'g'},
   };
 
   allergiesList = ['Crustaceans', 'Eggs', 'Dairy products', 'Peanuts', 'Soy', 'Wheat', 'Fish'];
-  desiredFoodList = ['Vegetarian', 'Vegan', 'Kosher', 'Celiac', 'Lactose free', 'Gluten free'];
+  desiredFoodList = ['Vegetarian', 'Vegan', 'Kosher', 'Lactose free', 'Gluten free'];
 }
 
