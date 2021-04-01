@@ -2,42 +2,42 @@
   <ion-toolbar>
     <ion-grid color="secondary">
       <ion-row class="ion-justify-content-between">
-        <ion-title>Grocery list</ion-title>
+        <ion-title class="ion-text-center" color="mainMedium"><h1><b>Grocery list</b></h1></ion-title>
       </ion-row>
     </ion-grid>
   </ion-toolbar>
 </ion-header>
 
 
-<ion-content color="light">
-    <ion-slides [options]="option" class="ion-margin-top">
+<ion-content mode="ios" color="">
+    <ion-slides [options]="option" class="" style="padding-bottom: 50px;">
       <ion-slide *ngFor="let recipeItem of recipesInGroceryList; let recipeIndex=index">
+        <ion-checkbox color="light" checked="true" style="position: absolute; left: 20px; top: 30px;" (click)="checkUncheckRecipe(recipeIndex)"></ion-checkbox>
+        <ion-icon (click)="deleteRecipe(recipeItem.$key)" color="danger" style="position: absolute; right: 5px; top: 10px; z-index: 10;" size = "large" name="close-circle"></ion-icon>
         <ion-card  class="myCard pickgradient">
-          <ion-checkbox color="primary" checked="true" style="position: absolute; left: +10px; top: +13px;" (click)="checkUncheckRecipe(recipeIndex)"></ion-checkbox>
           <img src="{{recipeItem.title_image}}" class="pickgradient" (click)="openRecipe(recipeItem)">
-          <ion-icon (click)="deleteRecipe(recipeItem.$key)" style="position: absolute; right: -10px; top: -15px;" size = "large" name="close-circle"></ion-icon>
-          <div class="myOverlay pick">
-            <div>{{ recipeItem.name }}</div>
-          </div>
         </ion-card>
+        <div class="myOverlay" style="color: rgb(91,135,163)!important;">
+          {{ recipeItem.name }}
+        </div>
       </ion-slide>
     </ion-slides>
 
     <div *ngFor="let ingredient of ingredients; let ingredientIndex=index">
-      <ion-item>
-        <ion-label><h2>{{ingredient.name.split("_").join(" ")}}</h2></ion-label>
+      <ion-item lines="none">
+        <ion-label color="mainDark"><h2>{{ingredient.name.split("_").join(" ")}}</h2></ion-label>
       </ion-item>
-        <ion-list *ngFor="let recipeIngredient of ingredient.recipeList; let recipeIngredientIndex=index" >
+        <ion-list lines="none" *ngFor="let recipeIngredient of ingredient.recipeList; let recipeIngredientIndex=index" >
           <ion-item>
-            <ion-label text-wrap *ngIf="recipeIngredient.checked" style="text-decoration: line-through; opacity: 0.5">
+            <ion-label class="ion-text-end" color="mainDark" text-wrap *ngIf="recipeIngredient.checked" style="text-decoration: line-through; opacity: 0.5">
               {{recipeIngredient.recipeName}} : {{recipeIngredient.quantity}} {{recipeIngredient.unity}}</ion-label>
-            <ion-label text-wrap *ngIf="!recipeIngredient.checked" style="text-decoration: none; opacity: 1">
+            <ion-label class="ion-text-end" text-wrap *ngIf="!recipeIngredient.checked" style="text-decoration: none; opacity: 1">
               {{recipeIngredient.recipeName}} : {{recipeIngredient.quantity}} {{recipeIngredient.unity}}</ion-label>
             <ion-checkbox *ngIf="recipeIngredient.checked" checked="true"
-                          style="text-decoration: line-through; opacity: 0.5" color="primary" type="checkbox"
+                          style="text-decoration: line-through; opacity: 0.5" color="mainDark" type="checkbox"
                           (click)="checkUncheckIngredient($event, recipeIngredient, ingredient)" ></ion-checkbox>
             <ion-checkbox *ngIf="!recipeIngredient.checked" checked="false"
-                          style="text-decoration: none; opacity: 1" color="primary" type="checkbox"
+                          style="text-decoration: none; opacity: 1" color="mainDark" type="checkbox"
                           (click)="checkUncheckIngredient($event, recipeIngredient, ingredient)" ></ion-checkbox>
           </ion-item>
         </ion-list>

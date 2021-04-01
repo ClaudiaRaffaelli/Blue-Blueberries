@@ -75,6 +75,14 @@ export class SearchRecipePage implements OnInit {
   voiceTextUser: string;
   assistantButtonColor = 'primary';
 
+  // Options for images slider
+  option = {
+    slidesPerView: 1.2,
+    centeredSlides: true,
+    loop: false,
+    spaceBetween: 1,
+  };
+
 
   constructor(private router: Router, public platform: Platform, private speechRecognition: SpeechRecognition,
               public ngZone: NgZone, private tts: TextToSpeech,
@@ -92,7 +100,7 @@ export class SearchRecipePage implements OnInit {
     this.mainIngredientsKeys = Object.keys(this.ingMain.ingredients);
     this.undesiredIngredientsKeys = Object.keys(this.ingUndesired.ingredients);
     this.searchKeyword = false;
-    this.searchAllIngredients = true;
+    this.searchAllIngredients = false;
     this.searchAvailableIngredients = true;
     this.showMainIngredients = false;
     this.searchUndesiredIngredients = false;
@@ -600,6 +608,9 @@ export class SearchRecipePage implements OnInit {
     }else if (this.voiceText.toLowerCase().includes('bye')){
       this.closeVoiceRecognition();
     }
+    else if (this.smallTalks(this.voiceText.toLowerCase())){
+      return;
+    }
     else{
       this.voiceText = 'Sorry, I didn\'t understand';
       this.speak(this.voiceText);
@@ -724,6 +735,25 @@ export class SearchRecipePage implements OnInit {
           delay: 0,
         })
         .applyTo(document.getElementsByClassName(id));
+  }
+
+  smallTalks(text: string){
+    if (text.includes('hello') || text.includes('hey')){
+      this.speak('Hey, what\'s up?');
+      return true;
+    }
+    if (text.includes('How are you')){
+      this.speak('I\'m fine, thanks for asking');
+      return true;
+    }
+    if (text.includes('who are you') || text.includes('what are you') || text.includes('what\'s your name')){
+      this.speak('I\'m Cindy, your personal assistant');
+      return true;
+    }
+    if (text.includes('what can you do') || text.includes('what can i do') || text.includes('help')){
+      this.speak('Try telling me your available ingredients with the command "I have". For example. "I have milk. eggs. and water."');
+      return true;
+    }
   }
 }
 

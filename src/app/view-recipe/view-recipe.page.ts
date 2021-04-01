@@ -523,6 +523,8 @@ export class ViewRecipePage implements OnInit {
       } else {
         this.speak('Sorry, it isn\'t in grocery list');
       }
+    }else if (this.smallTalks(this.voiceText.toLowerCase())){
+      return;
     }
     else{
       this.speak('Sorry, I didn\'t understand');
@@ -556,6 +558,25 @@ export class ViewRecipePage implements OnInit {
       }else{
         this.speak('Sorry, this recipe is not in your favorites');
       }
+    }
+  }
+
+  smallTalks(text: string){
+    if (text.includes('hello') || text.includes('hey')){
+      this.speak('Hey, what\'s up?');
+      return true;
+    }
+    if (text.includes('How are you')){
+      this.speak('I\'m fine, thanks for asking');
+      return true;
+    }
+    if (text.includes('who are you') || text.includes('what are you') || text.includes('what\'s your name')){
+      this.speak('I\'m Cindy, your personal assistant');
+      return true;
+    }
+    if (text.includes('what can you do') || text.includes('what can i do') || text.includes('help')){
+      this.speak('Try usging commands like: "set time of 60 minutes", "add to favorites", "add to grocery list" or "go to step four"');
+      return true;
     }
   }
 }

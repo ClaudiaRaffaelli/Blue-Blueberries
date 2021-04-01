@@ -1,22 +1,22 @@
 <ion-content mode="ios" forceOverscroll="true">
 <br>
     <ion-card class="desiredIcon">
-      <ion-item class="desiredIcon" lines="none" color="" (click)="toggleSearchAllIngredients()">
-        <ion-icon class="desiredIcon" [color]="searchAllIngredients ? 'mainLight' : 'mainLight'" mode="md" slot="start" [name]="searchAllIngredients ? 'checkbox' : 'square-outline'"></ion-icon>
-        <ion-label text-wrap><h1>Desired ingredients</h1></ion-label>
-        <ion-icon class="desiredIcon" slot="end" [color]="searchAllIngredients ? 'mainLight' : 'light'" [name]="searchAllIngredients ? 'thumbs-up' : ''"></ion-icon>
+      <ion-item class="desiredIcon"  color="mainDark" lines="none" (click)="toggleSearchAllIngredients()">
+        <ion-icon class="desiredIcon" [color]="searchAllIngredients ? 'light' : 'light'" mode="md" slot="start" [name]="searchAllIngredients ? 'checkbox' : 'square-outline'"></ion-icon>
+        <ion-label color="light" text-wrap><h1>Desired ingredients</h1></ion-label>
+        <ion-icon class="desiredIcon" slot="end" [color]="searchAllIngredients ? 'light' : 'mainDark'" [name]="searchAllIngredients ? 'thumbs-up' : ''"></ion-icon>
       </ion-item>
-      <ion-toolbar *ngIf="searchAllIngredients">
-        <ion-segment (ionChange)="allIngredientsChanged($event)" value="availableIngredients" color="primary">
+      <ion-toolbar style="padding-top: 10px!important;" *ngIf="searchAllIngredients">
+        <ion-segment (ionChange)="allIngredientsChanged($event)" value="availableIngredients" color="tertiary">
           <ion-segment-button value="availableIngredients">
             <span text-wrap>
-              <ion-icon size="large" [color]="searchAvailableIngredients ? 'mainLight' : 'medium'" name="nutrition"></ion-icon>
+              <ion-icon size="large" [color]="searchAvailableIngredients ? 'mainDark' : 'medium'" name="nutrition"></ion-icon>
             </span>
           </ion-segment-button>
           <ion-segment-button value="mainIngredients">
             <span text-wrap>
             <ion-icon color="medium" name="egg"></ion-icon>
-            <ion-icon size="large" [color]="searchMainIngredients ? 'mainLight' : 'medium'" name="nutrition"></ion-icon>
+            <ion-icon size="large" [color]="searchMainIngredients ? 'mainDark' : 'medium'" name="nutrition"></ion-icon>
             <ion-icon color="medium" name="fish"></ion-icon>
           </span>
           </ion-segment-button>
@@ -35,7 +35,7 @@
           <ion-row class="ion-align-items-center">
             <ion-col size="1"></ion-col>
             <ion-col size="10" class="ion-text-center" style="font-size: 12px;">
-              <ion-icon name="mic-outline" color="primary"></ion-icon> "<b>I have</b> eggs, milk, ..." <br>
+              <ion-icon name="mic-outline" color="mainMedium"></ion-icon> "<b>I have</b> eggs, milk, ..." <br>
               <!--<ion-button shape="round" color="secondary" (click)="speakIngredients('available')"><ion-icon name="mic-outline"></ion-icon></ion-button>-->
             </ion-col>
             <ion-col size="1"></ion-col>
@@ -83,7 +83,7 @@
           <ion-row class="ion-align-items-center">
             <ion-col size="1"></ion-col>
             <ion-col size="10" class="ion-text-center" style="font-size: 12px;">
-              <ion-icon name="mic-outline" color="primary"></ion-icon> "<b>I like</b> rice, butter, ..." <br>
+              <ion-icon name="mic-outline" color="mainMedium"></ion-icon> "<b>I like</b> rice, butter, ..." <br>
               <!--<ion-button shape="round" color="secondary" (click)="speakIngredients('available')"><ion-icon name="mic-outline"></ion-icon></ion-button>-->
             </ion-col>
             <ion-col size="1"></ion-col>
@@ -120,21 +120,11 @@
     </ion-card>
 
     <b><div style="width: 100%; text-align: center;">Advanced filters</div></b>
-      <!-- SEARCH BY NAME -->
-      <div class="keywordIcon">
-        <ion-item lines="none" color="" (click)="toggleSearchKeyword()">
-          <ion-icon class="desiredIcon" color="mainLight" slot="start" [name]="searchKeyword ? 'checkbox' : 'square-outline'"></ion-icon>
-          Keyword
-          <ion-icon class="maxTimeIcon" slot="end" [color]="searchKeyword ? 'mainLight' : 'light'" name="key"></ion-icon>
-        </ion-item>
-        <ion-searchbar *ngIf="searchKeyword" (ionChange)="onChangeName($event)" debounce="250" animated placeholder="Cake, pasta, ..." [value]="queryRecipeName">
-        </ion-searchbar>
-      </div>
       <!-- MAX TIME REQUIRED -->
       <div class="maxTimeIcon">
         <ion-item class="maxTimeIcon" lines="none" color="" (click)="toggleRequiredTime()">
           <ion-icon class="maxTimeIcon" color="mainLight" slot="start" [name]="searchRequiredTime ? 'checkbox' : 'square-outline'"></ion-icon>
-          Max time required
+          Time required
           <ion-icon class="maxTimeIcon" slot="end" [color]="searchRequiredTime ? 'mainLight' : 'light'" name="stopwatch"></ion-icon>
         </ion-item>
         <ion-list *ngIf="searchRequiredTime" lines="none">
@@ -149,7 +139,7 @@
           <ion-row class="ion-align-items-center">
             <ion-col size="1"></ion-col>
             <ion-col size="10" class="ion-text-center" style="font-size: 12px;">
-              <ion-icon name="mic-outline" color="primary"></ion-icon> "<b>Set timer</b> to 40 <b>minutes</b>" <br>
+              <ion-icon name="mic-outline" color="mainMedium"></ion-icon> "<b>Set timer</b> to 40 <b>minutes</b>" <br>
             </ion-col>
             <ion-col size="1"></ion-col>
           </ion-row>
@@ -172,7 +162,7 @@
           <ion-row class="ion-align-items-center">
             <ion-col size="1"></ion-col>
             <ion-col size="10" class="ion-text-center" style="font-size: 12px;">
-              <ion-icon name="mic-outline" color="primary"></ion-icon>"<b>I don't want</b> butter, lemons, ..."
+              <ion-icon name="mic-outline" color="mainMedium"></ion-icon>"<b>I don't want</b> butter, lemons, ..."
               <!--<ion-button shape="round" color="secondary" (click)="speakIngredients('undesired')"><ion-icon name="mic-outline"></ion-icon></ion-button>-->
             </ion-col>
             <ion-col size="1"></ion-col>
@@ -229,14 +219,23 @@
           <ion-row class="ion-align-items-center">
             <ion-col size="1"></ion-col>
             <ion-col size="10" class="ion-text-center" style="font-size: 12px;">
-              <ion-icon name="mic-outline" color="primary"></ion-icon> "<b>Set difficulty</b> to <b>medium</b>" <br>
+              <ion-icon name="mic-outline" color="mainMedium"></ion-icon> "<b>Set difficulty</b> to <b>medium</b>" <br>
             </ion-col>
             <ion-col size="1"></ion-col>
           </ion-row>
           <ion-row><ion-col size="12"></ion-col></ion-row>
         </ion-grid>
       </div>
-
+    <!-- SEARCH BY NAME -->
+    <div class="keywordIcon">
+      <ion-item lines="none" color="" (click)="toggleSearchKeyword()">
+        <ion-icon class="desiredIcon" color="mainLight" slot="start" [name]="searchKeyword ? 'checkbox' : 'square-outline'"></ion-icon>
+        Keyword
+        <ion-icon class="maxTimeIcon" slot="end" [color]="searchKeyword ? 'mainLight' : 'light'" name="key"></ion-icon>
+      </ion-item>
+      <ion-searchbar *ngIf="searchKeyword" (ionChange)="onChangeName($event)" debounce="250" animated placeholder="Cake, pasta, ..." [value]="queryRecipeName">
+      </ion-searchbar>
+    </div>
     <!-- COLLECTIONS -->
     <div class="collectionIcon">
       <ion-item class="collectionIcon" lines="none" color="" (click)="toggleSearchCollections()">
@@ -258,7 +257,7 @@
 
 
 <br><br>
-      <ion-card id="summary_animated" style="margin: 16px !important;">
+      <ion-card id="summary_animated" style="margin: 16px !important;" *ngIf="searchDifficulty || searchUndesiredIngredients || searchRequiredTime || queryRecipeName != '' || searchAllIngredients || searchCollections">
         <ion-card-header>
           <ion-item lines="none"><ion-icon slot="start" size="large" color="mainMedium" name="reader-outline"></ion-icon><h1>Summary</h1></ion-item>
         </ion-card-header>
@@ -351,7 +350,7 @@
     <ion-row>
       <ion-col size="3"></ion-col>
       <ion-col size="6" class="ion-text-center">
-        <ion-item lines="none" color="mainDark" (click)="submit()" style="border-radius: 15px">
+        <ion-item lines="none" color="mainDark" (click)="submit()" style="border-radius: 12px">
           <ion-icon slot="start" color="light" name="search-sharp"></ion-icon>
           <ion-label color="light" text-wrap>Search</ion-label>
         </ion-item>

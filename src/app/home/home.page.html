@@ -5,14 +5,15 @@
         <ion-buttons>
           <ion-back-button defaultHref="{{this.lastPage}}" text="" color="mainDark" icon="chevron-back-outline"></ion-back-button>
         </ion-buttons>
-          <ion-title color="mainDark"><ion-label text-wrap>{{titlePage}}</ion-label></ion-title>
+          <ion-title *ngIf="titlePage" color="mainDark"><ion-label text-wrap>{{titlePage}}</ion-label></ion-title>
+          <ion-title *ngIf="!titlePage" color="mainDark"><ion-label text-wrap><h1><b>Recipes</b></h1></ion-label></ion-title>
       </ion-row>
     </ion-grid>
   </ion-toolbar>
 </ion-header>
 
 <ion-content style="color: #FFFFFF;">
-    <div style="color: rgb(38,75,120)!important; padding: 0px 0px 0px 20px;"><h1><b>Recipes</b></h1></div>
+    <div style="color: rgb(38,75,120)!important; padding: 0px 0px 0px 20px;"></div>
 
     <div style="margin: 0px !important; padding: 0px!important;">
 

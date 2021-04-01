@@ -5,7 +5,6 @@
     <ion-slide *ngFor="let recipeItem of suggestedRecipes">
       <ion-card (click)="openRecipe(recipeItem)" class="myCard pickgradient">
           <img src="{{recipeItem.title_image}}" class="pickgradient">
-
       </ion-card>
       <div class="myOverlay" style="color: rgb(91,135,163)!important;">
         {{ recipeItem.name }}

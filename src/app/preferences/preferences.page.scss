@@ -4,3 +4,28 @@
 .ion-color-tertiary3{
   --ion-color-base: var(--ion-color-tertiary3) !important;
 }
+.ion-color-mainDark{
+  --ion-color-base: var(--ion-color-mainDark);
+}
+.ion-color-mainMedium{
+  --ion-color-base: var(--ion-color-mainMedium);
+}
+.ion-color-mainLight{
+  --ion-color-base: var(--ion-color-mainLight);
+}
+
+ion-icon{
+  color: #FFFFFF;
+}
+
+ion-label, ion-select{
+  color: #FFFFFF!important;
+}
+
+ion-card{
+  border-radius: 12px;
+}
+
+*{
+  font-family: RobotoSlab;
+}
