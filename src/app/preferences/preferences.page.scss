@@ -1,4 +1,6 @@
-ion-card{
-  border-radius: 12px;
-  margin: 15px !important;
+.ion-color-tertiary2{
+  --ion-color-base: var(--ion-color-tertiary2) !important;
+}
+.ion-color-tertiary3{
+  --ion-color-base: var(--ion-color-tertiary3) !important;
 }

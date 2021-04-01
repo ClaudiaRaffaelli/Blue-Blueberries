@@ -72,5 +72,18 @@ ion-slide ion-card {
   transition: 400ms all ease-in-out;
 }
 
+*{
+  font-family: RobotoSlab;
+}
+
+.ion-color-mainDark{
+  --ion-color-base: var(--ion-color-mainDark);
+}
+.ion-color-mainMedium{
+  --ion-color-base: var(--ion-color-mainMedium);
+}
+.ion-color-mainLight{
+  --ion-color-base: var(--ion-color-mainLight);
+}
 
 

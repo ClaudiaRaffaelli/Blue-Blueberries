@@ -71,7 +71,7 @@ hr.solid {
 #summary_animated {
   display: block;
   box-shadow: 0 0 0 rgb(199, 0, 255);
-  animation: pulse 1s;
+  animation: pulse 3s;
 }
 
 @-webkit-keyframes pulse {
@@ -120,4 +120,14 @@ hr.solid {
 }
 .ion-color-tertiary3{
   --ion-color-base: var(--ion-color-tertiary3);
+}
+
+.ion-color-mainDark{
+  --ion-color-base: var(--ion-color-mainDark);
+}
+.ion-color-mainMedium{
+  --ion-color-base: var(--ion-color-mainMedium);
+}
+.ion-color-mainLight{
+  --ion-color-base: var(--ion-color-mainLight);
 }

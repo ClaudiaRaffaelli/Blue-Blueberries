@@ -278,12 +278,16 @@ export class SearchRecipePage implements OnInit {
     this.queryRecipeName = '';
   }
 
+  clear(){
+
+  }
+
   toggleSearchKeyword(){
     this.searchKeyword = !this.searchKeyword;
     if (this.searchKeyword){
-      this.bounce('keywordIcon', 1.1);
+      this.bounce('keywordIcon', 1.05);
     }else{
-      this.bounce('keywordIcon', 0.9);
+      this.bounce('keywordIcon', 0.955);
     }
     this.resetSearchBars();
   }
@@ -322,9 +326,9 @@ export class SearchRecipePage implements OnInit {
       this.reset_pulse_animation('mic_animated');
     }
     if (this.searchAllIngredients){
-      this.bounce('desiredIcon', 1.1);
+      this.bounce('desiredIcon', 1.05);
     }else{
-      this.bounce('desiredIcon', 0.9);
+      this.bounce('desiredIcon', 0.95);
     }
     this.resetSearchBars();
   }
@@ -347,9 +351,9 @@ export class SearchRecipePage implements OnInit {
       this.reset_pulse_animation('mic_animated');
     }
     if (this.searchUndesiredIngredients){
-      this.bounce('undesiredIcon', 1.1);
+      this.bounce('undesiredIcon', 1.05);
     }else{
-      this.bounce('undesiredIcon', 0.9);
+      this.bounce('undesiredIcon', 0.95);
     }
     this.resetSearchBars();
   }
@@ -361,9 +365,9 @@ export class SearchRecipePage implements OnInit {
       this.reset_pulse_animation('mic_animated');
     }
     if (this.searchDifficulty){
-      this.bounce('difficultyIcon', 1.1);
+      this.bounce('difficultyIcon', 1.05);
     }else{
-      this.bounce('difficultyIcon', 0.9);
+      this.bounce('difficultyIcon', 0.95);
     }
     this.resetSearchBars();
   }
@@ -375,9 +379,9 @@ export class SearchRecipePage implements OnInit {
   toggleSearchCollections(){
     this.searchCollections = !this.searchCollections;
     if (this.searchCollections){
-      this.bounce('collectionIcon', 1.1);
+      this.bounce('collectionIcon', 1.05);
     }else{
-      this.bounce('collectionIcon', 0.9);
+      this.bounce('collectionIcon', 0.95);
     }
     this.resetSearchBars();
   }
@@ -393,9 +397,9 @@ export class SearchRecipePage implements OnInit {
       this.reset_pulse_animation('mic_animated');
     }
     if (this.searchRequiredTime){
-      this.bounce('maxTimeIcon', 1.1);
+      this.bounce('maxTimeIcon', 1.05);
     }else{
-      this.bounce('maxTimeIcon', 0.9);
+      this.bounce('maxTimeIcon', 0.95);
     }
   }
 
@@ -516,7 +520,7 @@ export class SearchRecipePage implements OnInit {
   }
 
   startVoiceRecognition(): void {
-    this.bounce('mic_animated', 1.1);
+    this.bounce('mic_animated', 1.05);
     if (annyang) {
       this.voiceActiveSectionDisabled = false;
       annyang.start({ autoRestart: false });
@@ -716,7 +720,7 @@ export class SearchRecipePage implements OnInit {
           from: {x: 1, y: 1},
           to: {x: end, y: end},
           easing: 'sway',
-          duration: 1000,
+          duration: 500,
           delay: 0,
         })
         .applyTo(document.getElementsByClassName(id));

@@ -1,36 +1,30 @@
 <ion-content *ngIf="dataFetched" color="light" fullscreen="true">
   <ion-card style="margin: 0px !important; padding: 10px;">
-    <ion-label color="dark"><br><br><h1><b>Picks for you</b></h1></ion-label>
-  <ion-slides [options]="option" class="" style="height: 300px; margin-top: -30px!important;">
+    <ion-label color="mainDark"><br><br><h1><b>Picks for you</b></h1></ion-label>
+  <ion-slides [options]="option" class="" style="height: 300px; margin-top: -60px!important; margin-bottom: -50px!important;">
     <ion-slide *ngFor="let recipeItem of suggestedRecipes">
       <ion-card (click)="openRecipe(recipeItem)" class="myCard pickgradient">
           <img src="{{recipeItem.title_image}}" class="pickgradient">
 
       </ion-card>
-      <div class="myOverlay pick">
+      <div class="myOverlay" style="color: rgb(91,135,163)!important;">
         {{ recipeItem.name }}
       </div>
     </ion-slide>
   </ion-slides>
 
   <!--  Now we display the fixed collections -->
-    <ion-label color="dark"><br><br><h1><b>Our collections</b></h1></ion-label>
-    <ion-list lines="none" class="" style="padding-top: 15% !important;">
-      <ion-item *ngFor="let collectionItem of collections" class="user-list" style="margin: 0px!important;">
+    <ion-label color="mainDark" style="margin-top: -60px!important;"><br><br><h1><b>Our collections</b></h1></ion-label>
+    <ion-list lines="none" class="" style="padding-top: 0% !important;" *ngFor="let collectionItem of collections">
         <ion-card style="border-radius: 15px; margin: 5px !important;" (click)="openCollection(collectionItem)">
           <div class="card" disabled="true">
             <img [src]="collectionItem.coverImage"/>
           </div>
           <ion-card-header (click)="openCollection(collectionItem)">
-            <ion-card-title>{{collectionItem.name}}</ion-card-title>
+              <ion-card-title color="mainMedium"><h1><b>{{collectionItem.name}}</b></h1></ion-card-title>
+              <ion-icon slot="start" color="tertiary" name="archive"></ion-icon> <ion-label>{{collectionItem.numberOfRecipes}} recipes</ion-label>
           </ion-card-header>
-          <ion-card-content (click)="openCollection(collectionItem)">
-            <div>
-              <ion-icon name="archive"></ion-icon> {{collectionItem.numberOfRecipes}} recipes
-            </div>
-          </ion-card-content>
         </ion-card>
-      </ion-item>
     </ion-list>
   </ion-card>
 </ion-content>

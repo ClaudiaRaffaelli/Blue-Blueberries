@@ -64,8 +64,18 @@ img{
   text-align: center;
   position: absolute;
   z-index: 1;
-  bottom: -10px;
+  bottom: 12px;
   color: black;
   font-weight: bold;
-  background: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.0);
+}
+
+.ion-color-mainDark{
+  --ion-color-base: var(--ion-color-mainDark);
+}
+.ion-color-mainMedium{
+  --ion-color-base: var(--ion-color-mainMedium);
+}
+.ion-color-mainLight{
+  --ion-color-base: var(--ion-color-mainLight);
 }

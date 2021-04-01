@@ -4,9 +4,19 @@
 }
 
 ion-tab-bar{
-  --ion-background-color: #4860b3;
+  --ion-background-color: #ffffff;
 }
 
 ion-icon{
-  color: #d9e2ff;
+  color: var(--ion-color-mainMedium);
+}
+
+.ion-color-mainDark{
+  --ion-color-base: var(--ion-color-mainDark);
+}
+.ion-color-mainMedium{
+  --ion-color-base: var(--ion-color-mainMedium);
+}
+.ion-color-mainLight{
+  --ion-color-base: var(--ion-color-mainLight);
 }
