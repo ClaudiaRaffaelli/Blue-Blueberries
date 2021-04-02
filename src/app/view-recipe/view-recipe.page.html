@@ -1,39 +1,39 @@
 
 <!-- Default back button -->
 <ion-header>
-  <ion-toolbar color="light">
-    <ion-grid color="secondary">
+  <ion-toolbar color="">
+    <ion-grid color="">
       <ion-row class="ion-justify-content-between">
         <ion-buttons>
-          <ion-back-button defaultHref="{{this.lastPage}}" text="" icon="chevron-back-outline"></ion-back-button>
+          <ion-back-button color="mainMedium" defaultHref="{{this.lastPage}}" text="" icon="chevron-back-outline"></ion-back-button>
         </ion-buttons>
 
         <ion-buttons color="light" style="position: absolute; right: +40px; top: +13px;">
           <ion-button (click)="addRemoveCart(data.$key)">
-            <ion-icon id="groceryList" size = "large" [name] = "isInGroceryList ? 'cart' : 'cart-outline'" (click)="addRemoveCart(data.$key)" color="primary"></ion-icon>
+            <ion-icon id="groceryList" size = "large" [name] = "isInGroceryList ? 'cart' : 'cart-outline'" (click)="addRemoveCart(data.$key)" color="mainMedium"></ion-icon>
             <ion-badge id="groceryBadge" color="danger" style="position: absolute; right: -5px; top: 0px; font-size: 0.8em; --padding-start: 5px;--padding-end: 5px; --padding-top: 2px; --padding-bottom: 2px">{{ recipeNumberInCart }}</ion-badge>
           </ion-button>
 
           <ion-icon id="presentPopover" size = "large" [name] = "isInAnyCollection ? 'heart' : 'heart-outline'" (click)="presentPopover($event, data.$key)" color="danger"></ion-icon>
-          <ion-icon id="timer" (click)="toggleTimer()" name="stopwatch-outline" size="large" [color]="timerState === 'start' ? 'success' : 'tertiary'"></ion-icon>
+          <ion-icon id="timer" (click)="toggleTimer()" name="stopwatch-outline" size="large" [color]="timerState === 'start' ? 'mainMedium' : 'mainMedium'"></ion-icon>
         </ion-buttons>
       </ion-row>
 
-      <ion-row class="ion-justify-content-center" *ngIf="timerToggle && timerState === 'start'">
-        <ion-item lines="none" color="light">
-          <ion-chip color="success">
-            <ion-icon id="timerPlay" (click)="startTimer()" *ngIf="timerState === 'stop'" size="large" color="success" name="play-circle-outline"></ion-icon>
+      <ion-row class="ion-justify-content-center" *ngIf="timerToggle && timerState === 'start'" style="color: #FFFFFF">
+        <ion-item lines="none" style="--ion-background-color: #FFFFFF">
+          <ion-chip color="primary-contrast">
+            <ion-icon id="timerPlay" (click)="startTimer()" *ngIf="timerState === 'stop'" size="large" color="mainDark" name="play-circle-outline"></ion-icon>
             <ion-icon id="timerStop" (click)="stopTimer()" *ngIf="timerState === 'start'" size="large" color="danger" name="stop-outline"></ion-icon>
-            <ion-label [color]="timerState === 'start' ? 'success' : 'medium'"> {{time | async}}</ion-label>
+            <ion-label [color]="timerState === 'start' ? 'mainDark' : 'mainDark'"> <h2>{{time | async}}</h2></ion-label>
           </ion-chip>
         </ion-item>
       </ion-row>
 
-      <ion-row class="ion-justify-content-center" *ngIf="timerToggle && timerState === 'stop'">
-          <ion-chip color="tertiary">
-            <ion-icon name="play-circle-outline" size="large"></ion-icon>
-            <ion-label>
-              <ion-datetime mode="md" (ionChange)="setTimer($event)" displayFormat="HH:mm" pickerFormat="HH mm" value="00:00"></ion-datetime>
+      <ion-row style="color: #FFFFFF" class="ion-justify-content-center" *ngIf="timerToggle && timerState === 'stop'">
+          <ion-chip lines="none" color="primary-contrast">
+            <ion-icon name="play-circle-outline" color="mainDark" size="large"></ion-icon>
+            <ion-label color="mainDark">
+              <ion-datetime style="padding: 0!important; margin: 0!important;" mode="md" (ionChange)="setTimer($event)" displayFormat="HH:mm" pickerFormat="HH mm" value="00:00"></ion-datetime>
             </ion-label>
           </ion-chip>
       </ion-row>
@@ -49,18 +49,18 @@
     <img id="titleImage" src="{{this.recipeImages[this.data.$key + '_' + (this.currentImg)]}}"/>
   </div>
   <ion-card style="border-radius: 15px; margin-top: -70px">
-    <ion-card-header color="light">
-      <ion-card-title>{{data.name}}</ion-card-title>
+    <ion-card-header color="mainDark">
+      <ion-card-title><ion-label text-wrap color="light">{{data.name}}</ion-label></ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-list lines="none">
-        <ion-item><ion-icon slot="start" color="primary" name="restaurant-outline" ></ion-icon><span>Ready in: </span> <span> <b>{{data.recipeTime}} mins</b></span></ion-item>
-        <ion-item><ion-icon slot="start" [color]="difficultyColor" name="flame-outline"></ion-icon> <span>Difficulty: </span> <span><b>{{data.recipeDifficulty}}</b> </span></ion-item>
+        <ion-item><ion-icon slot="start" color="primary" name="restaurant-outline" ></ion-icon><span>Ready in: {{data.recipeTime}} mins</span></ion-item>
+        <ion-item><ion-icon slot="start" [color]="difficultyColor" name="flame-outline"></ion-icon> <span>Difficulty: {{data.recipeDifficulty}} </span></ion-item>
         <ion-item *ngIf="data.videoUrl !== ''" href="{{data.videoUrl}}"><ion-icon slot="start" color="danger" name="logo-youtube"></ion-icon> Video available </ion-item>
       </ion-list>
     </ion-card-content>
-    <ion-card-header>
-      <h1><ion-icon color="tertiary" name="reader-outline"></ion-icon> Ingredients</h1>
+    <ion-card-header class="ion-text-center">
+      <ion-icon size="large" color="mainDark" name="reader-outline"></ion-icon> <ion-label text-wrap color="dark"><h1>Ingredients</h1></ion-label>
     </ion-card-header>
     <ion-card-content>
       <ul *ngFor="let ingredient of data.ingredients | keyvalue">
@@ -75,8 +75,8 @@
   </div>
 
   <ion-fab id="mic_animated" vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button *ngIf="voiceActiveSectionDisabled && !speaking" color="tertiary" (click)="startVoiceRecognition()" mode="ios">
-      <ion-icon name="mic-outline" mode="ios" style="font-size: 2em;"></ion-icon>
+    <ion-fab-button *ngIf="voiceActiveSectionDisabled && !speaking" color="mainDark" (click)="startVoiceRecognition()" mode="ios">
+      <ion-icon name="mic-outline" mode="ios" style="font-size: 2em; color: #ffffff"></ion-icon>
     </ion-fab-button>
     <ion-fab-button *ngIf="!voiceActiveSectionDisabled && !speaking" color="danger" (click)="closeVoiceRecognition()" mode="ios">
       <ion-icon name="mic-outline" mode="ios" style="font-size: 2em;"></ion-icon>
@@ -85,32 +85,5 @@
       <ion-icon name="mic-outline" mode="ios" style="font-size: 2em;"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-
-  <div *ngIf="voiceActiveSectionDisabled; else voicesection;">
-    <button type=”button” (click)="startVoiceRecognition()">Record</button>
-  </div>
-  <ng-template #voicesection>
-    <ng-container *ngIf="!voiceActiveSectionError; else failure">
-      <ng-container *ngIf="voiceText; else start">
-        <span>{{voiceText}}</span>
-      </ng-container>
-      <ng-template #start>
-        <ng-container *ngIf="voiceActiveSectionListening; else beginning">
-          <span>Listening…</span>
-        </ng-container>
-        <ng-template #beginning>
-          <span>Start talking…</span>
-        </ng-template>
-      </ng-template>
-    </ng-container>
-    <ng-template #failure>
-      <span>Didn’t catch that</span>
-    </ng-template>
-    <div>
-      <button (click)="closeVoiceRecognition()">Close</button>
-      <button (click)="startVoiceRecognition()">Restart</button>
-    </div>
-  </ng-template>
-
 </ion-content>
 

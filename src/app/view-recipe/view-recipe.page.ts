@@ -128,7 +128,7 @@ export class ViewRecipePage implements OnInit {
         this.recipeImages = {};
 
         // set difficulty icon's color
-        switch (this.data.recipeDifficulty) {
+        switch (this.data.recipeDifficulty.toLowerCase()) {
           case 'easy':
             this.difficultyColor = 'success';
             break;
@@ -166,12 +166,12 @@ export class ViewRecipePage implements OnInit {
           const ionDownIconButton = document.createElement('ion-icon');
           ionDownIconButton.setAttribute('name', 'chevron-down-circle-sharp');
           ionDownIconButton.setAttribute('size', 'large');
-          ionDownIconButton.setAttribute('color', 'tertiary');
+          ionDownIconButton.setAttribute('color', 'mainLight');
           ionDownIconButton.addEventListener('click', () => { this.ScrollToPoint('step ' + (j + 2)); });
           const ionUpIconButton = document.createElement('ion-icon');
           ionUpIconButton.setAttribute('name', 'chevron-up-circle-sharp');
           ionUpIconButton.setAttribute('size', 'large');
-          ionUpIconButton.setAttribute('color', 'tertiary');
+          ionUpIconButton.setAttribute('color', 'mainLight');
           ionUpIconButton.addEventListener('click', () => { this.ScrollToPoint('step ' + j); });
 
           const ionGrid = document.createElement('ion-grid');
@@ -197,7 +197,7 @@ export class ViewRecipePage implements OnInit {
           ionRow.appendChild(ionColUp);
           ionGrid.appendChild(ionRow);
           ionCardHeader.appendChild(ionGrid);
-          ionCardHeader.setAttribute('color', 'light');
+          ionCardHeader.setAttribute('style', 'color: #225A8F!important;');
 
           const ionCardContent = document.createElement('ion-card-content');
           // @ts-ignore
@@ -216,7 +216,8 @@ export class ViewRecipePage implements OnInit {
               const imgCard = document.createElement('ion-card');
               imgCard.className = 'recipeImageCard';
               const img = document.createElement('img'); // to do so create the tag <img>
-              img.className = 'recipeImage';
+              // img.className = 'recipeImage';
+              img.setAttribute('style', 'transform: scale(1.1, 1.1);');
 
               urlSrc = await this.getNextImage(); // get next image's url
               img.setAttribute('src', urlSrc); // set the src attribute
