@@ -104,10 +104,6 @@ export class ViewRecipePage implements OnInit {
 
         this.lastPage = this.router.getCurrentNavigation().extras.state.lastPage;
 
-        // find out if the recipe is in the grocery list and display a different icon accordingly
-        groceriesService.getGroceryList().then(groceryList => {
-          this.isInGroceryList = !!groceryList.includes(this.data.$key);
-        });
 
         // getting the Favorites collection
         this.localDBService.getCollectionItem('Favorites').then(async res => {
@@ -237,7 +233,11 @@ export class ViewRecipePage implements OnInit {
     });
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    // find out if the recipe is in the grocery list and display a different icon accordingly
+    await this.groceriesService.getGroceryList().then(async groceryList => {
+      this.isInGroceryList = !!groceryList.includes(this.data.$key);
+    });
   }
 
 

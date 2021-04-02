@@ -12,7 +12,10 @@ export class AppComponent {
   overlayHidden: boolean = true;
   slideOpts = {
     initialSlide: 0,
-    speed: 400
+    speed: 400,
+    centeredSlides: true,
+    loop: false,
+    spaceBetween: 1,
   };
 
   constructor(private storage: Storage,
@@ -58,6 +61,7 @@ export class AppComponent {
         this.storage.set("FirstTime", JSON.stringify(false));
         return true;
       }else{
+          await this.storage.remove("FirstTime")
           return false;
       }
     });
