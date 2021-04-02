@@ -24,10 +24,11 @@
   </ion-list>
 <!--   no more than 15 custom collections allowed-->
   <ion-item *ngIf="collectionsNames.length<15">
-    <ion-input (keyup.enter)="eventHandlerInputText()" [(ngModel)]="collectionNameFromInput"
-               style="position: absolute; left: 0px;" placeholder="Add collection"></ion-input>
-    <ion-button (click)="eventHandlerInputText()" slot="end">Add</ion-button>
+      <ion-button (click)="eventHandlerInputText()" slot="end">Add</ion-button>
+      <ion-input (keyup.enter)="eventHandlerInputText()" [(ngModel)]="collectionNameFromInput"
+                 style="position: relative; left: 0px; right: 20px" placeholder="Add collection"></ion-input>
   </ion-item>
+
 </ion-content>
 
 
