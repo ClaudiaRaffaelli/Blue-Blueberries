@@ -9,14 +9,22 @@ import {Storage} from "@ionic/storage";
 })
 export class AppComponent {
 
-  overlayHidden: boolean = false;
+  overlayHidden: boolean = true;
   slideOpts = {
     initialSlide: 0,
     speed: 400
   };
 
   constructor(private storage: Storage,
-              private speechRecognition: SpeechRecognition) {}
+              private speechRecognition: SpeechRecognition) {
+
+  }
+
+  async ngOnInit(){
+      // checking if it is the first time ever we open the app
+      this.overlayHidden = ! await this.getIsFirstTime();
+      console.log(this.overlayHidden)
+  }
 
 
 
@@ -42,14 +50,16 @@ export class AppComponent {
   }
 
 
-  /*getGroceryList(){
-    // getting the array of recipe key in the grocery list
-    return this.storage.get("GroceryList").then((item) => {
-      // If this is the first time we are fetching the grocery there is also no grocery list and we create it
+  async getIsFirstTime(){
+    // getting a value to know if it is the first time that the user has entered the application or not
+    return this.storage.get("FirstTime").then(async (item) => {
+      // If this is the first time we enter there is no value stored, we insert it as false (since we have entered)
       if (item == undefined){
-        this.storage.set("GroceryList", JSON.stringify([]));
+        this.storage.set("FirstTime", JSON.stringify(false));
+        return true;
+      }else{
+          return false;
       }
-      return JSON.parse(item);
     });
-  }*/
+  }
 }
