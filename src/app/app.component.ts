@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {SpeechRecognition} from '@ionic-native/speech-recognition/ngx';
+import {Storage} from "@ionic/storage";
 
 @Component({
   selector: 'app-root',
@@ -14,7 +15,9 @@ export class AppComponent {
     speed: 400
   };
 
-  constructor(private speechRecognition: SpeechRecognition) {}
+  constructor(private storage: Storage,
+              private speechRecognition: SpeechRecognition) {}
+
 
 
   public hideOverlay() {
@@ -37,4 +40,16 @@ export class AppComponent {
         });
     console.log('Giving permissions');
   }
+
+
+  /*getGroceryList(){
+    // getting the array of recipe key in the grocery list
+    return this.storage.get("GroceryList").then((item) => {
+      // If this is the first time we are fetching the grocery there is also no grocery list and we create it
+      if (item == undefined){
+        this.storage.set("GroceryList", JSON.stringify([]));
+      }
+      return JSON.parse(item);
+    });
+  }*/
 }
