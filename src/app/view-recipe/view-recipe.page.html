@@ -52,16 +52,16 @@
     <ion-card-header color="mainDark">
       <ion-card-title><ion-label text-wrap color="light">{{data.name}}</ion-label></ion-card-title>
     </ion-card-header>
-    <ion-card-content>
       <ion-list lines="none">
         <ion-item><ion-icon slot="start" color="primary" name="restaurant-outline" ></ion-icon><span>Ready in: {{data.recipeTime}} mins</span></ion-item>
         <ion-item><ion-icon slot="start" [color]="difficultyColor" name="flame-outline"></ion-icon> <span>Difficulty: {{data.recipeDifficulty}} </span></ion-item>
         <ion-item *ngIf="data.videoUrl !== ''" href="{{data.videoUrl}}"><ion-icon slot="start" color="danger" name="logo-youtube"></ion-icon> Video available </ion-item>
       </ion-list>
-    </ion-card-content>
-    <ion-card-header class="ion-text-center">
-      <ion-icon size="large" color="mainDark" name="reader-outline"></ion-icon> <ion-label text-wrap color="dark"><h1>Ingredients</h1></ion-label>
-    </ion-card-header>
+      <ion-item lines="none" *ngIf="this.data.desiredFood" style="padding: 20px 0px 20px 0px!important;">
+        <span><ion-chip style="background-color: #264B78; color: #FFFFFF" *ngFor="let item of desiredFood"><p (click)="searchSpecificDesiredFood(this.data.desiredFood[item])">{{this.data.desiredFood[item]}} </p></ion-chip></span>
+      </ion-item>
+    <ion-item style="padding-top: 20px!important;" lines="none" class="ion-text-center"><ion-icon size="large" color="mainDark" slot="start" name="reader-outline"></ion-icon><h1> Ingredients</h1>
+    </ion-item>
     <ion-card-content>
       <ul *ngFor="let ingredient of data.ingredients | keyvalue">
         <li *ngIf="ingredient.value.selected && ingredient.value.dose!=0">{{ingredient.value.dose}} {{ingredient.value.unit}} {{ingredient.key.split("_").join(" ").toLowerCase()}}</li>

@@ -159,6 +159,28 @@ export class HomePage implements OnInit {
                   filtersSatisfied = false;
                 }
               }
+              // @ts-ignore
+              if (this.query.specificDesiredFood && (filtersSatisfied === true)){
+                let filterOk = false;
+                try{ // old recipes does not have user preferences
+                  for (const recipeDesiredFood in myRecipeItem.desiredFood) {
+                    // @ts-ignore
+                    if (this.query.specificDesiredFood === myRecipeItem.desiredFood[recipeDesiredFood]) {
+                      filterOk = true;
+                      break;
+                    }
+                  }
+                }catch (e){}
+                finally {
+                  if (filterOk){
+                    if (--numberOfFilters === 0) {
+                      this.recipes.push(myRecipeItem as RecipeItem);
+                    }
+                  }else{
+                    filtersSatisfied = false;
+                  }
+                }
+              }
               if (this.allergies.length > 0 && (filtersSatisfied === true)){
                 let filterOk = true;
                 for (const recipeAllergy in myRecipeItem.allergies){
