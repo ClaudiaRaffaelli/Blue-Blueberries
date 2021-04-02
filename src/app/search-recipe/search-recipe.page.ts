@@ -435,7 +435,7 @@ export class SearchRecipePage implements OnInit {
   // submit button. Send the query to the next page
   submit(){
     const query: {[queryRequest: string]: {}} = {};
-    if (this.queryRecipeName !== ''){
+    if (this.queryRecipeName !== '' && this.searchKeyword){
       query.recipeName = this.queryRecipeName;
     }
     if (this.searchAvailableIngredients && this.searchAllIngredients){

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {SpeechRecognition} from '@ionic-native/speech-recognition/ngx';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,7 @@ export class AppComponent {
     speed: 400
   };
 
-  constructor() {}
+  constructor(private speechRecognition: SpeechRecognition) {}
 
 
   public hideOverlay() {
@@ -21,7 +22,19 @@ export class AppComponent {
   }
 
   public askPermission(){
-    // TODO Abdy inserisci qui la richiesta dei permessi
-    console.log("Giving permissions")
+    // Check feature available
+    this.speechRecognition.isRecognitionAvailable()
+        .then((available: boolean) => {
+          if (available){
+            this.speechRecognition.hasPermission()
+                .then((hasPermission: boolean) => {
+                  if (!hasPermission){
+                    // Request permissions
+                    this.speechRecognition.requestPermission();
+                  }
+                });
+          }
+        });
+    console.log('Giving permissions');
   }
 }

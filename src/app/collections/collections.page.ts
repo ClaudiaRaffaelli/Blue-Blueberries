@@ -3,7 +3,7 @@ import {CollectionItemService} from '../shared/collection-item.service';
 import 'firebase/storage'; // in order to use images stored in the firebase database
 import {NavigationExtras, Router} from '@angular/router'; // pass data between two pages
 import {Storage} from '@ionic/storage';
-import {CollectionItem} from "../shared/collectionItem";
+import {CollectionItem} from '../shared/collectionItem';
 
 @Component({
   selector: 'app-collections',

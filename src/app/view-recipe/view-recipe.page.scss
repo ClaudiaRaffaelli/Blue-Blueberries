@@ -80,7 +80,9 @@ ion-slide{
 }
 
 img{
+  width: 100%;
   position:relative;
+  max-height: 260px;
   z-index:-1;
   display:block;
 }

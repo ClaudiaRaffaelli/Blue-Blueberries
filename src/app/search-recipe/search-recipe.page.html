@@ -268,7 +268,7 @@
           <ion-item lines="none"><ion-icon slot="start" size="large" color="mainMedium" name="reader-outline"></ion-icon><h1>Summary</h1></ion-item>
         </ion-card-header>
         <ion-grid>
-          <ion-row *ngIf="queryRecipeName !== ''" class="ion-align-items-stretch">
+          <ion-row *ngIf="queryRecipeName !== '' && searchKeyword" class="ion-align-items-stretch">
             <ion-col size="1"><ion-icon color="danger" name="close" (click)="clearKeyword()"></ion-icon></ion-col>
             <ion-col size="1"><ion-icon color="tertiary" name="key-outline"></ion-icon></ion-col>
             <ion-col size="4">Keywords</ion-col>
