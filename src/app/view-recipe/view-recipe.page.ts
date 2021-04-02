@@ -1,5 +1,5 @@
 import {Component, OnInit, NgZone, ViewChild} from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import firebase from 'firebase';
 import {RecipeItemService} from '../shared/recipe-item.service';
 import {BehaviorSubject} from 'rxjs';
@@ -26,7 +26,7 @@ export class ViewRecipePage implements OnInit {
   data: any;
   recipeImages: { [id: string]: string };
   recipe: any;
-  desiredFood: [];
+  desiredFood: string[];
   img: any;
   pathReference: any;
   currentImg: number;
@@ -102,9 +102,6 @@ export class ViewRecipePage implements OnInit {
       if (this.router.getCurrentNavigation().extras.state) {
         this.data = this.router.getCurrentNavigation().extras.state.recipe;
 
-        if (!this.data){
-          this.router.navigate(['presentation']);
-        }
         this.lastPage = this.router.getCurrentNavigation().extras.state.lastPage;
 
         // find out if the recipe is in the grocery list and display a different icon accordingly
@@ -146,13 +143,7 @@ export class ViewRecipePage implements OnInit {
         let urlSrc = await this.getNextImage();
         titleImage.setAttribute('src', urlSrc);
 
-        // Desiredfood
-        this.desiredFood = [];
-        try{
-          this.desiredFood = this.data.desiredFood;
-        }catch (e) {
 
-        }
 
 
         this.textSteps = {};
@@ -247,17 +238,27 @@ export class ViewRecipePage implements OnInit {
   }
 
   ngOnInit() {
-    if (this.data === undefined) {
-      this.router.navigate(['home']);
-    }
+  }
+
+
+  ionViewDidEnter(){
+    // Desiredfood
+    this.desiredFood = [];
+    try{
+      this.desiredFood = Object.keys(this.data.desiredFood);
+    }catch (e) {}
   }
 
   async ionViewWillEnter(){
+    if (this.data === undefined) {
+      this.router.navigate(['presentation']);
+    }
     const recipeList = await this.groceriesService.getGroceryList();
     this.recipeNumberInCart = recipeList.length;
 
     // when the popover is dismissed we see if we have to change the status of the heart icon
     this.isInAnyCollection = await this.localDBService.isRecipeInAnyCollection(this.data.$key);
+
 
 
     // Annyang
@@ -286,6 +287,19 @@ export class ViewRecipePage implements OnInit {
       return url;
     });
     return urlSrc;
+  }
+
+  searchSpecificDesiredFood(food: string){
+    const query: {[queryRequest: string]: {}} = {};
+    query.specificDesiredFood = food;
+
+    const navigationExtras: NavigationExtras = {
+      state: {
+        query,
+        lastPage: 'view-recipe'
+      }
+    };
+    this.router.navigate(['home'], navigationExtras);
   }
 
   startTimer() {
