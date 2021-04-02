@@ -234,10 +234,6 @@ export class ViewRecipePage implements OnInit {
   }
 
   async ngOnInit() {
-    // find out if the recipe is in the grocery list and display a different icon accordingly
-    await this.groceriesService.getGroceryList().then(async groceryList => {
-      this.isInGroceryList = !!groceryList.includes(this.data.$key);
-    });
   }
 
 
@@ -255,6 +251,10 @@ export class ViewRecipePage implements OnInit {
     }
     const recipeList = await this.groceriesService.getGroceryList();
     this.recipeNumberInCart = recipeList.length;
+    // find out if the recipe is in the grocery list and display a different icon accordingly
+    await this.groceriesService.getGroceryList().then(async groceryList => {
+      this.isInGroceryList = !!groceryList.includes(this.data.$key);
+    });
 
     // when the popover is dismissed we see if we have to change the status of the heart icon
     this.isInAnyCollection = await this.localDBService.isRecipeInAnyCollection(this.data.$key);

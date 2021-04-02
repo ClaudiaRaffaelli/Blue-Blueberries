@@ -61,7 +61,6 @@ export class AppComponent {
         this.storage.set("FirstTime", JSON.stringify(false));
         return true;
       }else{
-          await this.storage.remove("FirstTime")
           return false;
       }
     });
