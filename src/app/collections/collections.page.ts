@@ -35,8 +35,6 @@ export class CollectionsPage implements OnInit {
 
   }
 
-  // TODO magari fare le collezioni più larghe, a causa dello slider sono molto compresse in width
-
   async ngOnInit() {
     // getting the Favorites collection
     await this.localDBService.getCollectionItem("Favorites").then(async res => {

@@ -19,4 +19,9 @@ export class AppComponent {
   public hideOverlay() {
     this.overlayHidden = true;
   }
+
+  public askPermission(){
+    // TODO Abdy inserisci qui la richiesta dei permessi
+    console.log("Giving permissions")
+  }
 }

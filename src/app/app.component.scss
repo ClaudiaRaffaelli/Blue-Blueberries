@@ -33,10 +33,24 @@ ion-icon{
   #slides{
     white-space: pre-line;
     position: relative;
-    top: 10%;
-    width: 90%; height:75%;
+    top: 5%;
+    width: 90%; height:90%;
     background: white;
     border-radius: 15px
   }
+}
+
+.ion-color-mainDark{
+  --ion-color-base: var(--ion-color-mainDark);
+}
+.ion-color-mainMedium{
+  --ion-color-base: var(--ion-color-mainMedium);
+}
+.ion-color-mainLight{
+  --ion-color-base: var(--ion-color-mainLight);
+}
+
+*{
+  font-family: RobotoSlab;
 }
 
