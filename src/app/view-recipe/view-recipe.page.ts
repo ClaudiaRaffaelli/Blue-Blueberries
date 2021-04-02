@@ -26,6 +26,7 @@ export class ViewRecipePage implements OnInit {
   data: any;
   recipeImages: { [id: string]: string };
   recipe: any;
+  desiredFood: [];
   img: any;
   pathReference: any;
   currentImg: number;
@@ -144,6 +145,14 @@ export class ViewRecipePage implements OnInit {
         const titleImage = document.getElementById('titleImage'); // Set title image (first image, with index 0)
         let urlSrc = await this.getNextImage();
         titleImage.setAttribute('src', urlSrc);
+
+        // Desiredfood
+        this.desiredFood = [];
+        try{
+          this.desiredFood = this.data.desiredFood;
+        }catch (e) {
+
+        }
 
 
         this.textSteps = {};
