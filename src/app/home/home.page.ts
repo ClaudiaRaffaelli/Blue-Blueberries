@@ -8,6 +8,7 @@ import {PopoverController} from '@ionic/angular';
 import {PopoverCollectionsComponent} from '../popover-collections/popover-collections.component';
 import {CollectionItemService} from '../shared/collection-item.service';
 import {Storage} from '@ionic/storage';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -36,12 +37,16 @@ export class HomePage implements OnInit {
     private router: Router,
     private localDBService: CollectionItemService,
     public popoverController: PopoverController,
-    public storage: Storage
+    public storage: Storage,
+    private platform: Platform
   ) {
     this.route.queryParams.subscribe(async params => {
     if (this.router.getCurrentNavigation().extras.state) {
       this.query = this.router.getCurrentNavigation().extras.state.query;
       this.lastPage = this.router.getCurrentNavigation().extras.state.lastPage;
+      this.platform.backButton.subscribeWithPriority(10, () => {
+        this.router.navigate([this.lastPage]);
+      });
 
       // If we are navigating from the page where there are listed all the collection.
       // in this page are shown all the recipes from that collection

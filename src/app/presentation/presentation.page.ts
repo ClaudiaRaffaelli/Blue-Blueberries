@@ -3,7 +3,7 @@ import firebase from 'firebase';
 import {RecipeItemService} from '../shared/recipe-item.service';
 import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {IngredientsDic, RecipeItem} from '../shared/recipeItem';
-import {Storage} from "@ionic/storage";
+import {Storage} from '@ionic/storage';
 
 @Component({
   selector: 'app-presentation',
