@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {SpeechRecognition} from '@ionic-native/speech-recognition/ngx';
 import {Storage} from "@ionic/storage";
 
@@ -7,7 +7,7 @@ import {Storage} from "@ionic/storage";
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
 
   overlayHidden: boolean = true;
   slideOpts = {
@@ -20,13 +20,12 @@ export class AppComponent {
 
   constructor(private storage: Storage,
               private speechRecognition: SpeechRecognition) {
-
+      // checking if it is the first time ever we open the app
+      this.overlayHidden = ! this.getIsFirstTime();
+      console.log(this.overlayHidden);
   }
 
   async ngOnInit(){
-      // checking if it is the first time ever we open the app
-      this.overlayHidden = ! await this.getIsFirstTime();
-      console.log(this.overlayHidden)
   }
 
 
