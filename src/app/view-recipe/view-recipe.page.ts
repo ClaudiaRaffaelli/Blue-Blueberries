@@ -139,7 +139,9 @@ export class ViewRecipePage implements OnInit {
         let urlSrc = await this.getNextImage();
         titleImage.setAttribute('src', urlSrc);
 
-
+        await this.groceriesService.getGroceryList().then(item => {
+          this.recipeNumberInCart = item.length;
+        });
 
 
         this.textSteps = {};
