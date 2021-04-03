@@ -80,6 +80,13 @@ export class IngredientsDic{
     Nutella: {selected: false, dose: 0, unit: 'g'},
     Halloumi_cheese: {selected: false, dose: 0, unit: 'g'},
     Sunflower_oil: {selected: false, dose: 0, unit: 'g'},
+    Baguette: {selected: false, dose: 0, unit: ''},
+    Balsami_glaze: {selected: false, dose: 0, unit: 'optional'},
+    Naan_breads: {selected: false, dose: 0, unit: ''},
+    Mozzarella: {selected: false, dose: 0, unit: 'slices'},
+    Rocket: {selected: false, dose: 0, unit: ''},
+    Lotus_Biscoff_Biscuits: {selected: false, dose: 0, unit: ''},
+    Biscoff_spread: {selected: false, dose: 0, unit: ''},
   };
 
   allergiesList = ['Crustaceans', 'Eggs', 'Dairy products', 'Peanuts', 'Soy', 'Wheat', 'Fish'];
