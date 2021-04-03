@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {SpeechRecognition} from '@ionic-native/speech-recognition/ngx';
 import {Storage} from "@ionic/storage";
-import { Animation, AnimationController } from '@ionic/angular';
+import {Animation, AnimationController} from '@ionic/angular';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +9,6 @@ import { Animation, AnimationController } from '@ionic/angular';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent implements OnInit{
-
   overlayHidden: boolean = true;
   slideOpts = {
     initialSlide: 0,
@@ -22,7 +21,6 @@ export class AppComponent implements OnInit{
   constructor(private storage: Storage,
               private speechRecognition: SpeechRecognition,
               private animationCtrl: AnimationController) {
-
   }
 
   async ngOnInit(){

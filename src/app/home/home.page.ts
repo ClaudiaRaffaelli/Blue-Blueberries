@@ -44,9 +44,6 @@ export class HomePage implements OnInit {
     if (this.router.getCurrentNavigation().extras.state) {
       this.query = this.router.getCurrentNavigation().extras.state.query;
       this.lastPage = this.router.getCurrentNavigation().extras.state.lastPage;
-      this.platform.backButton.subscribeWithPriority(10, () => {
-        this.router.navigate([this.lastPage]);
-      });
 
       // If we are navigating from the page where there are listed all the collection.
       // in this page are shown all the recipes from that collection
@@ -331,8 +328,13 @@ export class HomePage implements OnInit {
     // updating isInAnyCollection to display a different heart icon (full or empty) if the recipe is in any collection
     // or not
     this.reloadIsInCollection();
-    }
+  }
 
+  ionViewDidLeave(){
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate(['home']);
+    });
+  }
 
   async reloadIsInCollection(){
     this.isInAnyCollection = [];

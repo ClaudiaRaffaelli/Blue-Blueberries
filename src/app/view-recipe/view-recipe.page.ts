@@ -104,7 +104,6 @@ export class ViewRecipePage implements OnInit {
 
         this.lastPage = this.router.getCurrentNavigation().extras.state.lastPage;
 
-
         // getting the Favorites collection
         this.localDBService.getCollectionItem('Favorites').then(async res => {
           // if there is no Favorites collection, we create it
@@ -283,6 +282,9 @@ export class ViewRecipePage implements OnInit {
     this.insomnia.allowSleepAgain();
     // Remove this page annyang's callbacks
     this.closeVoiceRecognition();
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate(['view-recipe']);
+    });
   }
 
   async getNextImage() {

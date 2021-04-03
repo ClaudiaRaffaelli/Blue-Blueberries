@@ -4,6 +4,7 @@ import {RecipeItemService} from '../shared/recipe-item.service';
 import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {IngredientsDic, RecipeItem} from '../shared/recipeItem';
 import {Storage} from '@ionic/storage';
+import {Platform} from "@ionic/angular";
 
 @Component({
   selector: 'app-presentation',
@@ -32,7 +33,8 @@ export class PresentationPage implements OnInit {
       private aptService: RecipeItemService,
       private route: ActivatedRoute,
       private router: Router,
-      public storage: Storage) {
+      public storage: Storage,
+      private platform: Platform) {
 
     storage.set(`allergies`, []);
     storage.set(`desiredFood`, []);
@@ -90,6 +92,12 @@ export class PresentationPage implements OnInit {
 
     });
 
+  }
+
+  ionViewDidLeave(){
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate(['presentation']);
+    });
   }
 
   openRecipe(recipeP: any){

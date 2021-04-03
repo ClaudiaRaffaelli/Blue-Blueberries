@@ -4,6 +4,7 @@ import 'firebase/storage'; // in order to use images stored in the firebase data
 import {NavigationExtras, Router} from '@angular/router'; // pass data between two pages
 import {Storage} from '@ionic/storage';
 import {CollectionItem} from '../shared/collectionItem';
+import {Platform} from "@ionic/angular";
 
 @Component({
   selector: 'app-collections',
@@ -26,6 +27,7 @@ export class CollectionsPage implements OnInit {
       private localDBService: CollectionItemService,
       private router: Router,
       private storage: Storage,
+      public platform: Platform
   ) {
     // making sure that local storage is ready
     storage.ready().then(() => {
@@ -84,6 +86,12 @@ export class CollectionsPage implements OnInit {
     await this.localDBService.deleteCollectionItem(collectionItem.name).then(valueStr => {
       // removing the collection from the saved list
       this.collections.splice(collectionIndex, 1);
+    });
+  }
+
+  ionViewDidLeave(){
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate(['collections']);
     });
   }
 

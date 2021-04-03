@@ -196,6 +196,10 @@ export class SearchRecipePage implements OnInit {
     this.undesiredPulseToggleId = 'undesired_animated_disabled';
     // remove this page annyang's callbacks
     this.closeVoiceRecognition();
+
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate(['search-recipe']);
+    });
   }
 
   reset_pulse_animation(element: string) {

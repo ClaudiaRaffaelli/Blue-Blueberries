@@ -5,6 +5,7 @@ import firebase from "firebase";
 import {RecipeItem} from "../shared/recipeItem";
 import {GroceriesService} from "../shared/groceries.service";
 import * as _ from 'lodash';
+import {Platform} from "@ionic/angular";
 
 @Component({
   selector: 'app-groceries',
@@ -35,7 +36,8 @@ export class GroceriesPage implements OnInit {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private storage: Storage,
-              private groceriesService: GroceriesService) {
+              private groceriesService: GroceriesService,
+              public platform: Platform) {
     // making sure that local storage is ready
     storage.ready().then(() => {
     });
@@ -147,6 +149,12 @@ export class GroceriesPage implements OnInit {
     });
   }
 
+
+  ionViewDidLeave(){
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate(['groceries']);
+    });
+  }
 
   async getRecipeItem(recipeKey, imageRequired=true){
     const myRecipeItem = await this.database.child('recipes').child(recipeKey).get().then(function(snapshot) {
