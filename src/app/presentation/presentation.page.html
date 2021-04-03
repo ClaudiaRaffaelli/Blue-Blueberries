@@ -1,6 +1,12 @@
+<ion-header>
+  <ion-toolbar>
+    <img class="logo" src="../../assets/svg/logo5.png"/>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content *ngIf="dataFetched" color="light" fullscreen="true">
-  <ion-card style="margin: 0px !important; padding: 10px;">
-    <ion-label color="mainDark"><br><br><h1><b>Picks for you</b></h1></ion-label>
+  <ion-card style="margin: -30px 0px 0px 0px !important; padding: 10px;">
+    <ion-label color="mainDark" style="margin-top: -60px!important;"><br><br><h1><b>Picks for you</b></h1></ion-label>
   <ion-slides [options]="option" class="" style="height: 300px; margin-top: -60px!important; margin-bottom: -50px!important;">
     <ion-slide *ngFor="let recipeItem of suggestedRecipes">
       <ion-card (click)="openRecipe(recipeItem)" class="myCard pickgradient">
@@ -29,7 +35,6 @@
 </ion-content>
 
 <ion-content *ngIf="!dataFetched" color="light">
-  <ion-item lines="none" color="light"><h1>Picks for you</h1></ion-item>
   <ion-slides [options]="option" class="ion-margin-top">
     <ion-slide>
       <ion-card style="border-radius: 15px; margin: 10px !important;">

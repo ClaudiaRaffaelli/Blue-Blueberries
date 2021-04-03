@@ -43,7 +43,7 @@ export class ViewRecipePage implements OnInit {
   timerToggle: boolean;
 
   isInGroceryList: boolean;
-  recipeNumberInCart: number; // holds the number of recipes currently inside the cart for the grocery list
+  recipeNumberInCart = 0; // holds the number of recipes currently inside the cart for the grocery list
 
   isInAnyCollection = false; // it holds the boolean that says if the heart icon has to be full or empty
 
