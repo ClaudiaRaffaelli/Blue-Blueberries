@@ -20,12 +20,13 @@ export class AppComponent implements OnInit{
 
   constructor(private storage: Storage,
               private speechRecognition: SpeechRecognition) {
-      // checking if it is the first time ever we open the app
-      this.overlayHidden = ! this.getIsFirstTime();
-      console.log(this.overlayHidden);
+
   }
 
   async ngOnInit(){
+      // checking if it is the first time ever we open the app
+      this.overlayHidden = ! await this.getIsFirstTime();
+      console.log(this.overlayHidden);
   }
 
 
@@ -57,9 +58,10 @@ export class AppComponent implements OnInit{
     return this.storage.get("FirstTime").then(async (item) => {
       // If this is the first time we enter there is no value stored, we insert it as false (since we have entered)
       if (item == undefined){
-        this.storage.set("FirstTime", JSON.stringify(false));
+        await this.storage.set("FirstTime", JSON.stringify(false));
         return true;
       }else{
+          //await this.storage.remove("FirstTime");
           return false;
       }
     });
