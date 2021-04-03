@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {SpeechRecognition} from '@ionic-native/speech-recognition/ngx';
 import {Storage} from "@ionic/storage";
+import { Animation, AnimationController } from '@ionic/angular';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,8 @@ export class AppComponent implements OnInit{
   };
 
   constructor(private storage: Storage,
-              private speechRecognition: SpeechRecognition) {
+              private speechRecognition: SpeechRecognition,
+              private animationCtrl: AnimationController) {
 
   }
 
@@ -27,6 +29,15 @@ export class AppComponent implements OnInit{
       // checking if it is the first time ever we open the app
       this.overlayHidden = ! await this.getIsFirstTime();
       console.log(this.overlayHidden);
+      if (this.overlayHidden === false){
+          const animation: Animation = this.animationCtrl.create()
+              .addElement(document.getElementById("logo"))
+              .duration(400)
+              .fromTo('width', '75%', '100%')
+              .fromTo('opacity', '0.5', '1');
+
+          await animation.play()
+      }
   }
 
 
