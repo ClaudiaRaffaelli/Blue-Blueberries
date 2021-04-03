@@ -249,8 +249,11 @@ export class ViewRecipePage implements OnInit {
     if (this.data === undefined) {
       this.router.navigate(['presentation']);
     }
-    const recipeList = await this.groceriesService.getGroceryList();
-    this.recipeNumberInCart = recipeList.length;
+
+    await this.groceriesService.getGroceryList().then(item => {
+      this.recipeNumberInCart = item.length;
+    });
+
     // find out if the recipe is in the grocery list and display a different icon accordingly
     await this.groceriesService.getGroceryList().then(async groceryList => {
       this.isInGroceryList = !!groceryList.includes(this.data.$key);
