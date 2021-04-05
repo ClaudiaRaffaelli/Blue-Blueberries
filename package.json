@@ -1,5 +1,5 @@
 {
-  "name": "smartCookbook",
+  "name": "Blue Blueberries",
   "version": "0.0.1",
   "author": "Ionic Framework",
   "homepage": "https://ionicframework.com/",
@@ -114,7 +114,8 @@
       "cordova-plugin-speechrecognizer": {},
       "cordova-plugin-insomnia": {},
       "cordova-plugin-nativeaudio": {},
-      "clovelced-plugin-audiomanagement": {}
+      "clovelced-plugin-audiomanagement": {},
+      "es.keensoft.fullscreenimage": {}
     },
     "platforms": [
       "ios",

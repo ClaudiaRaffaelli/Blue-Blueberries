@@ -59,7 +59,7 @@ export class IngredientsDic{
     Carrot: {selected: false, dose: 0, unit: ''},
     Red_wine: {selected: false, dose: 0, unit: 'ml'},
     Mushroom_stock: {selected: false, dose: 0, unit: 'ml'},
-    Rosemary: {selected: false, dose: 0, unit: ''},
+    Rosemary: {selected: false, dose: 0, unit: 'tsp'},
     Bay_leaves: {selected: false, dose: 0, unit: ''},
     Tomato_puree: {selected: false, dose: 0, unit: 'tbsp'},
     Frozen_peas: {selected: false, dose: 0, unit: 'g'},
@@ -87,6 +87,10 @@ export class IngredientsDic{
     Rocket: {selected: false, dose: 0, unit: ''},
     Lotus_Biscoff_Biscuits: {selected: false, dose: 0, unit: ''},
     Biscoff_spread: {selected: false, dose: 0, unit: ''},
+    Chilli_flakes: {selected: false, dose: 0, unit: 'tsp'},
+    Cheddar_cheese: {selected: false, dose: 0, unit: 'g'},
+    Baking_powder: {selected: false, dose: 0, unit: 'tsp'},
+    Brioche_buns: {selected: false, dose: 0, unit: ''},
   };
 
   allergiesList = ['Crustaceans', 'Eggs', 'Dairy products', 'Peanuts', 'Soy', 'Wheat', 'Fish'];
