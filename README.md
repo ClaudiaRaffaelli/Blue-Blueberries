@@ -62,5 +62,7 @@ The idea of this application is to allow the easiest possible access to the reci
 
 \[6\] https://ionicframework.com/docs/native/speech-recognition
 
+\[7\] Image in logo from https://www.freepik.com
+
 # Acknowledgments
 Human Computer Interaction project - Computer Engineering Master Degree @[University of Florence](https://www.unifi.it/changelang-eng.html)
