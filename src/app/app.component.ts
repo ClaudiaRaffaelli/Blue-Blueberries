@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {SpeechRecognition} from '@ionic-native/speech-recognition/ngx';
 import {Storage} from "@ionic/storage";
-import {Animation, AnimationController} from '@ionic/angular';
+import {Animation, AnimationController, Platform} from '@ionic/angular';
+import { IonSlides } from '@ionic/angular';
 
 @Component({
   selector: 'app-root',
@@ -9,8 +10,9 @@ import {Animation, AnimationController} from '@ionic/angular';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent implements OnInit{
-  overlayHidden: boolean = true;
-  slideOpts = {
+    @ViewChild('slides', {static: true}) slides: IonSlides;
+    overlayHidden: boolean = true;
+    slideOpts = {
     initialSlide: 0,
     speed: 400,
     centeredSlides: true,
@@ -20,22 +22,25 @@ export class AppComponent implements OnInit{
 
   constructor(private storage: Storage,
               private speechRecognition: SpeechRecognition,
-              private animationCtrl: AnimationController) {
+              private animationCtrl: AnimationController,
+              public platform: Platform) {
   }
 
   async ngOnInit(){
-      // checking if it is the first time ever we open the app
-      this.overlayHidden = ! await this.getIsFirstTime();
-      console.log(this.overlayHidden);
-      if (this.overlayHidden === false){
-          const animation: Animation = this.animationCtrl.create()
-              .addElement(document.getElementById("logo"))
-              .duration(400)
-              .fromTo('width', '75%', '100%')
-              .fromTo('opacity', '0.5', '1');
+      this.platform.ready().then(async () => {
+          await this.slides.lockSwipes(true);
+          // checking if it is the first time ever we open the app
+          this.overlayHidden = ! await this.getIsFirstTime();
+          if (this.overlayHidden === false){
+              const animation: Animation = this.animationCtrl.create()
+                  .addElement(document.getElementById("logo"))
+                  .duration(400)
+                  .fromTo('width', '75%', '100%')
+                  .fromTo('opacity', '0.5', '1');
 
-          await animation.play()
-      }
+              await animation.play()
+          }
+      });
   }
 
 
@@ -74,5 +79,11 @@ export class AppComponent implements OnInit{
           return false;
       }
     });
+  }
+
+  async nextSlide() {
+      await this.slides.lockSwipes(false);
+      await this.slides.slideNext(200);
+      await this.slides.lockSwipes(true);
   }
 }

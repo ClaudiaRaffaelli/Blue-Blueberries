@@ -51,6 +51,9 @@ export class CollectionsPage implements OnInit {
   }
 
   async ionViewWillEnter(){
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate(['presentation']);
+    });
     // console.log("Re-loading collection each time I enter")
     // making sure that local storage is ready
     await this.storage.ready().then(async () => {
@@ -89,10 +92,5 @@ export class CollectionsPage implements OnInit {
     });
   }
 
-  ionViewDidLeave(){
-    this.platform.backButton.subscribeWithPriority(10, () => {
-      this.router.navigate(['collections']);
-    });
-  }
 
 }

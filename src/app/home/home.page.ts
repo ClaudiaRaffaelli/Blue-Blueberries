@@ -328,11 +328,8 @@ export class HomePage implements OnInit {
     // updating isInAnyCollection to display a different heart icon (full or empty) if the recipe is in any collection
     // or not
     this.reloadIsInCollection();
-  }
-
-  ionViewDidLeave(){
     this.platform.backButton.subscribeWithPriority(10, () => {
-      this.router.navigate(['home']);
+      this.router.navigate([this.lastPage]);
     });
   }
 

@@ -40,7 +40,6 @@
     "cordova-plugin-file": "^6.0.2",
     "cordova-plugin-inappbrowser": "^5.0.0",
     "cordova-plugin-media": "^5.0.3",
-    "es.keensoft.fullscreenimage": "^0.2.10",
     "fast-levenshtein": "^3.0.0",
     "firebase": "^8.2.9",
     "ionic-rating-component": "^1.1.6",
@@ -70,6 +69,7 @@
     "cordova-browser": "^6.0.0",
     "cordova-ios": "^4.0.1",
     "cordova-plugin-apiai": "^1.7.4",
+    "cordova-plugin-app-name": "^1.0.7",
     "cordova-plugin-crosswalk-webview": "^2.4.0",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-insomnia": "^4.3.0",
@@ -115,7 +115,9 @@
       "cordova-plugin-insomnia": {},
       "cordova-plugin-nativeaudio": {},
       "clovelced-plugin-audiomanagement": {},
-      "es.keensoft.fullscreenimage": {}
+      "cordova-plugin-app-name": {
+        "APP_NAME": "“Blue"
+      }
     },
     "platforms": [
       "ios",

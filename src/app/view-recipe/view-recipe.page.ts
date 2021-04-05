@@ -247,6 +247,9 @@ export class ViewRecipePage implements OnInit {
   }
 
   async ionViewWillEnter(){
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate([this.lastPage]);
+    });
     if (this.data === undefined) {
       this.router.navigate(['presentation']);
     }
@@ -282,9 +285,6 @@ export class ViewRecipePage implements OnInit {
     this.insomnia.allowSleepAgain();
     // Remove this page annyang's callbacks
     this.closeVoiceRecognition();
-    this.platform.backButton.subscribeWithPriority(10, () => {
-      this.router.navigate(['view-recipe']);
-    });
   }
 
   async getNextImage() {
