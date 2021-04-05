@@ -1,3 +1,5 @@
+<img src="./src/assets/svg/logo5.png" width="500" >
+
 # Overview
 ![GitHub last commit](https://img.shields.io/github/last-commit/ClaudiaRaffaelli/Blue-Blueberries)
 - **Academic year:** 2020-2021
