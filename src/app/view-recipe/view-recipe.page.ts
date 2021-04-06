@@ -284,7 +284,7 @@ export class ViewRecipePage implements OnInit {
   ionViewDidLeave(){
     this.insomnia.allowSleepAgain();
     // Remove this page annyang's callbacks
-    this.closeVoiceRecognition();
+    this.stopSpeaking();
   }
 
   async getNextImage() {
@@ -404,7 +404,10 @@ export class ViewRecipePage implements OnInit {
 
   stopSpeaking(){
     this.tts.speak('')
-        .then(() => console.log('Success'))
+        .then(() => {
+          this.speaking = false;
+          this.closeVoiceRecognition();
+        })
         .catch((reason: any) => console.log(reason));
   }
 

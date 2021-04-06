@@ -81,7 +81,7 @@
     <ion-fab-button *ngIf="!voiceActiveSectionDisabled && !speaking" color="success" (click)="closeVoiceRecognition()" mode="ios">
       <ion-icon name="mic-outline" mode="ios" style="font-size: 2em;"></ion-icon>
     </ion-fab-button>
-    <ion-fab-button *ngIf="speaking" color="danger" mode="ios">
+    <ion-fab-button *ngIf="speaking" color="danger" (click)="stopSpeaking()" mode="ios">
       <ion-icon name="mic-outline" mode="ios" style="font-size: 2em;"></ion-icon>
     </ion-fab-button>
   </ion-fab>
