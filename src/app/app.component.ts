@@ -14,12 +14,12 @@ export class AppComponent implements OnInit{
     overlayHidden: boolean = true;
     labelHidden = true;
     slideOpts = {
-    initialSlide: 0,
-    speed: 400,
-    centeredSlides: true,
-    loop: false,
-    spaceBetween: 1,
-  };
+        initialSlide: 0,
+        speed: 400,
+        centeredSlides: true,
+        loop: false,
+        spaceBetween: 1,
+    };
 
   constructor(private storage: Storage,
               private speechRecognition: SpeechRecognition,
@@ -77,7 +77,7 @@ export class AppComponent implements OnInit{
         await this.storage.set("FirstTime", JSON.stringify(false));
         return true;
       }else{
-          //await this.storage.remove("FirstTime");
+          await this.storage.remove("FirstTime");
           return false;
       }
     });
