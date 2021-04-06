@@ -101,7 +101,8 @@ export class SearchRecipePage implements OnInit {
     this.undesiredIngredientsKeys = Object.keys(this.ingUndesired.ingredients);
     this.searchKeyword = false;
     this.searchAllIngredients = false;
-    this.searchAvailableIngredients = true;
+    this.searchAvailableIngredients = false;
+    this.searchMainIngredients = true;
     this.showMainIngredients = false;
     this.searchUndesiredIngredients = false;
     this.searchDifficulty = false;
