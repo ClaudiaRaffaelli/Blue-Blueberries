@@ -590,7 +590,7 @@ export class ViewRecipePage implements OnInit {
       this.speak('I\'m Cindy, your personal assistant');
       return true;
     }
-    if (text.includes('what can you do') || text.includes('what can i do') || text.includes('help')){
+    if (text.includes('what can you do') || text.includes('what can i do') || text.includes('help') || text.includes('what can i ask you')){
       this.speak('Try usging commands like: "set time of 60 minutes", "add to favorites", "add to grocery list" or "go to step four"');
       return true;
     }

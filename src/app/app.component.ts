@@ -12,6 +12,7 @@ import { IonSlides } from '@ionic/angular';
 export class AppComponent implements OnInit{
     @ViewChild('slides', {static: true}) slides: IonSlides;
     overlayHidden: boolean = true;
+    labelHidden = true;
     slideOpts = {
     initialSlide: 0,
     speed: 400,
@@ -24,6 +25,7 @@ export class AppComponent implements OnInit{
               private speechRecognition: SpeechRecognition,
               private animationCtrl: AnimationController,
               public platform: Platform) {
+      this.overlayHidden = true;
   }
 
   async ngOnInit(){
@@ -38,7 +40,7 @@ export class AppComponent implements OnInit{
                   .fromTo('width', '75%', '100%')
                   .fromTo('opacity', '0.5', '1');
 
-              await animation.play()
+              await animation.play();
           }
       });
   }
@@ -82,8 +84,8 @@ export class AppComponent implements OnInit{
   }
 
   async nextSlide() {
+      this.labelHidden = false;
       await this.slides.lockSwipes(false);
       await this.slides.slideNext(200);
-      await this.slides.lockSwipes(true);
   }
 }

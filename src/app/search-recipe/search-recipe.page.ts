@@ -754,7 +754,7 @@ export class SearchRecipePage implements OnInit {
       this.speak('I\'m Cindy, your personal assistant');
       return true;
     }
-    if (text.includes('what can you do') || text.includes('what can i do') || text.includes('help')){
+    if (text.includes('what can you do') || text.includes('what can i do') || text.includes('help') || text.includes('what can i ask you')){
       this.speak('Try telling me your available ingredients with the command "I have". For example. "I have milk. eggs. and water."');
       return true;
     }

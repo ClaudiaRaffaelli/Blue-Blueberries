@@ -1,37 +1,33 @@
 <ion-app>
   <ion-router-outlet></ion-router-outlet>
   <!-- First time in app instructions -->
-  <div id="instruction-overlay" padding [hidden]="overlayHidden">
+  <ion-content id="instruction-overlay" padding [hidden]="overlayHidden">
     <ion-slides #slides id="slides" pager="True" [options]="slideOpts">
       <ion-slide>
         <ion-label style="position:absolute; width: 95%; top:15%" color="mainDark">Welcome to</ion-label>
         <img id="logo" style="position:absolute; top:0; height:80%; " src="https://firebasestorage.googleapis.com/v0/b/testrecipes-fe5a1.appspot.com/o/slides%2Fblue_bluberries_icon.png?alt=media&token=68f35b49-f053-427d-89dc-797958dcb98c">
-        <ion-button class="nextButton" color="mainMedium" (click)="nextSlide()"><ion-icon color="light" name="arrow-forward-circle-sharp"></ion-icon></ion-button>
+        <ion-label class="nextButton" *ngIf="!labelHidden">Loading...</ion-label>
+        <ion-button class="nextButton" *ngIf="labelHidden" color="mainMedium" (click)="nextSlide()">Start</ion-button>
       </ion-slide>
       <ion-slide>
         <ion-label style="position:absolute; width: 95%; top:5%" color="mainDark">Explore our collections of recipes</ion-label>
         <img style="position:relative; top:6%; height:80%; width: 95%;" src="https://firebasestorage.googleapis.com/v0/b/testrecipes-fe5a1.appspot.com/o/slides%2Fcollections.gif?alt=media&token=23041cbb-b2c4-4526-baf7-a46f12ab43e0">
-        <ion-button class="nextButton" color="mainMedium" (click)="nextSlide()"><ion-icon color="light" name="arrow-forward-circle-sharp"></ion-icon></ion-button>
       </ion-slide>
       <ion-slide>
         <ion-label style="position:absolute; top:5%; width: 95%" color="mainDark">Create and manage your own collections</ion-label>
         <img style="top:6%; width: 95%;" src="https://firebasestorage.googleapis.com/v0/b/testrecipes-fe5a1.appspot.com/o/slides%2Ffavorites.gif?alt=media&token=565cff8c-4801-494c-b1b2-121611d66b18">
-        <ion-button class="nextButton" color="mainMedium" (click)="nextSlide()"><ion-icon color="light" name="arrow-forward-circle-sharp"></ion-icon></ion-button>
       </ion-slide>
       <ion-slide>
         <ion-label style="position:absolute; top:5%; width: 95%" color="mainDark">Search for recipes with our advanced search</ion-label>
         <img style="top:6%; width: 95%;" src="https://firebasestorage.googleapis.com/v0/b/testrecipes-fe5a1.appspot.com/o/slides%2Fsearch-cropped.gif?alt=media&token=62266d93-92b7-4046-b433-060918e38c3d">
-        <ion-button class="nextButton" color="mainMedium" (click)="nextSlide()"><ion-icon color="light" name="arrow-forward-circle-sharp"></ion-icon></ion-button>
       </ion-slide>
       <ion-slide>
         <ion-label style="position:absolute; top:5%; width: 95%" color="mainDark">Add and remove recipes from your grocery list</ion-label>
         <img style="top:6%; width: 95%;" src="https://firebasestorage.googleapis.com/v0/b/testrecipes-fe5a1.appspot.com/o/slides%2Fgrocery-cropped.gif?alt=media&token=71172935-0c2d-4859-8440-40d0234b71b6">
-        <ion-button class="nextButton" color="mainMedium" (click)="nextSlide()"><ion-icon color="light" name="arrow-forward-circle-sharp"></ion-icon></ion-button>
       </ion-slide>
       <ion-slide>
         <ion-label style="position:absolute; top:5%; width: 95%;" color="mainDark">Set a timer</ion-label>
         <img style="position:relative; top:5%; width: 95%; height:80%;" src="https://firebasestorage.googleapis.com/v0/b/testrecipes-fe5a1.appspot.com/o/slides%2Ftimer.gif?alt=media&token=6bf8150d-5935-415b-91d5-44f5dbe85f37">
-        <ion-button class="nextButton" color="mainMedium" (click)="nextSlide()"><ion-icon color="light" name="arrow-forward-circle-sharp"></ion-icon></ion-button>
       </ion-slide>
       <ion-slide>
         <ion-label style="position:absolute; top:5%; width: 95%" color="mainDark" >Next time you see this icon, ask Cindy, our voice assistant:</ion-label>
@@ -41,14 +37,13 @@
         <ion-label style="position:absolute; top:70%; width: 95%" color="mainDark" >if <strong><span style="color:red"> red</span></strong>, she's listening</ion-label>
         <ion-label style="position:absolute; top:65%; width: 95%" color="mainDark" >if <strong><span style="color:orange"> yellow</span></strong>, she's talking</ion-label>
         <ion-button style="position:absolute; top:80%; width: 98%" color="mainLight" (click)="askPermission()">Give microphone permission</ion-button>
-        <ion-button class="nextButton" color="mainMedium" (click)="nextSlide()"><ion-icon color="light" name="arrow-forward-circle-sharp"></ion-icon></ion-button>
       </ion-slide>
       <ion-slide>
         <ion-label style="position:absolute; top:5%; width: 95%;" color="mainDark">Let's cook something!</ion-label>
         <ion-button style="position:relative; top:6%;" color="mainLight" (click)="hideOverlay()">Ready!</ion-button>
       </ion-slide>
     </ion-slides>
-  </div>
+  </ion-content>
 
   <ion-tabs>
     <ion-tab-bar slot="bottom">
