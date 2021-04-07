@@ -16,8 +16,20 @@
     <div style="color: rgb(38,75,120)!important; padding: 0px 0px 0px 20px;"></div>
 
     <div style="margin: 0px !important; padding: 0px!important;">
+        <ion-card *ngIf="noRecipe" style="border-radius: 15px;">
+            <div class="card" disabled="true" style="color: #FFFFFF; padding: 0px">
+                <img src="../../assets/img/empty_dish.png"/></div>
+            <ion-card-header style="padding-bottom: 0px;padding-top: 5px;">
+                <ion-card-title color="mainMedium"><h1><b>Empty Dish</b></h1></ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <ion-label>
+                          No recipe found :(
+                </ion-label>
+            </ion-card-content>
+        </ion-card>
 
-      <ion-list *ngIf="dataFetched" lines="none" class="ios list-ios hydrated ion-justify-content-center">
+        <ion-list *ngIf="dataFetched" lines="none" class="ios list-ios hydrated ion-justify-content-center">
         <ion-item *ngFor="let recipeItem of recipes; let recipeIndex=index" class="user-list" style="color: #FFFFFF; margin: 0px!important;">
           <ion-card style="border-radius: 15px; margin: 0px 0px 20px 0px !important;">
               <div class="card" disabled="true" style="color: #FFFFFF; padding: 0px">
@@ -35,7 +47,9 @@
                               <ion-icon slot="start" color="primary" name="restaurant-outline" ></ion-icon> {{recipeItem.recipeTime}} mins
                           </span>
                           <span>
-                              <ion-icon slot="start" color="danger" name="flame-outline"></ion-icon>{{recipeItem.recipeDifficulty}}
+                              <span *ngIf="recipeItem.recipeDifficulty.toLowerCase() === 'easy'"><ion-icon slot="start" color="success" name="flame-outline"></ion-icon>{{recipeItem.recipeDifficulty}}</span>
+                              <span *ngIf="recipeItem.recipeDifficulty.toLowerCase() === 'medium'"><ion-icon slot="start" color="warning" name="flame-outline"></ion-icon>{{recipeItem.recipeDifficulty}}</span>
+                              <span *ngIf="recipeItem.recipeDifficulty.toLowerCase() === 'hard'"><ion-icon slot="start" color="danger" name="flame-outline"></ion-icon>{{recipeItem.recipeDifficulty}}</span>
                           </span>
                       </ion-label>
 

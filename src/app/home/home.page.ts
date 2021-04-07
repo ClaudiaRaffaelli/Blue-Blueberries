@@ -30,6 +30,7 @@ export class HomePage implements OnInit {
   allergies: [];
   desiredFood: [];
   undesiredFood: [];
+  noRecipe = true;
 
   constructor(
     private aptService: RecipeItemService,
@@ -42,6 +43,7 @@ export class HomePage implements OnInit {
   ) {
     this.route.queryParams.subscribe(async params => {
     if (this.router.getCurrentNavigation().extras.state) {
+      this.noRecipe = true;
       this.query = this.router.getCurrentNavigation().extras.state.query;
       this.lastPage = this.router.getCurrentNavigation().extras.state.lastPage;
 
@@ -108,6 +110,7 @@ export class HomePage implements OnInit {
             if (this.undesiredFood.length > 0) numberOfFilters++;
             if (numberOfFilters === 0){ // no filters applied
               this.recipes.push(myRecipeItem as RecipeItem);
+              this.noRecipe = false;
             }else{
               // filtersSatisfied true means no filter has been checked or each filter is satisfied by now. If a filter is not satisfied then
               // filtersSatisfied is changed to false in order to save computational time because the next filters are not going to be checked
@@ -118,8 +121,8 @@ export class HomePage implements OnInit {
                 // @ts-ignore
                 if (this.query.collections.includes(myRecipeItem.collections as RecipeItem)){
                   if (--numberOfFilters === 0) {
-                    console.log('collezioni');
                     this.recipes.push(myRecipeItem as RecipeItem);
+                    this.noRecipe = false;
                   }
                 }else{
                   filtersSatisfied = false;
@@ -130,8 +133,8 @@ export class HomePage implements OnInit {
                 // @ts-ignore
                 if (myRecipeItem.name.toLowerCase().indexOf(this.query.recipeName.toLowerCase()) !== -1){
                   if (--numberOfFilters === 0) {
-                    console.log('nome');
                     this.recipes.push(myRecipeItem as RecipeItem);
+                    this.noRecipe = false;
                   }
                 }else{
                   filtersSatisfied = false;
@@ -142,8 +145,8 @@ export class HomePage implements OnInit {
                 // @ts-ignore
                 if ((myRecipeItem.recipeDifficulty as RecipeItem) === this.query.difficulty) {
                   if (--numberOfFilters === 0) {
-                    console.log('difficolta');
                     this.recipes.push(myRecipeItem as RecipeItem);
+                    this.noRecipe = false;
                   }
                 }else{
                   filtersSatisfied = false;
@@ -154,8 +157,8 @@ export class HomePage implements OnInit {
                 // @ts-ignore
                 if ((myRecipeItem.recipeTime as RecipeItem) <= this.query.requiredTime) {
                   if (--numberOfFilters === 0) {
-                    console.log('tempo');
                     this.recipes.push(myRecipeItem as RecipeItem);
+                    this.noRecipe = false;
                   }
                 }else{
                   filtersSatisfied = false;
@@ -177,6 +180,7 @@ export class HomePage implements OnInit {
                   if (filterOk){
                     if (--numberOfFilters === 0) {
                       this.recipes.push(myRecipeItem as RecipeItem);
+                      this.noRecipe = false;
                     }
                   }else{
                     filtersSatisfied = false;
@@ -197,8 +201,8 @@ export class HomePage implements OnInit {
                 }
                 if (filterOk){
                   if (--numberOfFilters === 0) {
-                    console.log('allergies');
                     this.recipes.push(myRecipeItem as RecipeItem);
+                    this.noRecipe = false;
                   }
                 }else{
                   filtersSatisfied = false;
@@ -221,8 +225,8 @@ export class HomePage implements OnInit {
                 finally {
                   if (filterOk){
                     if (--numberOfFilters === 0) {
-                      console.log('desiredFood');
                       this.recipes.push(myRecipeItem as RecipeItem);
+                      this.noRecipe = false;
                     }
                   }else{
                     filtersSatisfied = false;
@@ -246,8 +250,8 @@ export class HomePage implements OnInit {
                 }catch (e){}
                 if (filterOk){
                   if (--numberOfFilters === 0) {
-                    console.log('undesiredFood');
                     this.recipes.push(myRecipeItem as RecipeItem);
+                    this.noRecipe = false;
                   }
                 }else{
                   filtersSatisfied = false;
@@ -266,8 +270,8 @@ export class HomePage implements OnInit {
                 }
                 if (filterOk){
                   if (--numberOfFilters === 0) {
-                    console.log('available');
                     this.recipes.push(myRecipeItem as RecipeItem);
+                    this.noRecipe = false;
                   }
                 }else{
                   filtersSatisfied = false;
@@ -285,8 +289,8 @@ export class HomePage implements OnInit {
                 }
                 if (filterOk){
                   if (--numberOfFilters === 0) {
-                    console.log('main');
                     this.recipes.push(myRecipeItem as RecipeItem);
+                    this.noRecipe = false;
                   }
                 }else{
                   filtersSatisfied = false;
@@ -305,8 +309,8 @@ export class HomePage implements OnInit {
                 }
                 if (filterOk){
                   if (--numberOfFilters === 0) {
-                    console.log('undesiredIngredient');
                     this.recipes.push(myRecipeItem as RecipeItem);
+                    this.noRecipe = false;
                   }
                 }else{
                   filtersSatisfied = false;

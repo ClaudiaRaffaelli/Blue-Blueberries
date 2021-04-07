@@ -7,8 +7,8 @@ ion-tab-bar{
   --ion-background-color: #ffffff;
 }
 
-ion-icon{
-  color: var(--ion-color-mainMedium);
+ion-tab-button {
+  --color-selected: #225A8F;
 }
 
 .ion-color-mainDark{
@@ -59,4 +59,13 @@ ion-icon{
   bottom:15%;
   margin-right: auto;
   margin-left: auto;
+}
+
+:root {
+  ion-tab-button.tab-selected {
+    ion-icon, ion-label {
+      color: var(--ion-color-secondary) !important;
+      --ion-color-base: var(--ion-color-secondary) !important;
+    }
+  }
 }
