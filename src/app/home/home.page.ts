@@ -79,6 +79,7 @@ export class HomePage implements OnInit {
             myRecipeItem.title_image = this.imgs;
           });
           this.recipes.push(myRecipeItem as RecipeItem);
+          this.noRecipe = false;
         }
         this.dataFetched = true;
       } else{
