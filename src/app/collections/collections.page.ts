@@ -4,7 +4,8 @@ import 'firebase/storage'; // in order to use images stored in the firebase data
 import {NavigationExtras, Router} from '@angular/router'; // pass data between two pages
 import {Storage} from '@ionic/storage';
 import {CollectionItem} from '../shared/collectionItem';
-import {Platform} from "@ionic/angular";
+import {Platform, PopoverController} from "@ionic/angular";
+import {PopoverDeleteCollectionsComponent} from "../popover-delete-collections/popover-delete-collections.component";
 
 @Component({
   selector: 'app-collections',
@@ -27,7 +28,8 @@ export class CollectionsPage implements OnInit {
       private localDBService: CollectionItemService,
       private router: Router,
       private storage: Storage,
-      public platform: Platform
+      public platform: Platform,
+      public popoverController: PopoverController,
   ) {
     // making sure that local storage is ready
     storage.ready().then(() => {
@@ -84,12 +86,36 @@ export class CollectionsPage implements OnInit {
     this.router.navigate(['home'], navigationExtras);
   }
 
-  async deleteCollection(collectionItem, collectionIndex){
-    // deleting the collection from the local storage
-    await this.localDBService.deleteCollectionItem(collectionItem.name).then(valueStr => {
-      // removing the collection from the saved list
-      this.collections.splice(collectionIndex, 1);
+  async presentPopover(eve: any, collectionItem: any, collectionIndex: any) {
+    const popover = await this.popoverController.create({
+      component: PopoverDeleteCollectionsComponent,
+      cssClass: 'popOver',
+      componentProps: {
+        // communicating the collection item to the popover so that the user can delete it
+        collectionItem,
+      },
+      event: eve,
+      mode: 'ios',
+      translucent: true
     });
+
+    popover.onWillDismiss().then(() => {
+      // alert("before dismissing the popover")
+    });
+    popover.onDidDismiss().then(async () => {
+
+      // when the popover is dismissed we see if we have to remove the collection from the saved list
+      await this.localDBService.getCollectionItem(collectionItem.name).then(async valueStr => {
+
+        // if there is no collection returned by that name it means that the user has deleted it
+        if (valueStr === null) {
+          // removing the collection from the saved list
+          this.collections.splice(collectionIndex, 1);
+        }
+      });
+
+    });
+    return await popover.present();
   }
 
 

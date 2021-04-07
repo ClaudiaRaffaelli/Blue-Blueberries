@@ -22,13 +22,13 @@
     </div>
 
     <ion-list lines="none" *ngFor="let collectionItem of collections; let collectionIndex=index;"  class="user-list">
-      <ion-item-sliding>
-        <ion-item color="">
-          <ion-card (click)="openCollection(collectionItem)" style="margin: 10px 0px 10px 0px!important;" color="">
+      <div>
+          <ion-card>
             <div class="card">
-              <img src="{{collectionItem.coverPhoto}}"/>
+              <img src="{{collectionItem.coverPhoto}}" (click)="openCollection(collectionItem)"/>
+              <ion-icon color="danger" (click)="presentPopover($event, collectionItem, collectionIndex)" style="position: absolute; right: +25px; top: +13px;" size = "large" name="trash"></ion-icon>
             </div>
-            <ion-card-header>
+            <ion-card-header (click)="openCollection(collectionItem)">
               <ion-label color="mainMedium"><h1><b>{{collectionItem.name}}</b></h1></ion-label>
             </ion-card-header>
 
@@ -36,13 +36,7 @@
               {{collectionItem.recipeNumber}} recipes
             </ion-card-content>
           </ion-card>
-        </ion-item>
-        <ion-item-options side="end">
-          <ion-item-option color="danger" (click)="deleteCollection(collectionItem, collectionIndex)">
-            <ion-icon slot="top" name="trash">Delete collection</ion-icon>
-          </ion-item-option>
-        </ion-item-options>
-      </ion-item-sliding>
+      </div>
 
     </ion-list>
   </ion-list>

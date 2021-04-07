@@ -23,11 +23,12 @@ import {FormsModule} from '@angular/forms';
 import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx';
 import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
 import { Insomnia } from '@ionic-native/insomnia/ngx';
+import {PopoverDeleteCollectionsComponent} from "./popover-delete-collections/popover-delete-collections.component";
 
 
 @NgModule({
-    declarations: [AppComponent, PopoverCollectionsComponent],
-    entryComponents: [PopoverCollectionsComponent],
+    declarations: [AppComponent, PopoverCollectionsComponent, PopoverDeleteCollectionsComponent],
+    entryComponents: [PopoverCollectionsComponent, PopoverDeleteCollectionsComponent],
     imports: [BrowserModule, IonicModule.forRoot(), IonicStorageModule.forRoot(), AppRoutingModule,
         AngularFireModule.initializeApp(environment.firebaseConfig),
         AngularFireAuthModule,
@@ -36,7 +37,8 @@ import { Insomnia } from '@ionic-native/insomnia/ngx';
     providers: [SpeechRecognition, TextToSpeech, Insomnia, {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}],
     bootstrap: [AppComponent],
     exports: [
-        PopoverCollectionsComponent
+        PopoverCollectionsComponent,
+        PopoverDeleteCollectionsComponent,
     ]
 })
 export class AppModule {}

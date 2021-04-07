@@ -91,6 +91,8 @@ export class IngredientsDic{
     Cheddar_cheese: {selected: false, dose: 0, unit: 'g'},
     Baking_powder: {selected: false, dose: 0, unit: 'tsp'},
     Brioche_buns: {selected: false, dose: 0, unit: ''},
+    Tinned_mango_slices: {selected: false, dose: 0, unit: 'g'},
+    White_chocolate: {selected: false, dose: 0, unit: 'g'},
   };
 
   allergiesList = ['Crustaceans', 'Eggs', 'Dairy products', 'Peanuts', 'Soy', 'Wheat', 'Fish'];
