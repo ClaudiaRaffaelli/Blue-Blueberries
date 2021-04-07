@@ -15,7 +15,8 @@ The main tools employed:
 - Apache Cordova to build and deploy as a native app [2],
 - Google Firebase database for hosting the recipes and fixed collections [3],
 - Ionic Storage for saving in-app data like recipes in grocery list, custom collections, dietary preferences [5], 
-- Ionic Speech Recognition for the realization of the voice assistant [6].
+- Ionic Speech Recognition for the realization of the text to speech for the voice assistant [6].
+- TalAter Annyang is a library for speech to text recognition for the voice assistant [8].
 
 # Detailed characteristics
 The main features of this application are:
@@ -63,6 +64,10 @@ The idea of this application is to allow the easiest possible access to the reci
 \[6\] https://ionicframework.com/docs/native/speech-recognition
 
 \[7\] Image in logo from https://www.freepik.com
+
+\[8\] https://github.com/TalAter/annyang
+
+\[9\] Recipes from https://kitchenmason.com
 
 # Acknowledgments
 Human Computer Interaction project - Computer Engineering Master Degree @[University of Florence](https://www.unifi.it/changelang-eng.html)
