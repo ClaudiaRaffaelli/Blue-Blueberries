@@ -144,7 +144,7 @@ export class HomePage implements OnInit {
               // @ts-ignore
               if (this.query.difficulty && (filtersSatisfied === true)){
                 // @ts-ignore
-                if ((myRecipeItem.recipeDifficulty as RecipeItem) === this.query.difficulty) {
+                if ((myRecipeItem.recipeDifficulty.toLowerCase() as RecipeItem) === this.query.difficulty.toLowerCase()) {
                   if (--numberOfFilters === 0) {
                     this.recipes.push(myRecipeItem as RecipeItem);
                     this.noRecipe = false;
