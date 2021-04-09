@@ -226,15 +226,18 @@ export class HomePage implements OnInit {
       }
       // @ts-ignore
       if (this.desiredFood.length > 0 && (filtersSatisfied === true)) {
-        let filterOk = false;
+        let filterOk = true;
         try{ // old recipes does not have user preferences
-          for (const recipeDesiredFood in myRecipeItem.desiredFood) {
-            for (let i = 0; i < this.desiredFood.length; i++) {
-              // @ts-ignore
+          for (let i = 0; i < this.desiredFood.length; i++) {
+            let foundDesiredFood = false;
+            for (const recipeDesiredFood in myRecipeItem.desiredFood) {
               if (this.desiredFood[i] === myRecipeItem.desiredFood[recipeDesiredFood]) {
-                filterOk = true;
-                break;
+                foundDesiredFood = true;
               }
+            }
+            if (!foundDesiredFood) {
+              filterOk = false;
+              break;
             }
           }
         }catch (e){}
@@ -373,15 +376,18 @@ export class HomePage implements OnInit {
       }
       // @ts-ignore
       if (this.desiredFood.length > 0 && (filtersSatisfied === true)) {
-        let filterOk = false;
+        let filterOk = true;
         try{ // old recipes does not have user preferences
-          for (const recipeDesiredFood in myRecipeItem.desiredFood) {
-            for (let i = 0; i < this.desiredFood.length; i++) {
-              // @ts-ignore
+          for (let i = 0; i < this.desiredFood.length; i++) {
+            let foundDesiredFood = false;
+            for (const recipeDesiredFood in myRecipeItem.desiredFood) {
               if (this.desiredFood[i] === myRecipeItem.desiredFood[recipeDesiredFood]) {
-                filterOk = true;
-                break;
+                foundDesiredFood = true;
               }
+            }
+            if (!foundDesiredFood) {
+              filterOk = false;
+              break;
             }
           }
         }catch (e){}
