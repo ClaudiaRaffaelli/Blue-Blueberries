@@ -431,6 +431,7 @@ export class ViewRecipePage implements OnInit {
     popover.onDidDismiss().then(async () => {
       // when the popover is dismissed we see if we have to change the status of the heart icon
       this.isInAnyCollection = await this.localDBService.isRecipeInAnyCollection(recipeKey);
+      this.recipeInFavorites = await this.localDBService.isRecipeInCollection('Favorites', this.data.$key);
     });
     return await popover.present();
   }
