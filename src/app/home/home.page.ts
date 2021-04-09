@@ -9,6 +9,7 @@ import {PopoverCollectionsComponent} from '../popover-collections/popover-collec
 import {CollectionItemService} from '../shared/collection-item.service';
 import {Storage} from '@ionic/storage';
 import { Platform } from '@ionic/angular';
+import {PreferencesService} from "../shared/preferences.service";
 
 @Component({
   selector: 'app-home',
@@ -39,7 +40,8 @@ export class HomePage implements OnInit {
     private localDBService: CollectionItemService,
     public popoverController: PopoverController,
     public storage: Storage,
-    private platform: Platform
+    private platform: Platform,
+    private preferencesDBService: PreferencesService
   ) {
     this.route.queryParams.subscribe(async params => {
     if (this.router.getCurrentNavigation().extras.state) {
@@ -86,9 +88,10 @@ export class HomePage implements OnInit {
         this.dataFetched = true;
       } else{
         // navigating here from the search page
-        this.allergies = await this.storage.get(`allergies`);
-        this.undesiredFood = await this.storage.get(`undesiredFood`);
-        this.desiredFood = await this.storage.get(`desiredFood`);
+        this.allergies = await this.preferencesDBService.getAllergies();
+        this.desiredFood = await this.preferencesDBService.getDesiredFood();
+        this.undesiredFood = await this.preferencesDBService.getUndesiredFood();
+
         this.titlePage = '';
         this.recipesRes = this.aptService.getRecipesList();
         this.recipesRes.snapshotChanges().subscribe(res => {
