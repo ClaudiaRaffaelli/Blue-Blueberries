@@ -75,6 +75,9 @@ export class AppComponent implements OnInit{
       // If this is the first time we enter there is no value stored, we insert it as false (since we have entered)
       if (item == undefined){
         await this.storage.set("FirstTime", JSON.stringify(false));
+        this.storage.set('allergies', []);
+        this.storage.set('desiredFood', []);
+        this.storage.set('undesiredFood', []);
         return true;
       }else{
           //await this.storage.remove("FirstTime");

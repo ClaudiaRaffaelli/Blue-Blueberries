@@ -4,7 +4,7 @@ import {RecipeItemService} from '../shared/recipe-item.service';
 import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {IngredientsDic, RecipeItem} from '../shared/recipeItem';
 import {Storage} from '@ionic/storage';
-import {Platform} from "@ionic/angular";
+import {Platform} from '@ionic/angular';
 
 @Component({
   selector: 'app-presentation',
@@ -18,8 +18,10 @@ export class PresentationPage implements OnInit {
   collectionsRes: any;
   imgs: []; // Title images downloaded from the firebase storage
   suggestionsNumber = 3; // suggested recipes
+  currentSuggestions = 0;
   dataFetched: boolean; // flag that indicates when all recipes data have been downloaded from the database
-  collections = []
+  collections = [];
+  picks = [];
 
   // Options for images slider
   option = {
@@ -35,23 +37,18 @@ export class PresentationPage implements OnInit {
       private router: Router,
       public storage: Storage,
       private platform: Platform) {
-
-    storage.set(`allergies`, []);
-    storage.set(`desiredFood`, []);
-    storage.set(`undesiredFood`, []);
+    this.currentSuggestions = 0;
   }
 
 
   async ngOnInit() {
     this.recipesRes = this.aptService.getRecipesList();
-    this.recipesRes.snapshotChanges().subscribe(res => {
+    this.recipesRes.snapshotChanges().subscribe(async res => {
       this.dataFetched = false;
       this.suggestedRecipes = [];
-      const rndRes = [];
-      for (let i = 0; i < this.suggestionsNumber; i++){
-        rndRes.push(res[Math.floor(Math.random() * res.length)]); // push a random element
-      }
-      rndRes.forEach(item => {
+      this.picks = [];
+
+      for (const item of res) {
         const myRecipeItem = item.payload.toJSON();
         // @ts-ignore
         myRecipeItem.$key = item.key;
@@ -61,9 +58,12 @@ export class PresentationPage implements OnInit {
           // @ts-ignore
           myRecipeItem.title_image = this.imgs;
         });
-        this.suggestedRecipes.push(myRecipeItem as RecipeItem);
-      });
-
+        await this.checkPreferences(myRecipeItem);
+      }
+      for (let i = 0; i < this.suggestionsNumber; i++) {
+        const random = Math.floor(Math.random() * this.suggestedRecipes.length);
+        this.picks.push(this.suggestedRecipes[random]); // push a random element
+      }
     });
 
     // importing the collections
@@ -71,11 +71,11 @@ export class PresentationPage implements OnInit {
     await this.collectionsRes.snapshotChanges().subscribe( col => {
       col.forEach( async collection => {
 
-        let collectionItem = new FixedCollectionItem()
-        collectionItem.name = collection.key
+        const collectionItem = new FixedCollectionItem();
+        collectionItem.name = collection.key;
 
         // taking from the first recipe in the collection the cover image for the collection itself
-        let [firstRecipeKey] = Object.keys(collection.payload.toJSON());
+        const [firstRecipeKey] = Object.keys(collection.payload.toJSON());
 
         await firebase.storage().ref().child(firstRecipeKey + '/' + firstRecipeKey + '_0.jpg').getDownloadURL().then(async url => {
           collectionItem.coverImage = url;
@@ -119,6 +119,92 @@ export class PresentationPage implements OnInit {
       }
     };
     this.router.navigate(['home'], navigationExtras);
+  }
+
+  async checkPreferences(myRecipeItem) {
+    const allergies: [] = await this.storage.get(`allergies`);
+    const undesiredFood: [] = await this.storage.get(`undesiredFood`);
+    const desiredFood: [] = await this.storage.get(`desiredFood`);
+    let numberOfFilters = 0;
+    if (allergies.length > 0) { numberOfFilters++; }
+    if (desiredFood.length > 0) { numberOfFilters++; }
+    if (undesiredFood.length > 0) { numberOfFilters++; }
+    if (numberOfFilters === 0){
+      this.suggestedRecipes.push(myRecipeItem as RecipeItem);
+      this.currentSuggestions++;
+    }else{
+      let filtersSatisfied = true;
+      if (allergies.length > 0 && (filtersSatisfied === true)){
+        let filterOk = true;
+        for (const recipeAllergy in myRecipeItem.allergies){
+          for (let i = 0; i < allergies.length; i++){
+            // @ts-ignore
+            if (allergies[i] === myRecipeItem.allergies[recipeAllergy]){
+              filterOk = false;
+              filtersSatisfied = false;
+              break;
+            }
+          }
+        }
+        if (filterOk){
+          if (--numberOfFilters === 0) {
+            this.suggestedRecipes.push(myRecipeItem as RecipeItem);
+            this.currentSuggestions++;
+          }
+        }else{
+          filtersSatisfied = false;
+        }
+      }
+      // @ts-ignore
+      if (desiredFood.length > 0 && (filtersSatisfied === true)) {
+        let filterOk = false;
+        try{ // old recipes does not have user preferences
+          for (const recipeDesiredFood in myRecipeItem.desiredFood) {
+            for (let i = 0; i < desiredFood.length; i++) {
+              // @ts-ignore
+              if (desiredFood[i] === myRecipeItem.desiredFood[recipeDesiredFood]) {
+                filterOk = true;
+                break;
+              }
+            }
+          }
+        }catch (e){}
+        finally {
+          if (filterOk){
+            if (--numberOfFilters === 0) {
+              this.suggestedRecipes.push(myRecipeItem as RecipeItem);
+              this.currentSuggestions++;
+            }
+          }else{
+            filtersSatisfied = false;
+          }
+        }
+      }
+      // @ts-ignore
+      if (undesiredFood.length > 0 && (filtersSatisfied === true)) {
+        let filterOk = true;
+        try {
+          for (const ingredient in myRecipeItem.ingredients) {
+            for (let i = 0; i < undesiredFood.length; i++) {
+              // @ts-ignore
+              if (myRecipeItem.ingredients[undesiredFood[i]].selected) {
+                filterOk = false;
+                filtersSatisfied = false;
+                break;
+              }
+            }
+          }
+        }catch (e){}
+        if (filterOk){
+          if (--numberOfFilters === 0) {
+            this.suggestedRecipes.push(myRecipeItem as RecipeItem);
+            this.currentSuggestions++;
+          }
+        }else{
+          filtersSatisfied = false;
+        }
+      }
+    }
   }
 
 }

@@ -1,0 +1,8 @@
+{
+  "name": "Blue Blueberries",
+  "integrations": {
+    "capacitor": {},
+    "cordova": {}
+  },
+  "type": "angular"
+}

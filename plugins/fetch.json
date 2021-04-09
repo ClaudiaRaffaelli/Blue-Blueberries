@@ -1,0 +1,84 @@
+{
+  "cordova-plugin-apiai": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-apiai@2.0.0"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-speechrecognition": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-speechrecognition"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-tts": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-tts"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-crosswalk-webview": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-crosswalk-webview@^2.4.0"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-media": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-media@^5.0.3"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-speechrecognizer": {
+    "source": {
+      "type": "registry",
+      "id": "https://github.com/poiuytrez/SpeechRecognizer"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-insomnia": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-insomnia"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-nativeaudio": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-nativeaudio"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "clovelced-plugin-audiomanagement": {
+    "source": {
+      "type": "registry",
+      "id": "clovelced-plugin-audiomanagement"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-app-name": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-app-name"
+    },
+    "is_top_level": true,
+    "variables": {
+      "APP_NAME": "“Blue"
+    }
+  }
+}

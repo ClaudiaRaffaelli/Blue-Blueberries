@@ -27,10 +27,4 @@ npm-debug.log*
 /dist
 /node_modules
 /platforms
-/plugins
-/www
-/src/environments
-ionic.config.json
-config.xml
-package-lock.json
 

@@ -8,7 +8,7 @@
   <ion-card style="margin: -30px 0px 0px 0px !important; padding: 10px;">
     <ion-label color="mainDark" style="margin-top: -60px!important;"><br><br><h1><b>Picks for you</b></h1></ion-label>
   <ion-slides [options]="option" class="" style="height: 300px; margin-top: -60px!important; margin-bottom: -50px!important;">
-    <ion-slide *ngFor="let recipeItem of suggestedRecipes">
+    <ion-slide *ngFor="let recipeItem of picks">
       <ion-card (click)="openRecipe(recipeItem)" class="myCard pickgradient">
           <img src="{{recipeItem.title_image}}" class="pickgradient">
       </ion-card>

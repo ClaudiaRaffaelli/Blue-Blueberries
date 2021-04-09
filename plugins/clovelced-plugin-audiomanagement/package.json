@@ -1,0 +1,25 @@
+{
+    "version": "1.0.2",
+    "name": "clovelced-plugin-audiomanagement",
+    "cordova_name": "Audio management plugin",
+    "description": "A plugin to manage audio mode and volume",
+    "license": "Apache 2.0",
+    "repo": "https://github.com/clovelCed/cordova-plugin-audiomanagement",
+    "issue": "https://github.com/clovelCed/cordova-plugin-audiomanagement/issues",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/clovelCed/cordova-plugin-audiomanagement"
+    },
+    "keywords": [
+        "cordova",
+        "device",
+        "audio",
+        "volume",
+        "vibrate"
+    ],
+    "platforms": [
+        "android"
+    ],
+    "englishdoc": "",
+    "author": "Cédric CLOVEL"
+}
