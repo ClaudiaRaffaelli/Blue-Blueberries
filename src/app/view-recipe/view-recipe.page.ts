@@ -511,9 +511,15 @@ export class ViewRecipePage implements OnInit {
       }else{
         this.speak('Sorry, there isn\'t a step ' + step + '.');
       }
-    }else if (this.voiceText.toLowerCase().includes('set timer')){
+    }else if (this.voiceText.toLowerCase().includes('timer')){
       // Set timer to 30 minutes
-      const elements = String(wordsToNumbers(this.voiceText.toLowerCase())).split('minutes')[0].split(' ');
+      this.voiceText = this.voiceText.split('-').join(' ').toLowerCase();
+      let elements;
+      if (this.voiceText.includes('minutes')){
+        elements = String(wordsToNumbers(this.voiceText)).split('minutes')[0].split(' ');
+      }else if (this.voiceText.includes('minute')){
+        elements = String(wordsToNumbers(this.voiceText)).split('minute')[0].split(' ');
+      }
       const minutes = elements[elements.length - 2];
       if (!isNaN(parseInt(minutes, 10)) && parseInt(minutes, 10) > 0){
         this.duration = parseInt(minutes, 10);

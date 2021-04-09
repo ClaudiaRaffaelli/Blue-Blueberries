@@ -136,7 +136,7 @@
         <ion-list *ngIf="searchRequiredTime" lines="none">
           <ion-item>
             <ion-label>Time</ion-label>
-            <ion-datetime mode="ios" (ionChange)="timeRequiredChange($event)" minuteValues="0,5,10,15,30,45,50" displayFormat="HH:mm" pickerFormat="HH mm" value="00:00"></ion-datetime>
+            <ion-datetime (ionChange)="timeRequiredChange($event)" minuteValues="0,5,10,15,30,45,50,55" displayFormat="H:mm" hourValues="0,1,2,3" pickerFormat="H mm" value="00:30"></ion-datetime>
             </ion-item>
           <ion-row><ion-col size="12"></ion-col></ion-row>
         </ion-list>

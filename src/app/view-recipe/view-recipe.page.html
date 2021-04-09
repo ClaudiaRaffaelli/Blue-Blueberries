@@ -33,7 +33,7 @@
           <ion-chip lines="none" color="primary-contrast">
             <ion-icon name="play-circle-outline" color="mainDark" size="large"></ion-icon>
             <ion-label color="mainDark">
-              <ion-datetime style="padding: 0!important; margin: 0!important;" mode="md" (ionChange)="setTimer($event)" displayFormat="HH:mm" pickerFormat="HH mm" value="00:00"></ion-datetime>
+              <ion-datetime style="padding: 0!important; margin: 0!important;" (ionChange)="setTimer($event)" displayFormat="H:mm" hourValues="0,1,2,3" pickerFormat="H mm" value="00:00"></ion-datetime>
             </ion-label>
           </ion-chip>
       </ion-row>
