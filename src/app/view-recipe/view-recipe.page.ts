@@ -570,6 +570,8 @@ export class ViewRecipePage implements OnInit {
         await this.localDBService.addRecipeToCollectionItem('Favorites', this.data.$key);
         // updating the icon by setting the recipe as added to the collection
         this.recipeInFavorites = true;
+        // we also check if we have to change the status of the heart icon of collections
+        this.isInAnyCollection = await this.localDBService.isRecipeInAnyCollection(this.data.$key);
         this.speak('added to favorites');
       }else{
         this.speak('Sorry, already in favorites');
@@ -579,6 +581,8 @@ export class ViewRecipePage implements OnInit {
         // removing the recipe from the collection
         await this.localDBService.deleteRecipeFromCollectionItem('Favorites', this.data.$key);
         this.recipeInFavorites = false;
+        // we also check if we have to change the status of the heart icon of collections
+        this.isInAnyCollection = await this.localDBService.isRecipeInAnyCollection(this.data.$key);
         this.speak('removed from favorites');
       }else{
         this.speak('Sorry, this recipe is not in your favorites');
