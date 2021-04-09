@@ -48,7 +48,7 @@ The idea of this application is to allow the easiest possible access to the reci
 
 
 # Project Documents
-
+- The [Report](https://github.com/ClaudiaRaffaelli/Blue-Blueberries/blob/9227f6517b091de69c930a890f413eddcc57fd00/Blue%20BlueBerries%20Report.pdf) of the Blue Blueberries application can be found in this repository
 
 # Bibliography
 \[1\] https://ionicframework.com
