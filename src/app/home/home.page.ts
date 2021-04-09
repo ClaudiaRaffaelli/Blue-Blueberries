@@ -115,16 +115,17 @@ export class HomePage implements OnInit {
           this.dataFetched = true;
         });
       }
+      await this.reloadIsInCollection();
     }
   });
   }
 
 
 
-  ionViewWillEnter(){
+  async ionViewWillEnter(){
     // updating isInAnyCollection to display a different heart icon (full or empty) if the recipe is in any collection
     // or not
-    this.reloadIsInCollection();
+    await this.reloadIsInCollection();
     this.platform.backButton.subscribeWithPriority(10, () => {
       this.router.navigate([this.lastPage]);
     });
