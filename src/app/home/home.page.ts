@@ -80,9 +80,9 @@ export class HomePage implements OnInit {
             // @ts-ignore
             myRecipeItem.title_image = this.imgs;
           });
-          this.allergies = await this.storage.get(`allergies`);
-          this.undesiredFood = await this.storage.get(`undesiredFood`);
-          this.desiredFood = await this.storage.get(`desiredFood`);
+          this.allergies = await this.preferencesDBService.getAllergies();
+          this.desiredFood = await this.preferencesDBService.getDesiredFood();
+          this.undesiredFood = await this.preferencesDBService.getUndesiredFood();
           this.checkQuery(myRecipeItem);
         }
         this.dataFetched = true;
@@ -256,14 +256,12 @@ export class HomePage implements OnInit {
       if (this.undesiredFood.length > 0 && (filtersSatisfied === true)) {
         let filterOk = true;
         try {
-          for (const ingredient in myRecipeItem.ingredients) {
-            for (let i = 0; i < this.undesiredFood.length; i++) {
-              // @ts-ignore
-              if (myRecipeItem.ingredients[this.undesiredFood[i]].selected) {
-                filterOk = false;
-                filtersSatisfied = false;
-                break;
-              }
+          for (let i = 0; i < this.undesiredFood.length; i++) {
+            // @ts-ignore
+            if (myRecipeItem.ingredients[this.undesiredFood[i]] !== undefined && myRecipeItem.ingredients[this.undesiredFood[i]].selected) {
+              filterOk = false;
+              filtersSatisfied = false;
+              break;
             }
           }
         }catch (e){}
@@ -406,14 +404,12 @@ export class HomePage implements OnInit {
       if (this.undesiredFood.length > 0 && (filtersSatisfied === true)) {
         let filterOk = true;
         try {
-          for (const ingredient in myRecipeItem.ingredients) {
-            for (let i = 0; i < this.undesiredFood.length; i++) {
-              // @ts-ignore
-              if (myRecipeItem.ingredients[this.undesiredFood[i]].selected) {
-                filterOk = false;
-                filtersSatisfied = false;
-                break;
-              }
+          for (let i = 0; i < this.undesiredFood.length; i++) {
+            // @ts-ignore
+            if (myRecipeItem.ingredients[this.undesiredFood[i]] !== undefined && myRecipeItem.ingredients[this.undesiredFood[i]].selected) {
+              filterOk = false;
+              filtersSatisfied = false;
+              break;
             }
           }
         }catch (e){}

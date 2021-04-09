@@ -5,6 +5,7 @@ import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {IngredientsDic, RecipeItem} from '../shared/recipeItem';
 import {Storage} from '@ionic/storage';
 import {Platform} from '@ionic/angular';
+import {PreferencesService} from "../shared/preferences.service";
 
 @Component({
   selector: 'app-presentation',
@@ -36,7 +37,8 @@ export class PresentationPage implements OnInit {
       private route: ActivatedRoute,
       private router: Router,
       public storage: Storage,
-      private platform: Platform) {
+      private platform: Platform,
+      private preferencesDBService: PreferencesService) {
     this.currentSuggestions = 0;
   }
 
@@ -122,9 +124,9 @@ export class PresentationPage implements OnInit {
   }
 
   async checkPreferences(myRecipeItem) {
-    const allergies: [] = await this.storage.get(`allergies`);
-    const undesiredFood: [] = await this.storage.get(`undesiredFood`);
-    const desiredFood: [] = await this.storage.get(`desiredFood`);
+    const allergies: [] = await this.preferencesDBService.getAllergies();
+    const undesiredFood: [] = await this.preferencesDBService.getUndesiredFood();
+    const desiredFood: [] = await this.preferencesDBService.getDesiredFood();
     let numberOfFilters = 0;
     if (allergies.length > 0) { numberOfFilters++; }
     if (desiredFood.length > 0) { numberOfFilters++; }
@@ -187,14 +189,12 @@ export class PresentationPage implements OnInit {
       if (undesiredFood.length > 0 && (filtersSatisfied === true)) {
         let filterOk = true;
         try {
-          for (const ingredient in myRecipeItem.ingredients) {
-            for (let i = 0; i < undesiredFood.length; i++) {
-              // @ts-ignore
-              if (myRecipeItem.ingredients[undesiredFood[i]].selected) {
-                filterOk = false;
-                filtersSatisfied = false;
-                break;
-              }
+          for (let i = 0; i < undesiredFood.length; i++) {
+            // @ts-ignore
+            if (myRecipeItem.ingredients[undesiredFood[i]] !== undefined && myRecipeItem.ingredients[undesiredFood[i]].selected) {
+              filterOk = false;
+              filtersSatisfied = false;
+              break;
             }
           }
         }catch (e){}
