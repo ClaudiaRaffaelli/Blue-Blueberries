@@ -23,6 +23,7 @@ export class PresentationPage implements OnInit {
   dataFetched: boolean; // flag that indicates when all recipes data have been downloaded from the database
   collections = [];
   picks = [];
+  preferencesActive = false;
 
   // Options for images slider
   option = {
@@ -40,6 +41,7 @@ export class PresentationPage implements OnInit {
       private platform: Platform,
       private preferencesDBService: PreferencesService) {
     this.currentSuggestions = 0;
+    this.preferencesActive = false;
   }
 
 
@@ -96,6 +98,13 @@ export class PresentationPage implements OnInit {
 
   }
 
+  async ionViewWillEnter(){
+    const allergies: [] = await this.preferencesDBService.getAllergies();
+    const undesiredFood: [] = await this.preferencesDBService.getUndesiredFood();
+    const desiredFood: [] = await this.preferencesDBService.getDesiredFood();
+    this.preferencesActive = allergies.length > 0 || desiredFood.length > 0 || undesiredFood.length > 0;
+  }
+
   ionViewDidLeave(){
     this.platform.backButton.subscribeWithPriority(10, () => {
       this.router.navigate(['presentation']);
@@ -121,6 +130,10 @@ export class PresentationPage implements OnInit {
       }
     };
     this.router.navigate(['home'], navigationExtras);
+  }
+
+  openPreferences(){
+    this.router.navigate(['preferences']);
   }
 
   async checkPreferences(myRecipeItem) {

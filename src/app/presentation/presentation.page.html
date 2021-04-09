@@ -21,13 +21,16 @@
   <!--  Now we display the fixed collections -->
     <ion-label color="mainDark" style="margin-top: -60px!important;"><br><br><h1><b>Our collections</b></h1></ion-label>
     <ion-list lines="none" class="" style="padding-top: 0% !important;" *ngFor="let collectionItem of collections">
-        <ion-card style="border-radius: 15px; margin: 5px !important;" (click)="openCollection(collectionItem)">
-          <div class="card" disabled="true">
+        <ion-card style="border-radius: 15px; margin: 5px !important;">
+          <div class="card" disabled="true" (click)="openCollection(collectionItem)">
             <img [src]="collectionItem.coverImage"/>
           </div>
-          <ion-card-header (click)="openCollection(collectionItem)">
-              <ion-card-title color="mainMedium"><h1><b>{{collectionItem.name}}</b></h1></ion-card-title>
-              <ion-icon slot="start" color="tertiary" name="archive"></ion-icon> <ion-label>{{collectionItem.numberOfRecipes}} recipes</ion-label>
+          <ion-card-header>
+              <ion-card-title (click)="openCollection(collectionItem)" color="mainMedium"><h1><b>{{collectionItem.name}}</b></h1></ion-card-title>
+              <ion-label (click)="openCollection(collectionItem)">{{collectionItem.numberOfRecipes}} total recipes</ion-label>
+              <ion-label text-wrap>
+                <ion-chip color="warning" (click)="openPreferences()" *ngIf="preferencesActive"><ion-icon size="small" name="person"></ion-icon><ion-label>Preferences</ion-label></ion-chip>
+              </ion-label>
           </ion-card-header>
         </ion-card>
     </ion-list>
