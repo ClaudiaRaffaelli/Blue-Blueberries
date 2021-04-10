@@ -96,7 +96,6 @@ export class ViewRecipePage implements OnInit {
         });
 
 
-    this.insomnia.keepAwake();
     this.timerToggle = false;
     this.route.queryParams.subscribe(async params => {
       if (this.router.getCurrentNavigation().extras.state) {
@@ -239,6 +238,7 @@ export class ViewRecipePage implements OnInit {
 
 
   ionViewDidEnter(){
+    this.insomnia.keepAwake();
     // Desiredfood
     this.desiredFood = [];
     try{
