@@ -16,7 +16,7 @@ The main tools employed:
 - Google Firebase database for hosting the recipes and fixed collections [3],
 - Ionic Storage for saving in-app data like recipes in grocery list, custom collections, dietary preferences [5], 
 - Ionic Speech Recognition for the realization of the text to speech for the voice assistant [6].
-- TalAter Annyang is a library for speech to text recognition for the voice assistant [8].
+- TalAter Annyang is a library for speech to text recognition for the voice assistant (in Android) [8].
 
 # Detailed characteristics
 The main features of this application are:
@@ -48,7 +48,9 @@ The idea of this application is to allow the easiest possible access to the reci
 
 
 # Project Documents
-- The [Report](https://github.com/ClaudiaRaffaelli/Blue-Blueberries/blob/master/Report_Blue_Blueberries.pdf) of the Blue Blueberries application can be found in this repository
+In this repository can be found:
+- The [Report](https://github.com/ClaudiaRaffaelli/Blue-Blueberries/blob/master/Report_Blue_Blueberries.pdf) of the Blue Blueberries application.
+- And also the [Presentation](https://github.com/ClaudiaRaffaelli/Blue-Blueberries/blob/master/Presentation_Blue_Blueberries.pdf)
 
 # Bibliography
 \[1\] https://ionicframework.com
