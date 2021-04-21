@@ -71,6 +71,7 @@ export class SearchRecipePage implements OnInit {
   voiceActiveSectionError = false;
   voiceActiveSectionSuccess = false;
   voiceActiveSectionListening = false;
+  firstTimeMicButton = false;
   voiceText: any;
   voiceTextUser: string;
   assistantButtonColor = 'primary';
@@ -81,6 +82,12 @@ export class SearchRecipePage implements OnInit {
     centeredSlides: true,
     loop: false,
     spaceBetween: 1,
+  };
+
+  CordovaSttOptions = {
+    language: 'en-GB',
+    showPopup: false,
+    matches: 1
   };
 
 
@@ -197,6 +204,7 @@ export class SearchRecipePage implements OnInit {
     this.undesiredPulseToggleId = 'undesired_animated_disabled';
     // remove this page annyang's callbacks
     this.closeVoiceRecognition();
+    this.closeVoiceRecognitionCordova();
 
     this.platform.backButton.subscribeWithPriority(10, () => {
       this.router.navigate(['search-recipe']);
@@ -539,6 +547,33 @@ export class SearchRecipePage implements OnInit {
       annyang.start({ autoRestart: false });
       this.assistantButtonColor = 'danger';
     }
+  }
+
+  startVoiceRecognitionCordovaButton(){
+    this.firstTimeMicButton = true;
+    this.startVoiceRecognitionCordova();
+  }
+
+
+  startVoiceRecognitionCordova(){
+    this.voiceActiveSectionDisabled = false;
+    // Start the recognition process
+    this.speechRecognition.startListening(this.CordovaSttOptions)
+        .subscribe(
+            (matches: string[]) => {
+              this.ngZone.run(() => this.voiceText = matches[0]);
+              this.ngZone.run(() => this.firstTimeMicButton = false);
+              this.ngZone.run(() => this.performIntent());
+            },
+            (onerror) => console.log('error:', onerror)
+        );
+    this.assistantButtonColor = 'danger';
+  }
+
+  closeVoiceRecognitionCordova(){
+    this.firstTimeMicButton = false;
+    this.closeVoiceRecognition();
+    this.speechRecognition.stopListening();
   }
 
   closeVoiceRecognition(): void {

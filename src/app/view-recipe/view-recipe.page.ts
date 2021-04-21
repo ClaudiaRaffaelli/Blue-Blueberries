@@ -58,11 +58,18 @@ export class ViewRecipePage implements OnInit {
     spaceBetween: 2,
   };
 
+  CordovaSttOptions = {
+    language: 'en-GB',
+    showPopup: false,
+    matches: 1
+  };
+
   // voice assistant parameters (annyang)
   voiceActiveSectionDisabled = true;
   voiceActiveSectionError = false;
   voiceActiveSectionSuccess = false;
   voiceActiveSectionListening = false;
+  firstTimeMicButton = false;
   voiceText: any;
   assistantButtonColor: string;
   voiceTextUser = '';
@@ -285,6 +292,8 @@ export class ViewRecipePage implements OnInit {
     this.insomnia.allowSleepAgain();
     // Remove this page annyang's callbacks
     this.stopSpeaking();
+    this.closeVoiceRecognition();
+    this.closeVoiceRecognitionCordova();
   }
 
   async getNextImage() {
@@ -503,6 +512,32 @@ export class ViewRecipePage implements OnInit {
     }
   }
 
+  startVoiceRecognitionCordovaButton(){
+    this.firstTimeMicButton = true;
+    this.startVoiceRecognitionCordova();
+  }
+
+  startVoiceRecognitionCordova(){
+    this.voiceActiveSectionDisabled = false;
+    // Start the recognition process
+    this.speechRecognition.startListening(this.CordovaSttOptions)
+        .subscribe(
+            (matches: string[]) => {
+              this.ngZone.run(() => this.voiceText = matches[0]);
+              this.ngZone.run(() => this.firstTimeMicButton = false);
+              this.ngZone.run(() => this.performIntent());
+            },
+            (onerror) => console.log('error:', onerror)
+        );
+    this.assistantButtonColor = 'danger';
+  }
+
+  closeVoiceRecognitionCordova(){
+    this.firstTimeMicButton = false;
+    this.closeVoiceRecognition();
+    this.speechRecognition.stopListening();
+  }
+
   performIntent(){
     if (this.voiceText.toLowerCase().includes('step')){
       const step = String(wordsToNumbers(this.voiceText.toLowerCase())).split('step')[1].split(' ')[1];
@@ -533,7 +568,7 @@ export class ViewRecipePage implements OnInit {
       }
     }else if (this.voiceText.toLowerCase().includes('add') && (this.voiceText.toLowerCase().includes('favorites'))){
       this.addDeleteFromFavorites('add');
-    }else if (this.voiceText.toLowerCase().includes('remove') && (this.voiceText.toLowerCase().includes('favorites'))){
+    }else if (this.voiceText.toLowerCase().includes('remove') && ((this.voiceText.toLowerCase().includes('favorites')) || (this.voiceText.toLowerCase().includes('favorite')))){
       this.addDeleteFromFavorites('remove');
     }else if (this.voiceText.toLowerCase().includes('add') && this.voiceText.toLowerCase().includes('grocery list')) {
       if (!this.isInGroceryList) {

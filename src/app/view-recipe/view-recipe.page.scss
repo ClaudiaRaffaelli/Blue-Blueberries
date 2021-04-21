@@ -5,6 +5,10 @@
 //  top: 0;
 //}
 
+.md ion-chip{
+  margin: 1px !important;
+  border: 1px !important;
+}
 
 p{
   padding: 12px;
@@ -100,4 +104,57 @@ img{
 
 *{
   font-family: RobotoSlab;
+}
+
+.assistant-overlay {
+  position: fixed;
+  width: 65%;
+  height: 12%;
+  background: var(--ion-color-mainMedium);
+  z-index: 20;
+  bottom: 10px;
+  right: 21%;
+  color: white;
+  font-size: 12px;
+  border-radius: 25px;
+  padding: 12px;
+}
+
+.assistant-option1, .assistant-option2, .assistant-option3, .assistant-option4 {
+  position: fixed;
+  border: 1.5px solid var(--ion-color-mainMedium);
+  width: 70%;
+  height: 25%;
+  background: white;
+  z-index: 20;
+  right: 5%;
+  color: black;
+  font-size: 12px;
+  border-radius: 25px;
+}
+
+.assistant-option1{
+  bottom: 12%;
+}
+.assistant-option2{
+  bottom: 24%;
+}
+.assistant-option3{
+  bottom: 18%;
+}
+.assistant-option4{
+  bottom: 12%;
+}
+
+.assistant-option1 b{
+  color: var(--ion-color-mainMedium);
+}
+
+.assistant-option1 ion-chip{
+  background-color: white!important;
+  color: grey;
+}
+
+.assistant-option1 span{
+  font-size: 12px;
 }

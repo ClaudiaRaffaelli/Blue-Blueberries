@@ -43,6 +43,46 @@ hr.solid {
   border-radius: 25px;
   padding: 12px;
 }
+
+.assistant-option1, .assistant-option2, .assistant-option3, .assistant-option4 {
+  position: fixed;
+  border: 1.5px solid var(--ion-color-mainMedium);
+  width: 70%;
+  height: 30%;
+  background: white;
+  z-index: 20;
+  right: 5%;
+  color: black;
+  font-size: 12px;
+  border-radius: 25px;
+}
+
+.assistant-option1{
+  bottom: 12%;
+}
+.assistant-option2{
+  bottom: 24%;
+}
+.assistant-option3{
+  bottom: 18%;
+}
+.assistant-option4{
+  bottom: 12%;
+}
+
+.assistant-option1 b{
+  color: var(--ion-color-mainMedium);
+}
+
+.assistant-option1 ion-chip{
+  background-color: white!important;
+  color: grey;
+}
+
+.assistant-option1 span{
+  font-size: 12px;
+}
+
 /*pulse animation*/
 #mic_animated {
   border-radius: 50%;
