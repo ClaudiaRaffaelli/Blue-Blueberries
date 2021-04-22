@@ -46,8 +46,9 @@ hr.solid {
 
 .assistant-option1, .assistant-option2, .assistant-option3, .assistant-option4 {
   position: fixed;
-  border: 1.5px solid var(--ion-color-mainMedium);
-  width: 70%;
+  // border: 1.5px solid var(--ion-color-mainMedium);
+  display: flex;
+  flex-direction: column;
   height: 30%;
   background: white;
   z-index: 20;
@@ -55,6 +56,8 @@ hr.solid {
   color: black;
   font-size: 12px;
   border-radius: 25px;
+  padding: 2px;
+  box-shadow: 0 4px 30px 0 rgba(34, 90, 143, 0.5), 0 6px 20px 0 rgba(38, 75, 120, 0.19);
 }
 
 .assistant-option1{
